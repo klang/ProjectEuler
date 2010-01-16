@@ -1,7 +1,5 @@
 ;; What is the smallest number divisible by each of the numbers 1 to 20?
 
-;; What is the smallest number that is evenly divisible by all of the numbers from 1 to 20?
-
 ;; every number in the range is checked: very inefficient
 (defn divides-all? [n m]
   (= 0 (reduce + (map #(mod n %) (range 2 (+ 1 m))))))
@@ -61,6 +59,10 @@
 ; new approach ..
 (defn divides-all? [n m]
   (= m (count (take-while #(zero? (mod n %)) [1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20]))))
+(defn divides-all? [n m]
+  (= m (count (take-while #(zero? (mod n %)) [1 2 3 4 5 6 7 8 9 10]))))
+(defn divides-all? [n m]
+  (= m (count (take-while #(zero? (mod n %)) [10]))))
 (defn problem005 [m]
   (loop [m m
 	 s 1]
@@ -69,6 +71,8 @@
       (recur m (inc s)))))
 
 ;; 2520 is the smallest number that can be divided by each of the numbers from 1 to 10 without any remainder.
+(use 'clojure.contrib.test-is)
+
 (deftest test-problem005
   (is (= 2520 (problem005 10))))
 
