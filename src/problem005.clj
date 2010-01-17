@@ -37,32 +37,9 @@
 ; 
 
 (defn divides-all? [n m]
-  (let [a (take-while #(zero? (mod n %)) (range 1 (+ 1 m)))]
-    ))
+  (= (- m 1) (count (take-while #(true? %) (map #(zero? (mod n %)) (range 1 m))))))
 
-(defn divides-all? [n m]
-  (= m (count (take-while #(= % true) 
-			  (map #(= 0 (mod n %)) 
-			       (range 1 (+ 1 m))))))
-  )
 
-(defn divides-all? [n m]
-  (= (- m 1) (count (take-while #(true? %) (map #(zero? (mod n %)) (range 1 m)))))
-  )
-
-(defn divides-all? [n m]
-  (let [r (sieve m)
-	c (count r)]
-    (= c (count (take-while #(= % true) (map #(= 0 (mod n %)) r)))))
-  )
-
-; new approach ..
-(defn divides-all? [n m]
-  (= m (count (take-while #(zero? (mod n %)) [1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20]))))
-(defn divides-all? [n m]
-  (= m (count (take-while #(zero? (mod n %)) [1 2 3 4 5 6 7 8 9 10]))))
-(defn divides-all? [n m]
-  (= m (count (take-while #(zero? (mod n %)) [10]))))
 (defn problem005 [m]
   (loop [m m
 	 s 1]
@@ -80,3 +57,10 @@
 
 
 
+(reduce max (for [x1 (range 1 (+ 10 1))
+	x2 (range 2 (+ 10 2))
+	x3 (range 3 (+ 10 3))]
+    (if (= x1 x2 x3) x1 0)
+    ))
+
+(n-range )
