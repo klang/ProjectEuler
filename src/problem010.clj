@@ -11,5 +11,7 @@
   (is (= 17 (problem010 10))))
 
 ; user> (time (problem010 2000000))
+; "Elapsed time: 46393.526973 msecs"
+; 142913828922
 
 ; (run-tests)
