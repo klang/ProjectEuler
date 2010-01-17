@@ -5,6 +5,10 @@
      '[clojure.contrib.math :only (expt)]
      '[clojure.contrib.str-utils2 :only (split)])
 
+(defn digits [n]
+  (map #(. Integer parseInt % 10) 
+	     (filter #(not (= % "")) (split (str n) #""))))
+
 (defn problem016 [n] 
   (reduce + 
 	(map #(. Integer parseInt % 10) 
