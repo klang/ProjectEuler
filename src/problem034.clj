@@ -12,3 +12,6 @@
 ;; 40730
 
 ;; it works, but a limiting function should be possible to make
+;; (expt 10 (count (digits 145)))
+
+;; 7*9!=2540160<9999999 => all solutions are below 2540160 
