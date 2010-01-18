@@ -4,44 +4,36 @@
 
 (use 'clojure.contrib.test-is 'clojure.contrib.lazy-seqs)
 
-(def prime-gen
-     (let [primes (atom [])]
-       (for [n (iterate inc 2)
-             :when (not-any? #(zero? (rem n %))
-                             (filter #(<= % (Math/sqrt n)) 
-                                     @primes))]
-         (do (swap! primes conj n)
-             n))))
-(rem 13195 5)
-
 ;; what is the difference between rem and mod?
 ;; is one faster than the other or is it just taste?
-;; how about quot and /?
+;; how about quot and /, when using intergers?
 
-(comment 
-  (mod 13195 5)
-  (quot 13195 5)
-  (mod 2639 7)
-  (quot 2639 7)
-  (mod 377 13)
-  (quot 377 13)
-  (mod 29 29)
-)
+(defn factors [n]
+  (loop [factors []
+	 p primes
+	 number n]
+    (if (= number 1)
+      factors
+      (let [f (first p)]
+	(if (zero? (rem number f))
+	  ;; prime f is a factor of number 
+	  ;; (f might still be a factor, so keep the same p)
+	  (recur (conj factors f) p (quot number f))
+	  ;; try with the next prime
+	  (recur factors (rest p) number))))))
 
-(defn factor n
-     (let [factors (atom #{})]
-       (for [p (primes) :when ]
-	 (do (swap! factors conj p)
-	   p))))
+(deftest test-factors
+  (is (= [] (factors 1)))
+  (is (= [5 7 13 29] (factors 13195))))
 
 (defn problem003 [n]
-  #{5 7 13 29})
+  (peek (factors n)))
 
 (deftest test-problem003
-  (is (= #{5 7 13 29} (problem003 13195))))
+  (is (= 29 (problem003 13195))))
 
-; user> (time (problem004 3))
-; "Elapsed time: 3624.171717 msecs"
-; 906609
+;; user> (time (problem003 600851475143))
+;; "Elapsed time: 1.393474 msecs"
+;; 6857
 
 ; (run-tests)
