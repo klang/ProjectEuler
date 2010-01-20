@@ -7,6 +7,10 @@
 ;;  (BigInteger. (str (apply str s) d))
     (Integer. (str (apply str s) d))))
 
+(defn digits [n]
+  (map #(. Integer parseInt % 10) 
+	     (filter #(not (= % "")) (split (str n) #""))))
+
 (defn rotations [number]
   (let [ds (digits number)]
     (map #(str (apply str (drop % ds)) 
@@ -49,13 +53,23 @@
 
 ;; -- trying to make things a bit more efficient (goal: less than a minute)
 
+(defn prime-digits [n]
+  (let [raw (filter #(not (= % "")) (split (str n) #""))
+	raw-set (set raw)]
+    (if (or (contains? raw-set "2") 
+	    (contains? raw-set "5") 
+	    (contains? raw-set "0"))
+      ()
+      (map #(. Integer parseInt % 10) raw)))
+  )
+
 ;; if we always rotate prime numbers we do not need them in the rotation set
 ;; rotations of number, but not number itself. 
-(defn rotations [number]
-  (let [ds (digits number)]
+(defn possible-prime-rotations [number]
+  (let [ds (prime-digits number)]
     (map #(str (apply str (drop % ds)) 
 	       (apply str (take % ds))) 
-	 (range 1 (count ds))))) 
+	 (range 1 (count ds)))))
 
 ;; let us save the Integer conversion on numbers we do not need
 (defn circular-odd? [number]
@@ -63,13 +77,14 @@
 	rot (rotations number)
 	]
     (reduce #(and %1 %2) (map #(odd? %) rot) )))
-(for [n ])
+
 (defn circular-prime? [number]
   (let [rot (map #(Integer. %) (rotations number))]
     (reduce #(and %1 %2) (map #(prime? %) rot) )))
 
-(defn maybe-circular-prime? [number]
-  (let [rot (map #(Integer. %) (rotations number))]
-    (reduce #(and %1 %2) (map #(odd? %) rot) )))
+(defn fast-circular-prime? [number]
+  (let [rot (map #(Integer. %) (possible-prime-rotations number))]
+    (reduce #(and %1 %2) (map #(prime? %) rot) )))
 
-(filter #(< 0 %) (map #(if (maybe-circular-prime? %) % 0) (take-while #(<  % 1000000) primes)))
+
+(time (filter #(< 0 %) (map #(if (fast-circular-prime? %) % 0) (take-while #(<  % 10000) primes))))
