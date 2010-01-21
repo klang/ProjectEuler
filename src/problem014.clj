@@ -78,6 +78,50 @@
 ;; "Elapsed time: 149366.547031 msecs"
 ;; {:start 837799, :terms 525}
 
+;; user> (collatz 1)
+;; [1]
+;; user> (collatz 2)
+;; [2 1]
+;; user> (collatz 3)
+;; [3 10 5 16 8 4 2 1]
+;; user> (collatz 4)
+;; [4 2 1]
+;; user> (collatz 5)
+;; [5 16 8 4 2 1]
+;; user> (collatz 6)
+;; [6 3 10 5 16 8 4 2 1]
+;; user> (collatz 7)
+;; [7 22 11 34 17 52 26 13 40 20 10 5 16 8 4 2 1]
+;; user> (collatz 8)
+;; [8 4 2 1]
+;; user> (collatz 9)
+;; [9 28 14 7 22 11 34 17 52 26 13 40 20 10 5 16 8 4 2 1]
+;; user> (collatz 10)
+;; [10 5 16 8 4 2 1]
+;; user> (collatz 11)
+;; [11 34 17 52 26 13 40 20 10 5 16 8 4 2 1]
+;; user> (collatz 12)
+;; [12 6 3 10 5 16 8 4 2 1]
+;; user> (collatz 13)
+;; [13 40 20 10 5 16 8 4 2 1]
+;; user> (collatz 14)
+;; [14 7 22 11 34 17 52 26 13 40 20 10 5 16 8 4 2 1]
+;; user> (collatz 15)
+;; [15 46 23 70 35 106 53 160 80 40 20 10 5 16 8 4 2 1]
+;; user> (collatz 16)
+;; [16 8 4 2 1]
+;; user> (collatz 17)
+;; [17 52 26 13 40 20 10 5 16 8 4 2 1]
 
+;; user> (collatz 40)
+;; [40 20 10 5 16 8 4 2 1]
+
+; tails are the same
+
+;; user> (collatz 13)
+;; [13 40 20 10 5 16 8 4 2 1]
+;; has length 10
+;; all numbers in the sequence has length less than 10
 
    
+;; 
