@@ -1,7 +1,8 @@
 (use 'clojure.contrib.test-is 
      '[ clojure.contrib.lazy-seqs :only (primes)]
      '[clojure.contrib.math :only (expt sqrt exact-integer-sqrt)]
-     '[clojure.contrib.str-utils2 :only (split)])
+     '[clojure.contrib.str-utils2 :only (split)]
+     'clojure.contrib.repl-utils)
 
 (defn digits [n]
   (map #(. Integer parseInt % 10) 
