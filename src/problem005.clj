@@ -64,3 +64,135 @@
     ))
 
 (n-range )
+
+
+
+
+
+(defn re10 []
+  (loop [n 2]
+    (if (and  (zero? (rem n 1)) (zero? (rem n 2)) (zero? (rem n 3))
+	      (zero? (rem n 4)) (zero? (rem n 5)) (zero? (rem n 6))
+	      (zero? (rem n 7)) (zero? (rem n 8)) (zero? (rem n 9))
+	      (zero? (rem n 10))) 
+      n
+      (recur (+ n 2)))))
+
+;; starting from 1 .. (inc 1)
+;;user> (time (re10))
+;;"Elapsed time: 6.057196 msecs"
+;;2520
+
+;; starting from 2 .. (+ n 2)
+;;user> (time (re10))
+;;"Elapsed time: 2.617652 msecs"
+;;2520
+
+;; checking every number (also the odd ones, that will not be possible results)
+(defn re20all []
+  (loop [n 1]
+    (if (and  (zero? (rem n 2)) (zero? (rem n 3)) (zero? (rem n 4)) 
+	      (zero? (rem n 5)) (zero? (rem n 6)) (zero? (rem n 7)) 
+	      (zero? (rem n 8)) (zero? (rem n 9)) (zero? (rem n 10))
+	      (zero? (rem n 11))
+	      (zero? (rem n 12)) (zero? (rem n 13)) (zero? (rem n 14)) 
+	      (zero? (rem n 15)) (zero? (rem n 16)) (zero? (rem n 17)) 
+	      (zero? (rem n 18)) (zero? (rem n 19)) (zero? (rem n 20))
+
+) 
+      n
+      (recur (inc n)))))
+
+;; user> (time (re20all))
+;; "Elapsed time: 149766.979853 msecs"
+;; 232792560
+
+(defn re20even []
+  (loop [n 2]
+    (if (and  (zero? (rem n 2)) (zero? (rem n 3)) (zero? (rem n 4)) 
+	      (zero? (rem n 5)) (zero? (rem n 6)) (zero? (rem n 7)) 
+	      (zero? (rem n 8)) (zero? (rem n 9)) (zero? (rem n 10))
+	      (zero? (rem n 11))
+	      (zero? (rem n 12)) (zero? (rem n 13)) (zero? (rem n 14)) 
+	      (zero? (rem n 15)) (zero? (rem n 16)) (zero? (rem n 17)) 
+	      (zero? (rem n 18)) (zero? (rem n 19)) (zero? (rem n 20))
+
+) 
+      n
+      (recur (+ n 2)))))
+
+;; user> (time (re20even))
+;; "Elapsed time: 105269.64332 msecs"
+;; 232792560
+
+(defn re20even2 []
+  (loop [n 2]
+    (if (and  (= 0 (rem n 3)) (= 0 (rem n 4)) 
+	      (= 0 (rem n 5)) (= 0 (rem n 6)) (= 0 (rem n 7)) 
+	      (= 0 (rem n 8)) (= 0 (rem n 9)) (= 0 (rem n 10))
+	      (= 0 (rem n 11))
+	      (= 0 (rem n 12)) (= 0 (rem n 13)) (= 0 (rem n 14)) 
+	      (= 0 (rem n 15)) (= 0 (rem n 16)) (= 0 (rem n 17)) 
+	      (= 0 (rem n 18)) (= 0 (rem n 19)) (= 0 (rem n 20))
+
+) 
+      n
+      (recur (+ n 2)))))
+
+;; user> (time (re20even2))
+;; "Elapsed time: 77198.058512 msecs"
+;; 232792560
+
+(defn re20even2mod []
+  (loop [n 2]
+    (if (and  (= 0 (mod n 3)) (= 0 (mod n 4)) 
+	      (= 0 (mod n 5)) (= 0 (mod n 6)) (= 0 (mod n 7)) 
+	      (= 0 (mod n 8)) (= 0 (mod n 9)) (= 0 (mod n 10))
+	      (= 0 (mod n 11))
+	      (= 0 (mod n 12)) (= 0 (mod n 13)) (= 0 (mod n 14)) 
+	      (= 0 (mod n 15)) (= 0 (mod n 16)) (= 0 (mod n 17)) 
+	      (= 0 (mod n 18)) (= 0 (mod n 19)) (= 0 (mod n 20))) 
+      n
+      (recur (+ n 2)))))
+
+;; finally checking if mod is faster than rem
+;; user> (time (re20even2mod))
+;; "Elapsed time: 126468.241237 msecs"
+;; 232792560
+
+(defn re20even2flip []
+  (loop [n 2]
+    (if (and  (= 0 (rem n 19)) (= 0 (rem n 17)) (= 0 (rem n 13))
+	      (= 0 (rem n 11)) (= 0 (rem n 7)) (= 0 (rem n 5))
+	      (= 0 (rem n 3))
+	      (= 0 (rem n 18)) (= 0 (rem n 9))  
+	      (= 0 (rem n 20))
+	      (= 0 (rem n 15)) 
+	      (= 0 (rem n 16)) 
+	      (= 0 (rem n 12))(= 0 (rem n 6)) (= 0 (rem n 4)) 
+	      (= 0 (rem n 8)) 
+	      (= 0 (rem n 10))
+	      (= 0 (rem n 14))
+) 
+      n
+      (recur (+ n 2)))))
+;; user> (time (re20even2flip))
+;; "Elapsed time: 62725.00717 msecs"
+;; 232792560
+
+(defn re20even2flip2 []
+  (loop [n 2]
+    (if (and  (= 0 (rem n 19)) (= 0 (rem n 17)) (= 0 (rem n 13))
+	      (= 0 (rem n 11)) (= 0 (rem n 7)) (= 0 (rem n 5)) (= 0 (rem n 3))
+	      (= 0 (rem n 10)) (= 0 (rem n 20))
+	      (= 0 (rem n 12)) (= 0 (rem n 6)) (= 0 (rem n 4)) 
+	      (= 0 (rem n 14))
+	      (= 0 (rem n 15)) 
+	      (= 0 (rem n 16)) (= 0 (rem n 8)) 
+	      (= 0 (rem n 18)) (= 0 (rem n 9))  
+	      ) 
+      n
+      (recur (+ n 2)))))
+;; user> (time (re20even2flip2))
+;; "Elapsed time: 62720.427546 msecs"
+;; 232792560
