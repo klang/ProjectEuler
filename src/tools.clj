@@ -11,7 +11,10 @@
 (defn factorial [n] 
   (reduce * (range n 0 -1)))
 
-(defn fibo []
+(defn factorials []
+  (map first (iterate (fn [[a b]] [(* a b) (inc b)]) [1 2])))
+
+(defn fibos []
   (map first (iterate (fn [[a b]] [b (+ a b)]) [0 1])))
 
 (def prime-gen
