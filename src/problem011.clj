@@ -28,3 +28,12 @@
 ; What is the greatest product of four adjacent numbers in any direction 
 ; (up, down, left, right, or diagonally) in the 2020 grid?
 
+(defn all-points [matrix]
+  // loop through all combinations
+  // return the followin structure 
+  {x: x y: y val: val} )
+
+(defn up [coordinate]
+  (let [x (nth coordinate 0)
+	y (nth coordinate 1)
+	]))
