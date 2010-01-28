@@ -1,4 +1,4 @@
-; In the 2020 grid below, four numbers along a diagonal line have been marked in red. [coordinate (8,6) where the first vector is 0]
+; In the 2020 grid below, four numbers along a diagonal line have been marked in red. [coordinates (8,6),(9,7),(10,8),(11,9) counting from 0]
 
 
 (def grid 
