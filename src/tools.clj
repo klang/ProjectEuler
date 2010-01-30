@@ -39,8 +39,12 @@
 
 (defn factors [n]
   (loop [pfs []
-	 p primes
-	 number n]
+	 p primes ; (take-while #(<= (* % %) n) primes)
+	 number n
+	 ]
+; done if n=1
+; otherwise, if there are no more primes and n>1, then the n is prime.. what?
+; no more primes under (sqrt n) and no factors found => n is prime
     (if (= number 1)
       pfs
       (let [f (first p)]
@@ -52,16 +56,6 @@
 	  (recur pfs (rest p) number))))))
 
 (defn prime? [n]
-  (= 1 (count (factors n))))
+  (= 1 (count (prime-factors n))))
 
-(defn prime? [n]
-  (loop [pfs []
-	 p primes
-	 number n]
-    (if (< 1 (count pfs)) false 
-	(if (= number 1)
-	  true
-	  (let [f (first p)]
-	    (if (zero? (rem number f))
-	      (recur (conj pfs f) p (quot number f))
-	      (recur pfs (rest p) number)))))))
+
