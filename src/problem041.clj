@@ -5,6 +5,7 @@
 ;; (time (count pandigital))
 ;; "Elapsed time: 25714.786336 msecs"
 ;; 362880
+;;.. or (factorial 9)
 
 ;; the easy way to convert back to a number
 (defn integer [l] 
