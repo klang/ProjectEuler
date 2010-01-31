@@ -12,6 +12,8 @@
 (defn triangle [n] (quot (* n (+ n 1)) 2))
 (defn triangles [] 
   (map (fn [n] (quot (* n (+ n 1)) 2)) (iterate inc 1)))
+(defn triangles []
+  (map first (iterate (fn [[a b]] [(+ a b) (inc b)]) [1 2])))
 
 ;; user> (char 65)
 ;; \A
