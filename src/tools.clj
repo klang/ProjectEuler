@@ -25,6 +25,13 @@
 		 (reverse digit-list) 
 		 (range 0 (count digit-list)))))
 
+(defmulti digits-odd? class)
+(defmethod digits-odd? clojure.lang.LazySeq [list] 
+  (every? odd? list))
+(defmethod digits-odd? java.lang.Integer [number] 
+  (every? odd? (digits number)))
+
+
 (defn factorial [n] 
   (reduce * (range n 0 -1)))
 
