@@ -4,9 +4,24 @@
      '[clojure.contrib.str-utils2 :only (split)]
      'clojure.contrib.repl-utils)
 
-(defn digits [n]
+(defn digits [number]
   (map #(. Integer parseInt % 10) 
-	     (filter #(not (= % "")) (split (str n) #""))))
+	     (filter #(not (= % "")) (split (str number) #""))))
+
+(defn number2digit-list [number]
+  "convert number to digit list"
+  (loop [n number
+	 dl ()]
+    (if (zero? n)
+      dl
+      (recur (quot n 10) (conj dl (rem n 10))))))
+
+(defn digits [number] (number2digit-list number))
+
+(defn digit-list2number [digit-list]
+  (reduce + (map #(* %1 (expt 10 %2)) 
+		 (reverse digit-list) 
+		 (range 0 (count digit-list)))))
 
 (defn factorial [n] 
   (reduce * (range n 0 -1)))
@@ -57,5 +72,6 @@
 
 (defn prime? [n]
   (= 1 (count (prime-factors n))))
+
 
 
