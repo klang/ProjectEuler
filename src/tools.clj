@@ -20,6 +20,8 @@
 
 (defn digit-list2number [digit-list]
   (reduce + (map #(* %1 (expt 10 %2)) 
+;;		 digit-list
+;;		 (range (- (count digit-list) 1) -1 -1)
 		 (reverse digit-list) 
 		 (range 0 (count digit-list)))))
 
