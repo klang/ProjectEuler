@@ -25,6 +25,9 @@
 		 (reverse digit-list) 
 		 (range 0 (count digit-list)))))
 
+(defn integer [digit-list]
+  (digit-list2number digit-list))
+
 (defmulti digits-odd? class)
 (defmethod digits-odd? clojure.lang.LazySeq [list] 
   (every? odd? list))
