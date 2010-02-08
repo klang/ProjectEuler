@@ -8,7 +8,7 @@
   (map #(. Integer parseInt % 10) 
 	     (filter #(not (= % "")) (split (str number) #""))))
 
-(defn number2digit-list [number]
+(defn digit-list [number]
   "convert number to digit list"
   (loop [n number
 	 dl ()]
@@ -16,7 +16,14 @@
       dl
       (recur (quot n 10) (conj dl (rem n 10))))))
 
-(defn digits [number] (number2digit-list number))
+(defn digits [number] (digit-list number))
+
+(defn digit-set [number]
+  (loop [n number
+	 dl #{}]
+    (if (zero? n)
+      dl
+      (recur (quot n 10) (conj dl (rem n 10))))))
 
 (defn digit-list2number [digit-list]
   (reduce + (map #(* %1 (expt 10 %2)) 
