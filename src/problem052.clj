@@ -5,14 +5,6 @@
 ;; Find the smallest positive integer, x, such that 2x, 3x, 4x, 5x, and 6x, contain the same digits.
 (use 'clojure.set)
 
-;; special version of the old digit function, this time returning a set
-(defn digit-set [number]
-  (loop [n number
-	 dl #{}]
-    (if (zero? n)
-      dl
-      (recur (quot n 10) (conj dl (rem n 10))))))
-
 (defn p052number [number]
   (list number (* 2 number) (* 3 number) (* 4 number) (* 5 number) (* 6 number)))
 
