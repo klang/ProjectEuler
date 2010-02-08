@@ -40,12 +40,6 @@
 (defn ranges [r]
   (list (- 1 r) (+ r 1)))
 
-(defn mymax
-  ([x] x)
-  ([x y] (if (> x y) x y))
-  ([x y & more]
-     (reduce mymax (mymax x y) more)))
-
 (defn max-euler027 [r]
   (loop [current-max 0
 	 max-values  []
