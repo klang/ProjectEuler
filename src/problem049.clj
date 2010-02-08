@@ -12,9 +12,9 @@
 ;; user> (count four-digit-primes)
 ;; 1061
 
-(defn spacing [[ d1 d2 d3 d4]]
-  ;; if d1 < d2 < d3 < d4
-  (= (- d2 d1) (- d3 d2) (- d4 d3))
+(defn spacing [[ d1 d2 d3]]
+  ;; if d1 < d2 < d3
+  (= (- d2 d1) (- d3 d2))
   ;; will show that the they are equally spaced apart
   )
 
@@ -68,18 +68,32 @@
 ;;user> (count @sorted-primes)
 ;;236
 
-;; only 35 terms with 4 primes
-;; user> (count (filter #(= 4 (count (second %))) @sorted-primes))
-;;35
+;; there are 165 potential terms with more than 3 4-digit primes
+;; user> (count (filter #(< 2 (count (second %))) @sorted-primes))
+;; 165
 
-;; .. well, not so
+;; finding the example given:
 ;; user> (@sorted-primes #{1 4 7 8})
-;;[1487 1847 4817 4871 7481 7841 8147 8741]
+;; [1487 1847 4817 4871 7481 7841 8147 8741]
+;; (filter #(spacing %) (combinations (@sorted-primes #{1 4 7 8}) 3))
+;; ((1487 4817 8147))
+(defn list-spacing [[ d1 d2 d3]]
+  (list (- d2 d1) (- d3 d2)))
 
-(defn spacing3 [[ d1 d2 d3]]
-  ;; if d1 < d2 < d3 < d4
-  (= (- d2 d1) (- d3 d2))
-  ;; will show that the they are equally spaced apart
-  )
-(defn list-spacing [[ d1 d2 d3 d4]]
-  (list (- d2 d1) (- d3 d2) (- d4 d3)))
+(def foo (map #(combinations (second %) 3) (filter #(< 2 (count (second %))) @sorted-primes)))
+
+(defn find-sequence [sorted-primes]
+  (loop [sp @sorted-primes
+	 found []]
+    (if (= '() sp) 
+      found
+      (let [item (filter #(spacing %) (combinations (second (first sp)) 3))]
+	(recur (rest sp) (if (= '() item) found (conj found item))))
+      )
+    ))
+;; user> (find-sequence sorted-primes)
+;;[((2969 6299 9629)) ((1487 4817 8147))]
+;;user> (list-spacing '(2969 6299 9629))
+;;(3330 3330)
+
+;; -- ok, I searche for any combination with any kind of equal spacing..
