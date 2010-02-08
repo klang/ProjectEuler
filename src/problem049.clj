@@ -12,9 +12,9 @@
 ;; user> (count four-digit-primes)
 ;; 1061
 
-(defn spacing [d1 d2 d3]
-  ;; if d1 < d2 < d3
-  (= (- d1 d2) (- d2 d3) )
+(defn spacing [[ d1 d2 d3 d4]]
+  ;; if d1 < d2 < d3 < d4
+  (= (- d1 d2) (- d2 d3) (- d3 d4))
   ;; will show that the they are equally spaced apart
   )
 
