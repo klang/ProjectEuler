@@ -68,3 +68,7 @@
 ;;user> (count @sorted-primes)
 ;;236
 
+;; only 35 terms with 4 primes
+;; user> (count (filter #(= 4 (count (second %))) @sorted-primes))
+;;35
+
