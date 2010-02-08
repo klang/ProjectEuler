@@ -14,7 +14,7 @@
 
 (defn spacing [[ d1 d2 d3 d4]]
   ;; if d1 < d2 < d3 < d4
-  (= (- d1 d2) (- d2 d3) (- d3 d4))
+  (= (- d2 d1) (- d3 d2) (- d4 d3))
   ;; will show that the they are equally spaced apart
   )
 
@@ -72,3 +72,14 @@
 ;; user> (count (filter #(= 4 (count (second %))) @sorted-primes))
 ;;35
 
+;; .. well, not so
+;; user> (@sorted-primes #{1 4 7 8})
+;;[1487 1847 4817 4871 7481 7841 8147 8741]
+
+(defn spacing3 [[ d1 d2 d3]]
+  ;; if d1 < d2 < d3 < d4
+  (= (- d2 d1) (- d3 d2))
+  ;; will show that the they are equally spaced apart
+  )
+(defn list-spacing [[ d1 d2 d3 d4]]
+  (list (- d2 d1) (- d3 d2) (- d4 d3)))
