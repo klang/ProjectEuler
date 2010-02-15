@@ -93,3 +93,37 @@
 ;; 811
 
 ;; not practical
+
+(def primes-below-100 (take-while #(<= % 100) primes))
+
+(defn problem268factors [n]
+  "returns false fast, if factors higher than 100 are found"
+  (let [pfs (transient [])]
+    (loop [;i   0
+	   p   primes-below-100
+	   number n]
+      (if (or ;(< i 25)
+	      (= 0 (count p)) ;; there is no more primes to try with
+	      (= number 1))   ;; number is prime and has only 1 factor
+	false ;pfs            ;; this is not the number we are looking for
+	(let [f (first p)]
+	  (if (zero? (rem number f))
+	    ;; prime f is a factor of number 
+	    ;; (f might still be a factor, but we do not care, use next p)
+	    ;; .. come to think about it, break out and return true if 
+	    ;; 3 different primefactors have already been found (making f the 4th)
+	    (if (<= 3 (count pfs))
+	      true			; (conj pfs f)
+	      (do  (conj! pfs f)  (recur 
+				   ;(inc i) 
+				   (rest p) (quot number f))))
+	    ;; try with the next prime
+	    (recur 
+	     ;(inc i) 
+	     (rest p) number)))))))
+
+;; stil not practical to make any kind of calculation at each point in the range ..
+
+;; user> (time (count (range 1 (expt 10 7))))
+;; "Elapsed time: 7521.258606 msecs"
+;; 9999999
