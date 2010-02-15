@@ -12,6 +12,7 @@
   (loop [n number dl 0]
     (if (zero? n) dl
       (recur (quot n 10) (+ (* 10 dl) (rem n 10))))))
+(defn palindrome? [n] (= (reverse-number n) n))
 
 (defn digit-list [number]
   "convert number to digit list"
