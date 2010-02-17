@@ -27,11 +27,34 @@
 ;; 
 ;; obviously not the best way to do this
 
+(def p (memoize p))
+
+;; user> (time (p 1 100))
+;; "Elapsed time: 82.583742 msecs"
+;; 190569292
+
+;; .. ok, that was quick
+ 
 ;; Term number (11) here http://mathworld.wolfram.com/PartitionFunctionP.html
 
-;; gives in this very fast algorithm ..
+(defn pn [n]
+  "direct implementation of term (11) on http://mathworld.wolfram.com/PartitionFunctionP.html"
+  (cond 
+    (< n 0) 0
+    (= n 0) 1
+    :else 
+    (reduce + (map 
+	       (fn [k] (* (expt -1 (+ k 1)) 
+			  (+ (pn (- n (pentagonal k)))
+			     (pn (- n (second-pentagonal k))))))
+	       (range 1 (+ n 1))))))
+
+(def pn (memoize pn))
 
 ;; http://home.att.net/~numericana/answer/numbers.htm#partitions
+;; gives this very fast algorithm ..
+;; (basically, it remebers the previous terms, which is what we do with memoize above)
+
 ;; input m
 ;; dim p(m)
 ;; p(0) = 1
