@@ -4,50 +4,31 @@
 ;; floor
 
 ;; intermediate function
-(defn p [k n] 
+(defn p [k n]
+  "direct implementation of term (54) on http://mathworld.wolfram.com/PartitionFunctionP.html"
   (cond 
     (> k n) 0
     (= k n) 1
-    :else
-    (+ (p (+ k 1) n) (p k (- n k))))
-  )
+    :else (+ (p (+ k 1) n) (p k (- n k)))))
+
+(def p (memoize p))
 
 ;   n    0  1  2  3  4  5   6   7   8   9  10  11  12   13   14   15   16   17   18   19
 ; p(n)   1  1  2  3  5  7  11  15  22  30  42  56  77  101  135  176  231  297  385  490
-
-(comment
-  (p 1 9)  ; 30
-  (p 1 60) ; 966467
-;;user> (time (p 1 61))
-;;"Elapsed time: 5408.624164 msecs"
-;;1121505
-  )
-;;def upper_bound(k):
-;    """Ramanujan's upper bound for number of partitions of k"""
-;    return int(exp(pi*sqrt(2.0*k/3.0))/(4.0*k*sqrt(3.0)))
 
 (defn upper-bound [k]
   "Ramanujan's upper bound for number of partitions of k"
   (int (/ (Math/exp (* Math/PI (sqrt (/ (* 2 k) 3)))) (* 4 k (sqrt 3)))))
 
 ;; http://www.cs.sunysb.edu/~algorith/files/generating-partitions.shtml
-
 (def pentagonals ; (quot (* n (- (* 3 n) 1)) 2)
   (map (fn [n] (quot (- (* 3 n n) n) 2)) (iterate inc 1)))
 (def second-pentagonals ; (quot (* n (+ (* 3 n) 1)) 2)
   (map (fn [n] (quot (+ (* 3 n n) n) 2)) (iterate inc 1)))
 
 ;; http://www.ces.clemson.edu/~kevja/REU/2002/JDavisAndEPerez.pdf
-(defn pentagonal        [n] (quot (* n (- (* 3 n) 1)) 2))
-(defn second-pentagonal [n] (quot (* n (+ (* 3 n) 1)) 2))
-
-(defn partitions [n]
-  "returns the partitions of n as a list")
-(def p10 
-     "lazy sequence returning partitions of p(10)"
-     (partitions 10))
-(defn partitions# [n]
-  "returns the number of partitions of n")
+(defn pentagonal        [n] (quot (- (* 3 n n) n) 2))
+(defn second-pentagonal [n] (quot (+ (* 3 n n) n) 2))
 
 ;http://home.att.net/~numericana/answer/numbers.htm#partitions
 ;; input m
@@ -66,31 +47,32 @@
 ;;   p(i) = s
 ;; next i
 
-(defn generating-function [n]
-  "based on term (11) here: http://mathworld.wolfram.com/PartitionFunctionP.html"
-  (let [P (vec (take n (repeat 1)))] ; (transient [1])
-    (for [i (range 1 (+ n 1))]
-      (loop [j 1 p2 second-pentagonals p1 pentagonals k 1 s 0]
-	(if (> j 0)
-	  (let [j1 (- i (first p2))
-		j2 (- i (first p1))
-		s1 (if (>= j1 0) (- s (* (expt -1 k) (nth P j1))) s)
-		s2 (if (>= j2 0) (- s1 (* (expt -1 k) (nth P j2))) s1)
-		]
-	    (recur j2 (rest p2) (rest p1) (inc k) s2))
-	  (assoc P (- n 1) s)))      
-      
-      )))
+(defn pn [n]
+  "direct implementation of term (11) on http://mathworld.wolfram.com/PartitionFunctionP.html"
+  (cond 
+    (< n 0) 0
+    (= n 0) 1
+    :else 
+    (reduce + (map 
+	       (fn [k] (* (expt -1 (+ k 1)) 
+			  (+ (pn (- n (pentagonal k)))
+			     (pn (- n (second-pentagonal k))))))
+	       (range 1 (+ n 1))))))
 
-      (loop [j 1 p2 second-pentagonals p1 pentagonals k 1 s 0]
-	(if (> j 0)
-	  (let [j1 (- i (first p2))
-		j2 (- i (first p1))
-		s1 (if (>= j1 0) (- s (* (expt -1 k) (nth P j1))) s)
-		s2 (if (>= j2 0) (- s1 (* (expt -1 k) (nth P j2))) s1)
-		]
-	    (recur j2 (rest p2) (rest p1) (inc k) s2))
-	  (conj P s)))
+(def pn (memoize pn))
+
+(defn partitions [n]
+  "returns the partitions of n as a list")
+
+(def p10 
+     "lazy sequence returning partitions of p(10)"
+     (partitions 10))
+
+(defn partitions# [n]
+  "returns the number of partitions of n"
+  (pn n))
+
+
 
 (defn partitions [n]
   "returns the partitions of n as a list")
