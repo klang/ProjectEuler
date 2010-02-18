@@ -2,7 +2,10 @@
      '[ clojure.contrib.lazy-seqs :only (primes)]
      '[clojure.contrib.math :only (expt sqrt exact-integer-sqrt)]
      '[clojure.contrib.str-utils2 :only (split)]
-     'clojure.contrib.repl-utils)
+     'clojure.contrib.repl-utils
+     'clojure.contrib.combinatorics
+     'clojure.set)
+
 
 (defn digits [number]
   (map #(. Integer parseInt % 10) 
@@ -95,6 +98,31 @@
     false
     (= 1 (count (prime-factors n)))))
 
+(defn divisors# [n]
+  (if (>= 1 n)
+    1
+    (count (set (map #(reduce * %) (subsets (prime-factors n)))))))
 
+(defn divisors [n]
+  (if (>= 1 n)
+      #{1}
+      (set (map #(reduce * %) (subsets (prime-factors n))))))
 
+(defn proper-divisors [n]
+  (disj (divisors n) n))
+
+(defn proper-divisors# [n]
+  (cond (prime? n) 1
+	:else
+	(count (disj (set (map #(reduce * %) (subsets (prime-factors n)))) n))))
+
+(defn sum-of-proper-divisors [n] (reduce + (proper-divisors n)))
+
+; http://en.wikipedia.org/wiki/Divisor_function
+; Sigma(p^n) = [p^(n+1)]-1/(p-1)
+
+(defn amicable-pair [a b]
+  (and (not (= a b) (prime? a) (prime? b)) 
+       (= (sum-of-proper-divisors a) b) 
+       (= (sum-of-proper-divisors b) a)))
 
