@@ -53,6 +53,11 @@
        0
        (/ (estimate-continued-fraction (rest fraction))))))
 
+;; user> (estimate-continued-fraction [4 2 6 7])
+;; 415/93
+;; user> (estimate-continued-fraction (take 10 continued-fraction-e))
+;; 1457/536
+
 ;; user> (estimate-continued-fraction (take 100 continued-fraction-e))
 ;; 6963524437876961749120273824619538346438023188214475670667/2561737478789858711161539537921323010415623148113041714756
 ;; (load "tools")
