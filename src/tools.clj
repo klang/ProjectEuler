@@ -126,3 +126,17 @@
        (= (sum-of-proper-divisors a) b) 
        (= (sum-of-proper-divisors b) a)))
 
+;; http://groups.google.com/group/k12.ed.math/browse_thread/thread/19f74d278e88b65d/bd50b5ae25c74465?lnk=st&q=computing+euler+totient+function&rnum=4&pli=1
+;; translated from scheme
+(defn rec-totient [n]
+  (loop [tot 0, pos (- n 1)]
+    (if (> pos 0)
+      (if (= 1 (gcd n pos))
+	(recur (+ tot 1) (- pos 1))
+	(recur tot (- pos 1)))
+      tot)))
+
+(defn totient [n]
+  "totient(n) = n * (1 - 1/p1)(1 - 1/p2)(1 - 1/p3)...(1 - 1/pm) 
+where p1...pm are the unique prime factors of n."
+  (* n (reduce * (map #(- 1 (/ 1 %)) (set (factors n))))))
