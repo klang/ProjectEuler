@@ -2,6 +2,7 @@
      '[ clojure.contrib.lazy-seqs :only (primes)]
      '[clojure.contrib.math :only (expt sqrt exact-integer-sqrt)]
      '[clojure.contrib.str-utils2 :only (split)]
+     'clojure.contrib.math
      'clojure.contrib.repl-utils
      'clojure.contrib.combinatorics
      'clojure.set)
