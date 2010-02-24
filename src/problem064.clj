@@ -7,8 +7,8 @@
 ; multimethod (rational? number)   --> [a0 a1 a2 a3]  (cycle [a1 a2 a3])
 ; rational-numbers                 --> [a0 a1 a2 a3]
 
-(defn contiuned-fraction-for-sqrts [S]
-  "(contiuned-fraction-for-sqrts S) expects any ny natural number which is not a perfect square. returns [a0 a1 a2 a3 .. an] where (a1 .. an) is cyclic.
+(defn continued-fraction-for-sqrts [S]
+  "(continued-fraction-for-sqrts S) expects any ny natural number which is not a perfect square. returns [a0 a1 a2 a3 .. an] where (a1 .. an) is cyclic.
 The calculation is based on http://en.wikipedia.org/wiki/Methods_of_computing_square_roots#Continued_fraction_expansion"
   (let [s (first (exact-integer-sqrt S))]
     (loop [m0 0 d0 1 a0 s
@@ -30,17 +30,17 @@ The calculation is based on http://en.wikipedia.org/wiki/Methods_of_computing_sq
   (- (count continued-fraction) 1))
 
 (deftest test-continued-fraction-for-sqrts
-  (is (= 1 (period (contiuned-fraction-for-sqrts 2))))
-  (is (= 2 (period (contiuned-fraction-for-sqrts 3))))
-  (is (= 1 (period (contiuned-fraction-for-sqrts 5))))
-  (is (= 2 (period (contiuned-fraction-for-sqrts 6))))
-  (is (= 4 (period (contiuned-fraction-for-sqrts 7))))
-  (is (= 2 (period (contiuned-fraction-for-sqrts 8))))
-  (is (= 1 (period (contiuned-fraction-for-sqrts 10))))
-  (is (= 2 (period (contiuned-fraction-for-sqrts 11))))
-  (is (= 2 (period (contiuned-fraction-for-sqrts 12))))
-  (is (= 5 (period (contiuned-fraction-for-sqrts 13))))
-  (is (= 6 (period (contiuned-fraction-for-sqrts 114)))))
+  (is (= 1 (period (continued-fraction-for-sqrts 2))))
+  (is (= 2 (period (continued-fraction-for-sqrts 3))))
+  (is (= 1 (period (continued-fraction-for-sqrts 5))))
+  (is (= 2 (period (continued-fraction-for-sqrts 6))))
+  (is (= 4 (period (continued-fraction-for-sqrts 7))))
+  (is (= 2 (period (continued-fraction-for-sqrts 8))))
+  (is (= 1 (period (continued-fraction-for-sqrts 10))))
+  (is (= 2 (period (continued-fraction-for-sqrts 11))))
+  (is (= 2 (period (continued-fraction-for-sqrts 12))))
+  (is (= 5 (period (continued-fraction-for-sqrts 13))))
+  (is (= 6 (period (continued-fraction-for-sqrts 114)))))
 
 (defn perfect-square? [n]
   (zero? (second (exact-integer-sqrt n))))
@@ -53,12 +53,12 @@ The calculation is based on http://en.wikipedia.org/wiki/Methods_of_computing_sq
 
 (defn count-odd-periods [N]
   (count (filter odd-period? 
-		 (map #(contiuned-fraction-for-sqrts %) 
+		 (map #(continued-fraction-for-sqrts %) 
 		      (take-while #(<= % N) irrational-squares)))))
 
 (defn count-odd-periods-b [N]
   (count (filter odd-period? 
-		 (map #(contiuned-fraction-for-sqrts %) 
+		 (map #(continued-fraction-for-sqrts %) 
 		      (take-while #(<= % N) not-perfect-squares)))))
 
 (deftest test-count-odd-periods
