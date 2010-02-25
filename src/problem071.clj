@@ -86,3 +86,22 @@ Repeating parts starting with zeros are not supported.
 ;;(for [d 1000000 n (range 428571 d) :when (and (= 1 (gcd n d)) )] [n d])
 ;(filter #(<= % 3/7) (sort (for [d (range 1 101) n (range 1 d) :when (and (= 1 (gcd n d)) (< (/ n d) 3/7))] (/ n d))))
 
+(defn find-max [a b N]
+  "Implements the algorithm presented in 071_overview.pdf" 
+  (loop [bestNum 0
+	 bestDenom 1
+	 Ns (range 2 N)]
+    (if (empty? Ns)
+      (/ bestNum bestDenom)
+      (let [currDenom (first Ns)
+	    currNum (quot (- (* a currDenom) 1) b)]
+	(if (< (* bestNum currDenom) (* currNum bestDenom))
+	  (recur currNum currDenom (rest Ns))
+	  (recur bestNum bestDenom (rest Ns)))))))
+
+;; (sort (for [d (range 1 8) n (range 1 d) :when (= 1 (gcd n d))] (/ n d)))
+;; (find-max 3 7 8)
+
+;; user> (time (find-max 3 7 1000000))
+;; "Elapsed time: 1867.093735 msecs"
+;; 428570/999997
