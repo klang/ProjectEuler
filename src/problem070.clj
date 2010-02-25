@@ -2,10 +2,6 @@
 (use 'clojure.contrib.math 'clojure.set)
 
 (defn totient-permutation? [number]
-  (= (set (digits (totient number))) 
-     (set (digits number))))
-
-(defn totient-permutation? [number]
   (= (sort (digits (totient number))) 
      (sort (digits number))))
 
@@ -14,48 +10,36 @@
   (is (= (set (digits (totient 87109))) (set (digits 79180))))
   (is (totient-permutation? 87109)))
 
-;; user> (time (count (range 1 (expt 10 7))))
-;; "Elapsed time: 7230.823581 msecs"
-;; 9999999
-
-;(reduce min (map #(/ (- % 1) %) (take 100 primes)))
-; (totient p) = (- p 1) for p in primes
-
-;(every? #(and true %) (map #(totient-permutation?%) (take 100 primes)))
-;false
-
 (def totient-permutations 
      (filter #(totient-permutation? %) (iterate inc 2)))
 
-(def totient-ratios
-     (map #(/ % (totient %)) totient-permutations))
+; brute force .. 
+(defn n-for-min-totient-permutation-ratios [limit]
+  (loop [tp totient-permutations
+	 currentN (first tp) 
+	 currentMin (/ (first tp) (totient (first tp)))]
+    (if (or (empty? tp) ( < limit (first tp)))
+      (list currentN currentMin)
+      (let [thisRatio (/ (first tp) (totient (first tp)))]
+	(if (<= thisRatio currentMin)
+	  (do (println (list (first tp) thisRatio)) (recur (rest tp) (first tp) thisRatio ))
+	  (do (println (list (first (rest tp)))) (recur (rest tp) currentN currentMin)))))))
 
-(defn min-totient-ratios [limit]
-  (reduce min (map #(/ % (totient %)) 
-		   (take-while #(< % limit) totient-permutations))))
-
-(def totient (memoize totient))
-
-(def tp (take-while #(< % (expt 10 7)) totient-permutations))
-;; user> (time (count tp))
-;; "Elapsed time: 0.372115 msecs"
-;; 200
-
-;; now we are cooking!
-
-(def tpr (map #(/ % (totient %)) tp))
-
-(defn n-for-min-totient-permutation-ratios []
-  (loop [n 10 m 10
-	 tots (map (fn [n] [n (/ n (totient n))]) tp)]
-    (if (empty? tots)
-      (list n m)
-      (if (> m (second (first tots)))
-	(recur (first (first tots)) 
-	       (second (first tots)) 
-	       (rest tots))
-	(recur n m (rest tots))))))
-
-;; user> (n-for-min-totient-permutation-ratios)
-;; (400399 400399/399040)
-;; wrong (somehow tp was not calculated again after changing limit)
+;; user> (time (n-for-min-totient-permutation-ratios 10000000) )
+;; (5380657 5380657/5375860)
+;; (6018163 6018163/6013168)
+;; (6636841 6636841/6631684)
+;; (7026037 7026037/7020736)
+;; (7357291 7357291/7351792)
+;; (7507321 7507321/7501732)
+;; (8316907)
+;; (8316907 8316907/8310976)
+;; (8319823 8319823/8313928)
+;; (8326170)
+;; ---
+;; (9970632)
+;; (9983167)
+;; (10101409)
+;; "Elapsed time: 5498767.682737 msecs"
+;; (8319823 8319823/8313928)
+;; 
