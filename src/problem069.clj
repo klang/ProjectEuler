@@ -1,10 +1,5 @@
 (load "tools")
 
-(defn totient [n]
-  "totient(n) = n * (1 - 1/p1)(1 - 1/p2)(1 - 1/p3)...(1 - 1/pm) 
-where p1...pm are the unique prime factors of n."
-  (* n (reduce * (map #(- 1 (/ 1 %)) (set (prime-factors n))))))
-
 (defn n-for-max-totient-ratios [limit]
   (loop [n 1 m 1
 	 tots (map (fn [n] [n (/ n (totient n))]) 
