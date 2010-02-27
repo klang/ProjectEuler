@@ -29,3 +29,25 @@
 ;; .. method not efficient for target limit (takes way more than a minute)
 
 ; (+ 1/3 1/12000)
+
+(defn find-min [a b N]
+  "Implements the algorithm presented in 071_overview.pdf" 
+  (loop [bestNum 0
+	 bestDenom 1
+	 Ns (range 2 N)
+	 n 0]
+    (if (empty? Ns)
+      (list (/ bestNum bestDenom) n)
+      (let [currDenom (first Ns)
+	    currNum (quot (- (* a currDenom) 1) b)]
+	(if (< (* bestNum currDenom) (* currNum bestDenom))
+	  (recur currNum currDenom (rest Ns) (if (< 1/2 currNum) (inc n)))
+	  (recur bestNum bestDenom (rest Ns) (inc n))
+	  )))))
+
+;; (sort (for [d (range 1 8) n (range 1 d) :when (= 1 (gcd n d))] (/ n d)))
+;; (find-max 3 7 8)
+
+;; user> (time (find-max 3 7 1000000))
+;; "Elapsed time: 1867.093735 msecs"
+;; 428570/999997
