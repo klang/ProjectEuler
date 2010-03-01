@@ -1,6 +1,7 @@
 ;; http://en.wikipedia.org/wiki/Partition_(number_theory)
+(ns partitions 
+  (:use clojure.contrib.math))
 
-(use 'clojure.contrib.math)
 ;; floor
 
 ;; intermediate function
@@ -11,7 +12,7 @@
     (= k n) 1
     :else (+ (p (+ k 1) n) (p k (- n k)))))
 
-(def p (memoize p))
+(def p (memoize p))p
 
 ;   n    0  1  2  3  4  5   6   7   8   9  10  11  12   13   14   15   16   17   18   19
 ; p(n)   1  1  2  3  5  7  11  15  22  30  42  56  77  101  135  176  231  297  385  490
@@ -64,8 +65,8 @@
 (defn partitions [n]
   "returns the partitions of n as a list")
 
+;; "lazy sequence returning partitions of p(10)"
 (def p10 
-     "lazy sequence returning partitions of p(10)"
      (partitions 10))
 
 (defn partitions# [n]
@@ -73,48 +74,75 @@
   (pn n))
 
 
+(defn partitions [n pool]
+  "pool of numbers to take from when partitioning n. pool could be primes"
+  nil)
 
 (defn partitions [n]
   "returns the partitions of n as a list")
 ;; http://www.site.uottawa.ca/~ivan/F49-int-part.pdf
-;; ZS1
-(defn int_part [n]
-  (let [x (assoc (vec (take n (repeat 1))) 0 n ) ; [n 1 1 1 .. 1]
-	m 1 h 0                                  ; vectors index at 0
-	output (conj '() (x 0))
-	]
-    (do (println output))
-    (while (not (= 1 (x 0)))
+;; Fast Algorithms for generating integer partitions
+;; Antoine Zoghbi and Ivan Stojmenović
+;; ZS1 - anti-lexicographic order 
+;; ([5], [4 1], [3 2], [3 1 1], [2 2 1], [2 1 1 1], [1 1 1 1 1])
+;; ZS1 - anti-lexicographic order
+;; (defn x [n] (assoc (vec (take n (repeat 1))) 0 n)) 	;; x  [n 1 1 1 .. 1]
+;; 
+(let [n 5
+      x (assoc (vec (take n (repeat 1))) 0 n )
+      m 0 
+      h 0]
+  (loop [r 2 t 3] 
+    (when (> t r) 
+      (do (inc h) 
+	  (assoc x h r) 
+	  (dec t) 
+	  (do (println (list r t x)))
+	  ))))
+
+(defn zs1 [n]
+  (loop [x (assoc (vec (take n (repeat 1))) 0 n ), m 0, h 0, output (conj [] (x 0))]
+    (do (println (x 0)))
+    (if (= (x 0) 1) 
+      output
       (if (= (x h) 2)
-	(do (assoc x h 1) (inc m) (dec h))
-	(let [r (- (x h) 1)
-	      t (- m (+ h 1))
-	      (assoc x h r)]
-	  (while (>= t r)
-	    (do (inc h) (assoc x h r) ())))
-	
-	)
-      )
-    x
+	(list (assoc x h 1) (inc m) (dec h) (conj output (subvec x 0 (+ m 1))))
+	(list (assoc x h 1) (inc m) (dec h) (conj output (subvec x 0 (+ m 1))))))
     )
   )
-;; def int_part(n):
-;;     x=[1 for i in range(n+1)]
-;;     x[1]=n; m=1; h=1
-;;     yield [x[1]]
-;;     while x[1]!=1:
-;;         if x[h]==2:
-;;             m+=1; x[h]=1; h-=1
-;;         else:
-;;             r=x[h]-1; t=m-h+1; x[h]=r
-;;             while t>=r:
-;;                 h+=1; x[h]=r; t-=r
-;;                 if t==0: m=h
-;;                 else: m=h+1
-;;                 if t>1:
-;;                     h+=1; x[h]=t
-;;         yield x[1:m+1]
-;; 
+
+(defn ZS1 [n]
+  (loop [x (assoc (vec (take n (repeat 1))) 0 n ), m 0, h 0, output (conj [] (x 0)) ]
+;    (do (println (x 0)))
+    (if (= (x 0) 1) ;; the last iteration will be [1 1 1 1 .. 1] 
+      output
+      (if (= (x h) 2)
+	;             x           m       h        output            
+	(recur (assoc x h 1) (inc m) (dec h) (conj output (subvec x 0 (+ m 1))))
+	(let [r (- (x h) 1)     ;; r = x[h]-1
+	      t (- m (- h 1))   ;; t = m-h+1 = m - (h - 1)
+	      x (assoc x h r)   ;; x[h]=r         x should be transient for this to make sense
+	      ]
+
+	  (while ())
+	  (if (zero? t))
+	  ;             x           m       h        output            
+	  (recur     (if (zero? t) h (inc h)) (if (> t 1)) (conj output (subvec x 0 m)) )
+	  
+	  )
+	)
+      )
+
+      (do (println (subvec x 0 m)))
+      )))
+
+
+
+
+
+
+
+
 
 
 (defn my-combinations

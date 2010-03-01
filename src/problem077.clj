@@ -7,3 +7,8 @@
 ;; 2 + 2 + 2 + 2 + 2
 
 ;; What is the first value which can be written as the sum of primes in over five thousand different ways?
+(load "partitions")
+
+;; (p 1 30)
+;; 5604
+
