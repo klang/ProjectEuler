@@ -59,3 +59,15 @@
 ;; (1/4 2/5 1/5 1/2)
 ;; user> (reduce * (map (fn [[n d]] (/ n d)) (filter #(unorthodox-cancelling? %) f)))
 ;; 1/100
+
+;; beautiful code in Haskell
+;; xy/yz = x/z
+;; (10x + y)/(10y+z) = x/z
+;; 9xz + yz = 10xy
+;; 
+;;[(10*x+y,10*y+z) | x <- [1..9], y <- [1..9], z <- [1..9], x /= y , (9*x*z) + (y*z) == (10*x*y)]
+
+;; beautiful translation to Clojure
+(for [x (range 1 10) y (range 1 10) z (range 1 10) 
+      :when (and (not (= x y)) (= (+ (* 9 x z) (* y z)) (* 10 x y)))]
+  [(+ (* 10 x) y) (+ (* 10 y) z)])
