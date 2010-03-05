@@ -96,7 +96,3 @@
 ;; "Elapsed time: 555.710465 msecs"
 ;; 840
 ;; much much better
-
-
-
-(for [a (range 2, (+ (/ p 4) 1)) :when (zero? (mod (- (* p p) (* 2 p a)) (- (* 2 p) (* 2 a))))] 1)
