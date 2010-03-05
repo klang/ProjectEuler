@@ -10,7 +10,8 @@
      (for [a (range 1 p) 
 	   b (range a p) 
 	   :when (and (zero? (second (exact-integer-sqrt (+ (* a a) (* b b)))))
-		      (= (+ a b (first (exact-integer-sqrt (+ (* a a) (* b b))))) p))]        [a b (first (exact-integer-sqrt (+ (* a a) (* b b))))]))
+		      (= (+ a b (first (exact-integer-sqrt (+ (* a a) (* b b))))) p))]
+        [a b (first (exact-integer-sqrt (+ (* a a) (* b b))))]))
 
 ;(filter #(not (zero? (second %))) (map (fn [a] [a (count (tri a))]) (range 1 20)))
 
@@ -75,26 +76,27 @@
   ;; print smax
   )
 
-
-
-(for [p (range 1 1001) 
-      a (range 2, (+ (/ p 4) 1)) 
-      :when (zero? (mod (- (* p p) (* 2 p a))
-			(- (* 2 p) (* 2 a))))] p)
+;; (for [a (range 2, (+ (/ p 4) 1)) :when (zero? (mod (- (* p p) (* 2 p a)) (- (* 2 p) (* 2 a))))] 1) 
 
 (defn p39 [limit]
   (loop [mxt 0 mxi 0 p 1]
     (if (< limit p)
-      (list mxi mxt)
-      (let [t 0]
-	(for [a (range 2, (+ (/ p 4) 1))]
-	  (if (zero? (mod (- (* p p) (* 2 p a))
-			  (- (* 2 p) (* 2 a))))
-	    (inc t)))
-	(if (> t (smax 0))
+      mxi
+      (let [t (reduce + 
+		        (for [a (range 2, (+ (/ p 4) 1))] 
+			  (if (zero? (mod (- (* p p) 
+					     (* 2 p a)) 
+					  (- (* 2 p) (* 2 a)))) 
+			    1 0)))]
+	(if (< mxt t)
 	  (recur t p (inc p))
-	  (recur mxt mxi (inc p)))
-	))))
+	  (recur mxt mxi (inc p)))))))
+
+;; user> (time (p39 1000))
+;; "Elapsed time: 555.710465 msecs"
+;; 840
+;; much much better
 
 
 
+(for [a (range 2, (+ (/ p 4) 1)) :when (zero? (mod (- (* p p) (* 2 p a)) (- (* 2 p) (* 2 a))))] 1)
