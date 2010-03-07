@@ -93,6 +93,11 @@
 	  ;; try with the next prime
 	  (recur pfs (rest p) number))))))
 
+; though interesting, there really is no point in using the above implementation
+(def factors prime-factors)
+
+
+
 ;; prime-factors has an assert that I keep falling in when using prime? in a functional way
 (defn prime? [n]
   (if (>= 1 n)
