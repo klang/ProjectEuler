@@ -27,3 +27,26 @@
 ;; 
 ;; NOTE: As there are only 16384 routes, it is possible to solve this problem by trying every route. However, Problem 67, is the same challenge with a triangle containing one-hundred rows; it cannot be solved by brute force, and requires a clever method! ;o)
 
+
+(def triangle-txt (slurp "triangle-018.txt"))
+
+(defn str2int [v]
+  (map #(. Integer parseInt % 10) v))
+
+(def triangle (into [] (map #(into [] ( str2int %)) 
+			    (map #(split % #" ") (split triangle-txt #"\n")))))
+
+(def t [[3] [7 4] [2 4 6] [8 5 9 3]])
+
+(defn edges [G]
+  "return all the edges of G"
+  (for [l (range 0 (- (count G) 1)) 
+	i (range 0 (count (G l))) 
+	j (range i (+ i 2))] 
+    [l i j]))
+
+(defn value [G [l i j]]
+  "return the value of the edge"
+  (vector (nth (G l) i) (nth (G (+ l 1)) j)))
+
+(map #(value triangle %) (edges triangle))
