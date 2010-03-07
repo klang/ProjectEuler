@@ -88,8 +88,6 @@
   ;; v0 - v1 and v - v1
   )
 
-(defn det [[a1 a2] [b1 b2]]
-  (- (* a1 b2) (* a2 b1)))
 (defn inside-by-cross-product [[a1 a2 b1 b2 c1 c2]]
   (let [x1 (<= 0 (det [a1 a2] [b1 b2]))
 	x2 (<= 0 (det [b1 b2] [c1 c2]))
