@@ -22,16 +22,11 @@
 ;; [49999991]
 ;; this number is the largest prime that can be paired with a number below 10^8
 (load "tools")
-(defn primes-below [a-big-number a-small-prime]
-  (let [limit (floor (+ (/ a-big-number a-small-prime) 1))]
-    (take (- a-small-prime 1) (filter prime? (range limit 2 -1)))))
 
+;; http://reference.wolfram.com/mathematica/ref/PrimePi.html
 (defn pi [n]
   "number of primes less than or equal to n."
   (count (take-while #(<= % n) primes)))
-
-(defn strange [n]
-  (map #(factors %) (range (floor (/ (expt 10 8) n))  (floor (- (/ (expt 10 8) n) 10)) -1)))
 
 ;(count (filter #(= 2 (count (factors %))) (range 2 (expt 10 3))))
 ;(map #(factor %) (filter #(= 2 (count (factors %))) (range 2 (expt 10 3))))
@@ -39,11 +34,25 @@
   ;; (- (pi (/ limit p)) (pi (- p 1)))
   ;; to solve the actual problem the first run, involves counting the number of primes 
   ;; below about 50 million .. which can not be done with the current version of pi does
-  ;; not handle well, as it involves generating just over 5 million primes.
+  ;; not handle well, as it involves generating just over 4 million primes.
   ;; if these are cached, the rest of the calculations should be fast .. 
   ;; the one minute rule is going to be broken .. find another way to do it.
-  )
+  (let [c (.intValue (floor (+ (/ (Math/log limit) (Math/log 2)) 1)))]
+    (loop [res 0 p primes i 0 ]
+      (let [this-prime (first p), primes-under (pi (/ limit this-prime)), prime-number i]
+	(do (println {:this this-prime :number prime-number :runs c :under primes-under :limit (.intValue (* 1. (/ limit this-prime))) :sum res :diff (- primes-under prime-number)}))
+	(if (< primes-under prime-number) res
+	    (recur (+ res (- primes-under prime-number))
+	     (rest p) (inc i) ))))))
 
+(deftest test-two-factor-integers-below
+  (is (=      3 (two-factor-integers-below (- (expt 10 1) 1))))
+  (is (=     34 (two-factor-integers-below (expt 10 2))))
+  (is (=    299 (two-factor-integers-below (expt 10 3))))
+  ;(is (=   2625 (two-factor-integers-below (expt 10 4))))
+  ;(is (=  23378 (two-factor-integers-below (expt 10 5))))
+  ;(is (= 210035 (two-factor-integers-below (expt 10 6))))
+  )
 ;;user> (/ (Math/log (expt 10 8)) (Math/log 2))
 ;;26.5754247590989
 ;;  (floor (+ (/ (Math/log (expt 10 8)) (Math/log 2)) 1))
