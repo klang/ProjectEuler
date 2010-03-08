@@ -10,11 +10,11 @@
 (use 'clojure.contrib.test-is)
 
 ;; lazy sequences
-(defn triangles [] 
+(def triangles 
   (map (fn [n] (quot (* n (+ n 1)) 2)) (iterate inc 1)))
-(defn pentagonals [] 
+(def pentagonals 
   (map (fn [n] (quot (* n (- (* 3 n) 1)) 2)) (iterate inc 1)))
-(defn hexagonals [] 
+(def hexagonals 
   (map (fn [n] (* n (- (* 2 n) 1))) (iterate inc 1)))
 
 ;; as functions
