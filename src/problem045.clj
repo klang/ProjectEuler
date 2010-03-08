@@ -26,11 +26,11 @@
 (def tri (set (take 100000 (triangles))))
 (def pen (set (take 100000 (pentagonals))))
 (def hex (set (take 100000 (hexagonals))))
-(intersection tri pen hex)
+;(intersection tri pen hex)
 ; #{1 1533776805 40755}
 
 (deftest test-problem045
   (is (= 40755 (triangle 285) (pentagonal 165) (hexagonal 143))
-      (= 1533776805 (triangel 55385) (pentagonal 31977) (hexagonals 27693))))
+      (= 1533776805 (triangle 55385) (pentagonal 31977) (hexagonals 27693))))
 
 ;; (run-tests)
