@@ -39,13 +39,37 @@
 
 ;; why am I holding onto the head?
 
-(defn f2 []
-  (map first (iterate 
-		(fn [[c n dn nn dnn]] [
-				       (if (= dn dnn) (+ c 1) c)
-				       nn
-				       dnn
-				       (+ nn 1)
-				       (divisors# (+ nn 1))
-				       ]) [0 2 2 3 2])))
+(defn f2 [limit] (for [n (range 2 limit) :when (= (divisors# n) (divisors# (+ n 1)))] n))
+;; user> (time (count (f2 (expt 10 4))))
+;; "Elapsed time: 6969.99566 msecs"
+;; 1119
 
+(defn free-mem [] (.freeMemory (Runtime/getRuntime)))
+
+(def pfs (map #(prime-factors %) (iterate inc 2)))
+(def divs (map #(divisors# %) (iterate inc 2)))
+(defn f3 [limit] 
+  (loop [d divs, c 0 , i 0]
+    (if (<  limit i)
+      c
+      (recur (rest d) (if (= (first d) (second d)) (inc c) c) (inc i)))))
+;; user> (time (f3 10000))
+;; "Elapsed time: 5636.747636 msecs"
+;; 1119
+;; user> (time (f3 100000))
+;; "Elapsed time: 73683.396872 msecs"
+;; 10585
+
+;; what is special about this number?
+;;user> (time (f3 131069))
+;; Evaluation aborted.
+;; user> (divisors# 131069)
+;; 4
+;; user> (divisors# 131070)
+;; 32
+;; user> (count (take 131070 divs))
+;; 131070
+;; user> (count (take 131071 divs))
+;; ; Evaluation aborted.
+;; user> (prime? 131071)
+;; true
