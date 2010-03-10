@@ -2,6 +2,7 @@
 
 ;; For example, 14 has the positive divisors 1, 2, 7, 14 while 15 has 1, 3, 5, 15.
 (load "tools")
+
 (defn f [limit]
   (loop [n 2, dn (divisors# n), c 0]
     (if (< limit n) 
@@ -45,14 +46,20 @@
 ;; 1119
 
 (defn free-mem [] (.freeMemory (Runtime/getRuntime)))
+(defn total-mem [] (.totalMemory (Runtime/getRuntime)))
+(defn max-mem [] (.maxMemory (Runtime/getRuntime)))
+
 
 (def pfs (map #(prime-factors %) (iterate inc 2)))
 (def divs (map #(divisors# %) (iterate inc 2)))
+
 (defn f3 [limit] 
   (loop [d divs, c 0 , i 0]
     (if (<  limit i)
       c
-      (recur (rest d) (if (= (first d) (second d)) (inc c) c) (inc i)))))
+      (do (println {:c c :i i :d (first d)})
+	  (recur (rest d) (if (= (first d) (second d)) (inc c) c) (inc i))))))
+
 ;; user> (time (f3 10000))
 ;; "Elapsed time: 5636.747636 msecs"
 ;; 1119
@@ -73,3 +80,18 @@
 ;; ; Evaluation aborted.
 ;; user> (prime? 131071)
 ;; true
+
+;; generating and remembering more than 131070 primes will take up the 64M default memory
+;;(custom-set-variables '(swank-clojure-extra-vm-args '("-server" "-Xmx512M")) )
+
+;; user> (time (f3 10000))
+;; "Elapsed time: 8026.056974 msecs"
+;; 1119
+;; user> (time (f3 10000000))
+
+
+(def f4
+  (loop [d divs, c 0 , i (expt 10 2)]
+    (if (<  0 i)
+      c
+      (recur (rest d) (if (= (first d) (second d)) (inc c) c) (dec i)))))
