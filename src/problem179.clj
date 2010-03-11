@@ -60,6 +60,13 @@
       (do (println {:c c :i i :d (first d)})
 	  (recur (rest d) (if (= (first d) (second d)) (inc c) c) (inc i))))))
 
+
+(defn f3 [limit] 
+  (loop [d (map #(primes/divisors# %) (iterate inc 2)), c 0 , i 0]
+    (if (<  limit i)
+      c
+;      (do (println {:c c :i i :d (first d)}))
+      (recur (rest d) (if (= (first d) (second d)) (inc c) c) (inc i)))))
 ;; user> (time (f3 10000))
 ;; "Elapsed time: 5636.747636 msecs"
 ;; 1119
@@ -95,3 +102,16 @@
     (if (<  0 i)
       c
       (recur (rest d) (if (= (first d) (second d)) (inc c) c) (dec i)))))
+
+
+(defn f5 [start limit]
+  (loop [n start, dn (divisors# n), c 0]
+    (if (< limit n) 
+      c
+      (let [nn (inc n)
+	    dnn (divisors# nn)
+	    c   (if (= dn dnn) (inc c) c)]
+	(do (println {:c c :i n :d dn})
+	    (recur nn dnn c))))))
+
+ (f5 2 1000000)
