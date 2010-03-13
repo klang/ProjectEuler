@@ -18,6 +18,15 @@
   (is (= 7 (A 2 2)))
   (is (= 125 (A 3 4))))
 
+;;A(m,n)       n=0             n=1             n=2         n=3            n=4         n=5
+;; m=0           1               2               3           4              5           6
+;; m=1           2               3               4           5              6           7
+;; m=2           3               5               7           9             11          13
+;; m=3           5              13              29          61            125         253
+;; m=4          13           65533        265536-3   2265536-3 A(3,2265536-3) A(3,A(4,4))
+;; m=5       65533      A(4,65533) A(4,A(4,65533)) A(4,A(5,2))    A(4,A(5,3)) A(4,A(5,4))
+;; m=6  A(4,65533) A(5,A(4,65533))     A(5,A(6,1)) A(5,A(6,2))    A(5,A(6,3)) A(5,A(6,4))
+
 ;; http://en.wikipedia.org/wiki/Ackermann_function
 
 ;; If we define the function f (n) = A(n, n), which increases both m and n at the same time, we have a function of one variable that dwarfs every primitive recursive function, including very fast-growing functions such as the exponential function, the factorial function, multi- and superfactorial functions, and even functions defined using Knuth's up-arrow notation (except when the indexed up-arrow is used).
@@ -25,3 +34,9 @@
 ;; (reduce + (map #(A % %) (range 0 4)))
 
 ;; well .. as we do not have infinite memory on this machine .. 
+
+;; from RosettaCode.org
+(defn ackermann [m n] 
+  (cond (zero? m) (inc n)
+        (zero? n) (ackermann (dec m) 1)
+        :else (ackermann (dec m) (ackermann m (dec n)))))
