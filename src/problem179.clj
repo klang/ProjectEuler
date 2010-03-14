@@ -62,7 +62,7 @@
 
 
 (defn f3 [limit] 
-  (loop [d (map #(primes/divisors# %) (iterate inc 2)), c 0 , i 0]
+  (loop [d (map #(divisors# %) (iterate inc 2)), c 0 , i 0]
     (if (<  limit i)
       c
 ;      (do (println {:c c :i i :d (first d)}))
@@ -114,4 +114,4 @@
 	(do (println {:c c :i n :d dn})
 	    (recur nn dnn c))))))
 
- (f5 2 1000000)
+; (f5 2 1000000)
