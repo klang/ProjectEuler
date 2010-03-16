@@ -19,3 +19,7 @@
 ;;
 
 ;; (run-tests)
+
+;; easier way to select the last ten digits..
+(mod (problem048 1000) (expt 10 10))
+; 9110846700
