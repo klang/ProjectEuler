@@ -22,6 +22,7 @@
 ;                                                                 --1855times--
 (use 'clojure.contrib.math)
 
+;; http://en.wikipedia.org/wiki/Modular_exponentiation#Memory-efficient_method
 (defn mod-expt [base exp m]
   (loop [e 1, c base]
     (if (= e exp) c (recur (inc e) (mod (* c base) m)))))
@@ -38,6 +39,7 @@
 ;; with http://en.wikipedia.org/wiki/Binary_exponentiation 
 ;; as we do not have an optimal addition chain algorithm yet
 
+;;http://en.wikipedia.org/wiki/Modular_exponentiation#Right-to-left_binary_method
 (defn mod-expt-bin [base exponent modulus]
   (loop [result 1 base base
 	 exponent (reverse (Integer/toBinaryString exponent))]
