@@ -20,6 +20,7 @@
 ; 1777↑↑1855 = 1777↑(1777↑↑1854) = 1777↑(1777↑(1777↑↑1853)) =  1777↑1777↑ ..↑1777 
 ;                                                               \              /
 ;                                                                 --1855times--
+(use 'clojure.contrib.math)
 
 (defn mod-expt [base exp m]
   (loop [e 1, c base]
@@ -57,3 +58,18 @@
 ;; 99034097
 ;; .. a slight improvement over the 123353.921124 msecs :-D
 
+;; user> (time (mod-expt-bin 1777 1855 (expt 10 8)))
+;; "Elapsed time: 1.283125 msecs"
+;; 47576593
+;; ..
+
+;; 1777↑↑1855 = 1777↑(1777↑↑1854) = 1777↑(1777↑(1777↑↑1853)) =  1777↑1777↑ ..↑1777 
+;;                                                               \              /
+;;                                                                 --1855times--
+
+(defn hyper-mod-bin [a n b m]
+  (reduce #(mod-expt-bin %2 %1 m) (repeat (* (- n 1) b) a)))
+
+;; user> (time (hyper-mod-bin 1777 2 1855 (expt 10 8)))
+;; "Elapsed time: 235.245622 msecs"
+;; 95962097
