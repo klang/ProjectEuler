@@ -240,6 +240,10 @@
 (defn ↑↑↑↑ [a b]
   (reduce #(↑↑↑ %2 %1) (repeat b a)))
 
+
 ;; (time (- (↑↑ 2 7) 3 ))
 ;; (time (- (↑↑↑ 2 8) 3 ))
 ;; (time (- (↑↑↑↑ 2 9) 3 ))
+;; this is the key
+;;user> (mod-expt-bin 2 (↑↑ 2 7) (expt 14 7))
+;;10436864
