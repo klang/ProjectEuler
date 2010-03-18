@@ -6,7 +6,7 @@
 ;;  Find how many positive integers less than 10^16 are divisible by at least four distinct primes less than 100.
 
 (defn distinct-factors [n]
-  (count (set (prime-factors n))))
+  (count (distinct (prime-factors n))))
 
 (defn distinct-factors-less-than-100 [n]
   (count (filter #(< % 100) (set (prime-factors n)))))
