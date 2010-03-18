@@ -131,6 +131,11 @@
 (defn up-arrows [a n b]
   (repeat (* (- n 1) b) a))
 
+(deftest test-up-arrows
+  ;; example from http://en.wikipedia.org/wiki/Knuth's_up-arrow_notation
+  ;; 3↑↑↑2 = 3↑↑(3↑↑↑1) = 3↑↑3 = 3↑(3↑↑2) = 3↑(3↑(3↑1)) = 3↑3↑3
+  (is (= (up-arrows 3 3 2) (up-arrows 3 2 3))))
+
 ;;--------------
 
 (deftest test-up-arrow
@@ -221,3 +226,20 @@
 ;; 5
 ;; user> (mod (reduce + (map #(mod (g %) 7) (range 0 10))) 7)
 ;; 5
+
+
+(defn ↑ [a b]
+  (mod-expt-bin a b (expt 14 8))
+
+(defn ↑↑ [a b]
+  (reduce #(mod-expt-bin %2 %1 (expt 14 8)) (repeat b a)))
+
+(defn ↑↑↑ [a b]
+  (reduce #(↑↑ %2 %1) (repeat b a)))
+
+(defn ↑↑↑↑ [a b]
+  (reduce #(↑↑↑ %2 %1) (repeat b a)))
+
+;; (time (- (↑↑ 2 7) 3 ))
+;; (time (- (↑↑↑ 2 8) 3 ))
+;; (time (- (↑↑↑↑ 2 9) 3 ))
