@@ -1,0 +1,64 @@
+* jvm
+(custom-set-variables '(swank-clojure-extra-vm-args '("-server" "-Xmx64M")))
+* defwrk
+(load "~/projects/ProjectEuler/project.el")
+(find-file "~/projects/ProjectEuler/project.el")
+* tools
+** TODO 122 - Addition Chains could be used for problem 188
+
+* partitions
+** function that creates all the partitions of 'something'
+* primes
+** efficient representation of memoized primes
+* working
+** 282 - The Ackermann function
+* stuck
+** understanding
+*** 015 - Starting in the top left corner in a 20 by 20 grid, how many routes are there to the bottom right corner?
+** memory/time
+*** 179 - Consecutive positive divisors
+*** 023 - Find the sum of all the positive integers which cannot be written as the sum of two abundant numbers.
+* pipeline
+** 062 - Find the smallest cube for which exactly five permutations of its digits are cube.
+** 191 - Prize Strings
+** 018 - Find the maximum sum travelling from the top of the triangle to the base.
+** 031 - Investigating combinations of English currency denominations.
+** 032 - Find the sum of all numbers that can be written as pandigital products.
+** 038 - What is the largest 1 to 9 pandigital that can be formed by multiplying a fixed number by 1, 2, 3, ... ?
+** 043 - Find the sum of all pandigital numbers with an unusual sub-string divisibility property.
+** 044 - Find the smallest pair of pentagonal numbers whose sum and difference is pentagonal.
+** 046 - What is the smallest odd composite that cannot be written as the sum of a prime and twice a square?
+** 050 - Which prime, below one-million, can be written as the sum of the most consecutive primes?
+* done
+<2010-03-18 Thu> #64: 188 - The hyperexponentiation of a number
+<2010-03-14 Sun> #63: 124
+<2010-03-13 Sun> #62: 087
+<2010-03-12 Sun> #61: 059
+<2010-03-11 Sun> #60: 063, #59: 057
+<2010-03-08 Sun> #58: 187, #57: 102
+<2010-03-04 Sun> #56: 039
+<2010-03-02 Sun> #55: 033
+<2010-03-01 Sun> #54: 058
+<2010-02-27 Sun> #53: 097
+<2010-02-25 Sun> #52: 070, #51: 069
+<2010-02-24 Sun> #50: 080, #49: 064
+<2010-02-22 Sun> #48: 053
+<2010-02-21 Sun> #47: 064
+<2010-02-20 Sun> #46: 066
+<2010-02-21 Sun> #45: 022, #44: 071
+<2010-02-17 Sun> #43: 095
+<2010-02-15 Sun> #42: 076, #41: 026
+<2010-02-14 Sun> #40: 055
+<2010-02-13 Sun> #39: 029
+<2010-02-12 Sun> #38: 104, #37: 040
+<2010-02-11 Sun> #36: 011, #35: 092
+<2010-02-08 Sun> #34: 049
+<2010-02-07 Sun> #33: 056, #32: 052, #31: 027, #30: 037
+<2010-02-05 Sun> #29: 019
+<2010-02-04 Sun> #28: 047
+<2010-01-31 Sun> #27: 028, #26: 021, #25: 042
+<2010-01-30 Sun> #24: 017, #23: 041, #22: 038
+<2010-01-24 Sun> #21: 024, #20: 009, #19: 012, 
+<2010-01-23 Sun> #18: 005, #17: 045, #16: 018, 
+<2009-12-25 Sun> #1: 001, #2: 002, #3: 005, #4: 006
+    
