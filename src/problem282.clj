@@ -229,7 +229,7 @@
 
 
 (defn ↑ [a b]
-  (mod-expt-bin a b (expt 14 8))
+  (mod-expt-bin a b (expt 14 8)))
 
 (defn ↑↑ [a b]
   (reduce #(mod-expt-bin %2 %1 (expt 14 8)) (repeat b a)))
