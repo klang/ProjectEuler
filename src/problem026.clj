@@ -130,3 +130,20 @@ where p1...pm are the unique prime factors of n."
   "If the period of the repeating decimal of 1⁄p is equal to p − 1 then the repeating decimal part is called a cyclic number."
   (= (totient n) (- n 1)))
 
+;;-----
+;; http://samwiseandthestereotypical.blogspot.com/2008/12/clojure-project-euler-and-recurring.html
+
+(defn order [a n]
+  (first (filter #(= 1 (.modPow (bigint a) % (bigint n)))
+                 (map bigint (iterate inc 1)))))
+
+(defn decimal-period [n]
+  (cond (= 1 n) 0
+        (zero? (rem n 2)) (decimal-period (/ n 2))
+        (zero? (rem n 5)) (decimal-period (/ n 5))
+        true (order 10 n)))
+
+(defn p26 [n]
+  (let [nums (range 1 n) 
+        periods (map decimal-period nums)]
+    ((zipmap periods nums) (apply max periods))))
