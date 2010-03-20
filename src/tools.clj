@@ -20,9 +20,11 @@
 
 (defn digit-list [number]
   "convert number to digit list"
-  (loop [n number dl ()]
-    (if (zero? n) dl
-      (recur (quot n 10) (conj dl (rem n 10))))))
+  (cond (zero? number) (list 0)
+	:else
+	(loop [n number dl ()]
+	  (if (zero? n) dl
+	      (recur (quot n 10) (conj dl (rem n 10)))))))
 
 (defn digits [number] (digit-list number))
 
@@ -146,3 +148,8 @@
   "totient(n) = n * (1 - 1/p1)(1 - 1/p2)(1 - 1/p3)...(1 - 1/pm) 
 where p1...pm are the unique prime factors of n."
   (* n (reduce * (map #(- 1 (/ 1 %)) (set (prime-factors n))))))
+
+(defn totient [n]
+  "totient(n) = n * (1 - 1/p1)(1 - 1/p2)(1 - 1/p3)...(1 - 1/pm) 
+where p1...pm are the unique prime factors of n."
+  (* n (reduce * (map #(- 1 (/ 1 %)) (distinct (prime-factors n))))))
