@@ -10,6 +10,7 @@
 ** function that creates all the partitions of 'something'
 * primes
 ** efficient representation of memoized primes
+** found efficient prime checker .. use it for 179, 23 and one or two more
 * working
 ** 282 - The Ackermann function
 * stuck
