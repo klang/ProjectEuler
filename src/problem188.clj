@@ -45,11 +45,10 @@
 	 exponent (reverse (Integer/toBinaryString exponent))]
     (if (nil? (first exponent))
       result
-      (if (= (first exponent) \1)
-	(recur (mod (* result base) modulus) 
-	       (mod (* base base) modulus) (rest exponent))
-	(recur result 
-	       (mod (* base base) modulus) (rest exponent))))))
+      (recur (if (= (first exponent) \1)
+	       (mod (* result base) modulus)
+	       result)
+	     (mod (* base base) modulus) (rest exponent)))))
 
 
 ;; user> (time (mod-expt-bin 1777 1777 (expt 10 8)))
