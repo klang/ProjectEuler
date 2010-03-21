@@ -75,3 +75,16 @@
 ;; user> (time (hyper-mod-bin 1777 2 1855 (expt 10 8)))
 ;; "Elapsed time: 235.245622 msecs"
 ;; 95962097
+
+(defn exptm [base pow modulus]
+  "Binary exponentation kept down"
+  (.modPow (bigint base) (bigint pow) (bigint modulus)))
+
+(defn hyperm [a b m]
+  "returns a↑↑b mod m, keeps the results low"
+  ;(do (println (list a b m (repeat b a))))
+  (reduce #(exptm %2 %1 m) (repeat b a)))
+
+;; user> (time (hyperm 1777 1855 (expt 10 8)))
+;; "Elapsed time: 208.373776 msecs"
+;; 95962097
