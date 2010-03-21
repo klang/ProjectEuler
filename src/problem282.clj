@@ -247,3 +247,82 @@
 ;; this is the key
 ;;user> (mod-expt-bin 2 (↑↑ 2 7) (expt 14 7))
 ;;10436864
+
+;(reduce #(mod-expt-bin %2 %1 (expt 14 8)) [2 2 2 2 2 2 2])
+;(mod-expt-bin 2 (mod-expt-bin 2 (mod-expt-bin 2 65536 (expt 14 8))(expt 14 8) )(expt 14 8))
+
+;; corollary to Euler-Fermat's theorem : 
+;; a^b(mod c)= a^[b(mod phi(c))] (mod c) if gcd(a,c)=1. 
+
+;; gcd (2, 14^8) = 2 .. the theorem does not apply
+
+;; http://en.wikipedia.org/wiki/Modular_exponentiation#Right-to-left_binary_method
+
+;; user> (Integer/toBinaryString (expt 2 (expt 2 16)))
+;; "0"
+;; exptm returns bad results for bit powers.. unfortunately
+(defn exptm [base pow modulus]
+  "Binary exponentation kept down"
+  (loop [result 1 base base
+	 pow (reverse (Integer/toBinaryString pow))]
+    (if (nil? (first pow))
+      result
+      (if (= (first pow) \1)
+	(recur (mod (* result base) modulus) 
+	       (mod (* base base) modulus) (rest pow))
+	(recur result 
+	       (mod (* base base) modulus) (rest pow))))))
+
+(defn exptm [base pow modulus]
+  "Binary exponentation kept down"
+  (.modPow (bigint base) (bigint pow) (bigint modulus)))
+
+(defn hyper [a b]
+  "returns a↑↑b, grows very very fast."
+  (reduce #(expt %2 %1) (repeat b a)))
+
+(deftest test-hyper
+  (is (= (hyper 3 1) 3))
+  (is (= (hyper 3 2) 27))
+  (is (= (hyper 3 3) 7625597484987))
+  (is (= (hyper 2 1) 2))
+  (is (= (hyper 2 2) 4))
+  (is (= (hyper 2 3) 16))
+  (is (= (hyper 2 4) 65536))
+  ;;(is (= 19729 (count (digits (hyper 2 5)))))
+  ;;(is (= 19729 (count (digits (hyper 2 5)))))
+  (is (not (= (hyper 2 5) (hyper 3 3))))
+  )
+
+(defn hyperm [a b m]
+  "returns a↑↑b mod m, keeps the results low"
+  ;(do (println (list a b m (repeat b a))))
+  (reduce #(exptm %2 %1 m) (repeat b a)))
+
+(def hyperm (memoize hyperm))
+
+(defn hyper3m [a b m]
+  ;(do (println (list a b m)))
+  (reduce #(hyperm %1 %2 m) (repeat b a)))
+
+(def hyper3m (memoize hyper3m))
+
+(defn hyper4m [a b m]
+  (reduce #(hyper3m %1 %2 m) (repeat b a)))
+
+;user> (hyperm 2 7 (expt 14 8))
+;982905344
+;user> (hyper3m 3 8 (expt 14 8))
+;1457738491
+;user> (hyper4m 4 9 (expt 14 8))
+
+(defn print-arrows [n]
+  (apply str (repeat n "↑")))
+
+(defn knuth-arrow [a n b]
+  (cond 
+    (= n 1) (str a (print-arrows 1) b)
+    (= b 0) (str a)
+    :else (str a (print-arrows (- n 1)) "" (knuth-arrow a n (- b 1)) ""))
+  )
+
