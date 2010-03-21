@@ -42,13 +42,14 @@
 ;;http://en.wikipedia.org/wiki/Modular_exponentiation#Right-to-left_binary_method
 (defn mod-expt-bin [base exponent modulus]
   (loop [result 1 base base
-	 exponent (reverse (Integer/toBinaryString exponent))]
-    (if (nil? (first exponent))
+	 exponent exponent]
+    (if (= 0 exponent)
       result
-      (recur (if (= (first exponent) \1)
+      (recur (if (odd? exponent)
 	       (mod (* result base) modulus)
 	       result)
-	     (mod (* base base) modulus) (rest exponent)))))
+	     (mod (* base base) modulus) 
+	     (bit-shift-right exponent 1)))))
 
 
 ;; user> (time (mod-expt-bin 1777 1777 (expt 10 8)))
