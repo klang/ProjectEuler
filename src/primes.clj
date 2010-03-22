@@ -41,24 +41,3 @@
   (concat [2 3 5 7] (sieve (spin (wheel2357) 11))))
 
 ;------------------------
-(use 'clojure.contrib.combinatorics)
-(defn prime-factors [arg]
-  (assert (and (integer? arg) (>= arg 2)))
-  (loop [pfs [], n arg]  ; pfs is the vector of prime factors already determined
-    (if (= n 1)
-      pfs
-      (let [dps (for [p (primes) :while (<= (* p p) n) :when (zero? (rem n p))] p)
-            ps  (for [p dps, q (rest (iterate #(/ % p) n)) :while (integer? q)] p)]
-        (if (empty? dps)
-          (recur (conj pfs n), 1)
-          (recur (into pfs ps), (apply / n ps)))))))
-
-(defn prime? [n]
-  (if (>= 1 n)
-    false
-    (= 1 (count (prime-factors n)))))
-
-(defn divisors# [n]
-  (if (>= 1 n)
-    1
-    (count (set (map #(reduce * %) (subsets (prime-factors n)))))))
