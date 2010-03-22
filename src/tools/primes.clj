@@ -1,4 +1,4 @@
-(ns euler.tools.primes
+(ns tools.primes
   (:use [clojure.contrib.combinatorics]))
 (use '[clojure.contrib.lazy-seqs :only (primes)])
 

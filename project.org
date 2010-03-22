@@ -5,16 +5,15 @@
 (find-file "~/projects/ProjectEuler/project.el")
 * tools
 ** TODO 122 - Addition Chains could be used for problem 188
-
 * partitions
 ** function that creates all the partitions of 'something'
 * primes
 ** efficient representation of memoized primes
-** found efficient prime checker .. use it for 179, 23 and one or two more
+** found efficient prime checker .. use it for 179, 23, 216 and one or two more
 * working
-** 282 - The Ackermann function
 * stuck
 ** understanding
+*** 282 - The Ackermann function
 *** 015 - Starting in the top left corner in a 20 by 20 grid, how many routes are there to the bottom right corner?
 ** memory/time
 *** 179 - Consecutive positive divisors
