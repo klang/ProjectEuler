@@ -4,6 +4,7 @@
 ;(load "tools")
 (use 'tools.pseudo-primes
      '[tools.primes :only (prime-factors divisors# divisors)]
+     '[tools.java-wrappers :only (free-mem total-mem max-mem)]
      'clojure.contrib.combinatorics
      'clojure.set
      '[clojure.contrib.math :only (expt)])
@@ -49,11 +50,6 @@
 ;; user> (time (count (f2 (expt 10 4))))
 ;; "Elapsed time: 6969.99566 msecs"
 ;; 1119
-
-(defn free-mem [] (.freeMemory (Runtime/getRuntime)))
-(defn total-mem [] (.totalMemory (Runtime/getRuntime)))
-(defn max-mem [] (.maxMemory (Runtime/getRuntime)))
-
 
 (def pfs (map #(prime-factors %) (iterate inc 2)))
 (def divs (map #(divisors# %) (iterate inc 2)))
