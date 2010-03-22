@@ -3,19 +3,10 @@
 ;; For example, 14 has the positive divisors 1, 2, 7, 14 while 15 has 1, 3, 5, 15.
 ;(load "tools")
 (use 'tools.pseudo-primes
+     '[tools.primes :only (prime-factors divisors# divisors)]
      'clojure.contrib.combinatorics
      'clojure.set
      '[clojure.contrib.math :only (expt)])
-
-(defn divisors# [n]
-  (if (>= 1 n)
-    1
-    (count (distinct (map #(reduce * %) (subsets (prime-factors n)))))))
-
-(defn divisors [n]
-  (if (>= 1 n)
-      #{1}
-      (distinct (map #(reduce * %) (subsets (prime-factors n))))))
 
 (defn f [limit]
   (loop [n 2, dn (divisors# n), c 0]
