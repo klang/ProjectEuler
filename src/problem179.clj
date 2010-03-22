@@ -1,7 +1,21 @@
 ;; Find the number of integers 1 < n < 10^7, for which n and n + 1 have the same number of positive divisors. 
 
 ;; For example, 14 has the positive divisors 1, 2, 7, 14 while 15 has 1, 3, 5, 15.
-(load "tools")
+;(load "tools")
+(use 'tools.pseudo-primes
+     'clojure.contrib.combinatorics
+     'clojure.set
+     '[clojure.contrib.math :only (expt)])
+
+(defn divisors# [n]
+  (if (>= 1 n)
+    1
+    (count (distinct (map #(reduce * %) (subsets (prime-factors n)))))))
+
+(defn divisors [n]
+  (if (>= 1 n)
+      #{1}
+      (distinct (map #(reduce * %) (subsets (prime-factors n))))))
 
 (defn f [limit]
   (loop [n 2, dn (divisors# n), c 0]
