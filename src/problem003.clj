@@ -2,7 +2,9 @@
 
 ; What is the largest prime factor of the number 600851475143 ?
 
-(use 'clojure.contrib.test-is 'clojure.contrib.lazy-seqs)
+(ns p003
+  (:use clojure.test)
+  (:use [clojure.contrib.lazy-seqs :only (primes)]))
 
 ;; what is the difference between rem and mod?
 ;; is one faster than the other or is it just taste?
@@ -33,7 +35,5 @@
   (is (= 29 (problem003 13195))))
 
 ;; user> (time (problem003 600851475143))
-;; "Elapsed time: 1.393474 msecs"
+;; "Elapsed time: 85.231813 msecs"
 ;; 6857
-
-; (run-tests)
