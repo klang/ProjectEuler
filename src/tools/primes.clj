@@ -51,3 +51,9 @@
   "totient(n) = n * (1 - 1/p1)(1 - 1/p2)(1 - 1/p3)...(1 - 1/pm) 
 where p1...pm are the unique prime factors of n."
   (* n (reduce * (map #(- 1 (/ 1 %)) (distinct (prime-factors n))))))
+
+;; --- let's try to build a map of totient results
+
+; n=p1^e1*p2^e2...p1^e1, φ(n)=n(1-1/p1)(1-1/p2)...(1-1/pk).
+; n=p1*p2
+; φ(p1*p2)=p1*p2*(1-1/p1)(1-1/p2)=(p1-1)(p2-1)
