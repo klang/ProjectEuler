@@ -1,10 +1,12 @@
-(use 'clojure.contrib.test-is)
+;; A palindromic number reads the same both ways. 
 
-; A palindromic number reads the same both ways. 
-; The largest palindrome made from the product of two 2-digit numbers is 9009 = 91 * 99.
+;; The largest palindrome made from the product of two 2-digit numbers is 9009 = 91 * 99.
 
-; Find the largest palindrome made from the product of two 3-digit numbers.
-(use 'clojure.contrib.math)
+;; Find the largest palindrome made from the product of two 3-digit numbers.
+
+(ns p004
+  (:use clojure.test)
+  (:use [clojure.contrib.math :only (expt)]))
 
 (defn palindrome? [m]
   (= (apply str (reverse (str m))) (str m)))
@@ -17,8 +19,8 @@
 )
 
 (comment 
-(reduce max (for [x (range 100 1000) y 
-		  (range 100 (+ x 1))] 
+(reduce max (for [x (range 100 1000) 
+		  y (range 100 (+ x 1))] 
 	      (if (palindrome? (* x y)) (* x y) 0)))
 )
 
@@ -39,5 +41,3 @@
 ; user> (time (problem004 3))
 ; "Elapsed time: 3624.171717 msecs"
 ; 906609
-
-; (run-tests)
