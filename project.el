@@ -1,4 +1,4 @@
-(defwrk project-euler "problems currently being worked on"
+(defwrk project-euler-current "problems currently being worked on"
   "~/projects/ProjectEuler/project.org"
   "~/projects/ProjectEuler/src/tools.clj"
   "~/projects/ProjectEuler/src/problem179.clj"
@@ -8,7 +8,7 @@
   ;"~/projects/ProjectEuler/src/problem282.clj"
   "~/projects/ProjectEuler/src/problem145.clj"
 )
-(defwrk project-euler50 "stuck problems"
+(defwrk project-euler-stuck "stuck problems"
   "~/projects/ProjectEuler/src/tools.clj"
   "~/projects/ProjectEuler/src/problem015.clj"
   "~/projects/ProjectEuler/src/problem018.clj"
@@ -23,3 +23,13 @@
   "~/projects/ProjectEuler/src/problem074.clj"
   "~/projects/ProjectEuler/src/problem075.clj"
 )
+
+(defun project-euler nil
+  "Start Project Euler"
+  (interactive)
+  (setq default-directory "~/projects/ProjectEuler/")
+  (load "~/projects/gists/gist-337280/clojure-font-lock-setup.el")
+  (project-euler-current)
+  (swank-clojure-project default-directory)
+  )
+
