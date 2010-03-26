@@ -2,6 +2,15 @@
   (:use [clojure.contrib.combinatorics]))
 (use '[clojure.contrib.lazy-seqs :only (primes)])
 
+(def prime-gen
+     (let [primes (atom [])]
+       (for [n (iterate inc 2)
+             :when (not-any? #(zero? (rem n %))
+                             (filter #(<= % (Math/sqrt n)) 
+                                     @primes))]
+         (do (swap! primes conj n)
+             n))))
+
 (defn prime-factors [arg]
   (assert (and (integer? arg) (>= arg 2)))
   (loop [pfs [], n arg]  ; pfs is the vector of prime factors already determined
