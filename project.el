@@ -30,6 +30,6 @@
   (setq default-directory "~/projects/ProjectEuler/")
   (load "~/projects/gists/gist-337280/clojure-font-lock-setup.el")
   (project-euler-current)
-  (swank-clojure-project default-directory)
+;  (swank-clojure-project default-directory)
   )
 
