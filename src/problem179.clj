@@ -57,3 +57,11 @@
 
 ;; still not efficient, but at least it doesn't run out of memeory.
 ;; .. and I am sure there is no run-away subset calculations on the way...
+
+;; p179> (time (f1 (expt 10 7)))
+;; "Elapsed time: 4343526.044964 msecs"
+;; 986262
+
+
+
+  
