@@ -33,6 +33,20 @@
     1
     (count (set (map #(reduce * %) (subsets (prime-factors n)))))))
 
+;; though using subsets does work for n with a low number of prime-factors, it will go seriously
+;; wrong, if then number of prime-factors is high.
+
+;; http://mathworld.wolfram.com/Divisor.html term number (5) says
+;; the total number of divisors is given by
+;; d(n) = (1+m1)(1+m2)...(1+mk), where n = p1^m1 = p2^m2 * .. * pk^mk is the prime factorization of n
+
+(defn- mk [m coll]
+  (+ 1 (count (filter #(= m %) coll))))
+
+(defn divisors# [n]
+  (let [facts (prime-factors n), divs (distinct facts) ]
+    (reduce * (map #(mk % facts) divs))))
+
 (defn divisors [n]
   (if (>= 1 n)
       #{1}
