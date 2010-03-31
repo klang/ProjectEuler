@@ -1,5 +1,9 @@
 * jvm
 (custom-set-variables '(swank-clojure-extra-vm-args '("-server" "-Xmx64M")))
+(custom-set-variables '(swank-clojure-extra-vm-args '("-server" "-Xmx128M")))
+(custom-set-variables '(swank-clojure-extra-vm-args '("-server" "-Xmx256M")))
+(custom-set-variables '(swank-clojure-extra-vm-args '("-server" "-Xmx512M")))
+(custom-set-variables '(swank-clojure-extra-vm-args '("-server" "-Xmx768M")))
 * defwrk
 (load "~/projects/ProjectEuler/project.el")
 (find-file "~/projects/ProjectEuler/project.el")
@@ -10,7 +14,9 @@
 * primes
 ** efficient representation of memoized primes
 ** found efficient prime checker .. use it for 179, 23, 216 and one or two more
+** do not use subsets for anything big! (think proper-divisors)
 * working
+
 * stuck
 ** understanding
 *** 282 - The Ackermann function
@@ -19,6 +25,7 @@
 *** 179 - Consecutive positive divisors
 *** 023 - Find the sum of all the positive integers which cannot be written as the sum of two abundant numbers.
 * pipeline
+** 123 - Determining the remainder when (pn − 1)^n + (pn + 1)^n is divided by pn^2.
 ** 062 - Find the smallest cube for which exactly five permutations of its digits are cube.
 ** 191 - Prize Strings
 ** 018 - Find the maximum sum travelling from the top of the triangle to the base.
@@ -30,7 +37,10 @@
 ** 046 - What is the smallest odd composite that cannot be written as the sum of a prime and twice a square?
 ** 050 - Which prime, below one-million, can be written as the sum of the most consecutive primes?
 * done
+
+<2010-03-20 Thu> #66: 112 
 <2010-03-18 Thu> #64: 188 - The hyperexponentiation of a number
+<2010-03-15 Thu> #65: 122 - using a003313 
 <2010-03-14 Sun> #63: 124
 <2010-03-13 Sun> #62: 087
 <2010-03-12 Sun> #61: 059
