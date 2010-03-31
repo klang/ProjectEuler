@@ -4,7 +4,8 @@
 ;(load "tools")
 (ns p179
   (:use	[tools.primes :only (divisors#)]
-	[clojure.contrib.math :only (expt exact-integer-sqrt)]))
+	[clojure.contrib.math :only (expt exact-integer-sqrt)]
+	[clojure.test]))
 
 (defn f [limit]
   (loop [n 2, dn (divisors# n), c 0]
