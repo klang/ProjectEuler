@@ -1,6 +1,7 @@
 ;; What is the difference between the sum of the squares and the square of the sums?
-(use 'clojure.contrib.math
-     'clojure.contrib.test-is)
+(ns problem006
+    (:use clojure.contrib.math)
+    (:use clojure.contrib.test-is))
 
 (defn problem006 [n]
   (- (expt (reduce + (range (+ 1 n))) 2) 
@@ -8,3 +9,7 @@
 
 (deftest test-problem006
   (is (= 2640 (problem006 10))))
+
+;; problem006> (time (problem006 100))
+;; "Elapsed time: 3.953298 msecs"
+;; 25164150
