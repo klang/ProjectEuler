@@ -29,31 +29,14 @@
 
 (deftest test-read-data (is (= t-read t-hard)))
 
-(max (+ 3 7 2) (+ 3 7 4) (+ 3 4 4) (+ 3 4 6))   ; lookahead = 2 elements
-;;      0 0 0    [0 0 1]    0 1 1     0 1 2     ; item number
+;; starting from the top, adding the elements to the corresponding elements in 
+;; the next row, selecting the max value from each addition pair, we can 
+;; 'squeeze' the triangle all the way to the bottom. 
+;; The triangle reduces to a single row and the maxial value is just the 
+;; maximal value in this last vector.
 
-(max (+ 3 7 2 8) (+ 3 7 2 5) (+ 3 7 4 5) (+ 3 7 4 9 ) (+ 3 4 4 5) (+ 3 4 4 9) (+ 3 4 6 9) (+ 3 4 6 3))
-;;      0 0 0 0     0 0 0 1     0 0 1 1    [0 0 1 2]     0 1 1 1     0 1 1 2     0 1 2 2     0 1 2 3
+;; The amount of calculations done doesn't explode and usable for problem 67.
 
-;;      0 0 0    [0 0 1]    0 1 1     0 1 2     ; item number
-(max (+ 3 7 2) (+ 3 7 4) (+ 3 4 4) (+ 3 4 6))   ; lookahead = 2 elements
-
-(def t002 {[0 0 0] [3 7 2] [0 0 1] [3 7 4] [0 1 1] [3 4 4] [0 1 2] [3 4 6]})
-(def c (into {} (map #(vector % (reduce + (t002 %))) (keys t002))))
-
-(defn lookahead-max [triangle] nil)
-
-(defn path-elements  [triangle level element lookahead])
-
-(defn paths [triangle level element lookahead]
-  "paths going out from an 'element on 'level of length 'lookahead"
-  ;; paths going out from 'element and 'element on 'level+1 of length 'lookahead-1
-  ;(cond (zero? lookahead) ())
-  )
-
-(defn reduce-1-level [triangle]
-  (cons (into [] (for [a (first triangle)
-		       b (second triangle)] (+ a b))) (drop 2 triangle)))
 (comment
   (def triangle [[3] [7 4] [2 4 6] [8 5 9 3]])
   (def triangle [[10 7] [2 4 6] [8 5 9 3]])
