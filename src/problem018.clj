@@ -12,7 +12,7 @@
 ;; [snipped]
 ;; 
 ;; NOTE: As there are only 16384 routes, it is possible to solve this problem by trying every route. However, Problem 67, is the same challenge with a triangle containing one-hundred rows; it cannot be solved by brute force, and requires a clever method! ;o)
-(ns p018
+(ns problem018
   (:use clojure.test)
   (:use [clojure.contrib.str-utils2 :only (split)]))
 
@@ -26,7 +26,7 @@
 (def t-hard [[3] [7 4] [2 4 6] [8 5 9 3]])
 (def t-read (read-data "triangle-018-test.txt"))
 (def t-full (read-data "triangle-018.txt"))
-(def t-mega (read-data "triangle.txt"))
+
 (deftest test-read-data (is (= t-read t-hard)))
 
 (max (+ 3 7 2) (+ 3 7 4) (+ 3 4 4) (+ 3 4 6))   ; lookahead = 2 elements
@@ -54,34 +54,12 @@
 (defn reduce-1-level [triangle]
   (cons (into [] (for [a (first triangle)
 		       b (second triangle)] (+ a b))) (drop 2 triangle)))
-
-(def triangle [[3] [7 4] [2 4 6] [8 5 9 3]])
-(def level1 (first triangle))
-(def level2 (second triangle))
-(for [i (range 0 (count level1))] 
-  (list (+ (level1 i) (level2 i)) 
-	(+ (level1 i) (level2 (+ i 1)))))
-
-(def triangle [[10 7] [2 4 6] [8 5 9 3]])
-(def level1 (first triangle))
-(def level2 (second triangle))
-(for [i (range 0 (count level1))] 
-  (list (+ (level1 i) (level2 i)) 
-	(+ (level1 i) (level2 (+ i 1)))))
-
-(def triangle [[12 14 13] [8 5 9 3]])
-(def level1 (first triangle))
-(def level2 (second triangle))
-
-(for [i (range 0 (count level1))] 
-  (list (+ (level1 i) (level2 i)) 
-	(+ (level1 i) (level2 (+ i 1)))))
-
-(def triangle [[12 14 13] 
-	       [8 5 9 3]])
-
-(def level1 (first triangle))
-(def level2 (second triangle))
+(comment
+  (def triangle [[3] [7 4] [2 4 6] [8 5 9 3]])
+  (def triangle [[10 7] [2 4 6] [8 5 9 3]])
+  (def triangle [[12 14 13] [8 5 9 3]])
+  (def level1 (first triangle))
+  (def level2 (second triangle)))
 
 (defn level2-max [level1 level2]
   ;; (list (max (+ 5 12) (+ 5 14)) (max (+ 9 14) (+ 9 13)))
@@ -113,7 +91,8 @@
   "squeezes the first two levels of a triangle into a new triangle with running maxes calculated for each element"
   (into [(next-level2 (first triangle) (second triangle))] (drop 2 triangle)))
 
-;(reduce max (first (squeeze-max (squeeze-max (squeeze-max triangle)))))
+;; (reduce max (first (squeeze-max (squeeze-max (squeeze-max triangle)))))
+;; 23
 
 (defn squeeze-max-triangle [triangle]
   (loop [triangle (squeeze-max triangle)]
@@ -127,3 +106,4 @@
 ;; "Elapsed time: 0.885029 msecs"
 ;; 1074
 
+;; directly usable for problem067
