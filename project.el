@@ -1,8 +1,7 @@
 (defwrk project-euler-current "problems currently being worked on"
   "~/projects/ProjectEuler/project.org"
   "~/projects/ProjectEuler/src/tools.clj"
-  "~/projects/ProjectEuler/src/problem018.clj"
-  "~/projects/ProjectEuler/src/problem067.clj"
+  "~/projects/ProjectEuler/src/problem078.clj"
 )
 (defwrk project-euler-stuck "stuck problems"
   "~/projects/ProjectEuler/src/tools.clj"
