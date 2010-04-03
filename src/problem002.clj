@@ -5,7 +5,7 @@
 
 ; Find the sum of all the even-valued terms in the sequence which do not exceed four million.
 
-(ns p002
+(ns problem002
   (:use clojure.test))
 
 (defn fibo []
