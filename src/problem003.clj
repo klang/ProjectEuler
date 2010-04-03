@@ -2,7 +2,7 @@
 
 ; What is the largest prime factor of the number 600851475143 ?
 
-(ns p003
+(ns problem003
   (:use clojure.test)
   (:use [clojure.contrib.lazy-seqs :only (primes)]))
 
