@@ -4,7 +4,7 @@
 
 ;; Find the largest palindrome made from the product of two 3-digit numbers.
 
-(ns p004
+(ns problem004
   (:use clojure.test)
   (:use [clojure.contrib.math :only (expt)]))
 
