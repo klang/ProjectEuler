@@ -33,7 +33,7 @@
 
 ;; After having used too much time on this, let's look if there is a sequence..
 
-;; http://www.research.att.com/~njas/sequences/A071976
+;; http://www.research.att.com/~njas/sequences/A000984
 
 ;; C(2n,n) = (2n)!/(n!)^2.
 (defn C [n]
