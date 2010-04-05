@@ -12,7 +12,6 @@
   "~/projects/ProjectEuler/src/problem191.clj"
   ;"~/projects/ProjectEuler/src/problem282.clj"
   "~/projects/ProjectEuler/src/problem145.clj"
-  "~/projects/ProjectEuler/src/problem015.clj"
   "~/projects/ProjectEuler/src/problem033.clj"
   "~/projects/ProjectEuler/src/problem032.clj"
   "~/projects/ProjectEuler/src/problem038.clj"
