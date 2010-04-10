@@ -69,3 +69,15 @@
 ;; [MarleysGhost] I was surprised at how few primes were necessary. By the time even the largest elements of the triangle were divided by primes up through 43, they were reduced to less than 47*47.
 ;; [quilan] Well, yeah... highest numerator term [ n! / (k!*(n-k)!) ] is going to be 51!, so the highest prime-factor will have to be <= 51. Therefore, 47.
 
+
+(defn square-free-pascal [n]
+  (loop [p primes
+	 dp (distinct-pascal n)]
+    (if (or (<= n (first p)) 
+	    (< (reduce max dp) (expt (first p) 2))) 
+      dp
+      (recur (rest p) (filter #(not (zero? (rem % (expt (first p) 2)))) dp)))))
+
+;; problem203> (time (reduce + (square-free-pascal 51)))
+;; "Elapsed time: 57.684452 msecs"
+;; 34029210557338
