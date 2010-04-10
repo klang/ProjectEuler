@@ -22,6 +22,25 @@
           (recur (conj pfs n), 1)
           (recur (into pfs ps), (apply / n ps)))))))
 
+(defn factors [n]
+  (loop [pfs []
+	 p primes ; (take-while #(<= (* % %) n) primes)
+	 number n
+	 ]
+; done if n=1
+; otherwise, if there are no more primes and n>1, then the n is prime.. what?
+; no more primes under (sqrt n) and no factors found => n is prime
+    (if (= number 1)
+      pfs
+      (let [f (first p)]
+	(if (zero? (rem number f))
+	  ;; prime f is a factor of number 
+	  ;; (f might still be a factor, so keep the same p)
+	  (recur (conj pfs f) p (quot number f))
+	  ;; try with the next prime
+	  (recur pfs (rest p) number))))))
+
+
 ;; prime-factors has an assert that I keep falling in when using prime? in a functional way
 (defn prime? [n]
   (if (>= 1 n)
