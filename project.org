@@ -13,16 +13,14 @@
 ** function that creates all the partitions of 'something'
 * primes
 ** efficient representation of memoized primes
-** found efficient prime checker .. use it for 179, 23, 216 and one or two more
+** found efficient prime checker .. use it for 23, 216 and one or two more
 ** do not use subsets for anything big! (think proper-divisors)
 * working
 
 * stuck
 ** understanding
 *** 282 - The Ackermann function
-*** 015 - Starting in the top left corner in a 20 by 20 grid, how many routes are there to the bottom right corner?
 ** memory/time
-*** 179 - Consecutive positive divisors
 *** 023 - Find the sum of all the positive integers which cannot be written as the sum of two abundant numbers.
 * pipeline
 ** 123 - Determining the remainder when (pn − 1)^n + (pn + 1)^n is divided by pn^2.
@@ -37,6 +35,7 @@
 ** 046 - What is the smallest odd composite that cannot be written as the sum of a prime and twice a square?
 ** 050 - Which prime, below one-million, can be written as the sum of the most consecutive primes?
 * done
+<2010-04-10 Sat> #72: 203
 <2010-04-05 Mon> #71: 015
 <2010-04-03 Sat> #68: 018, #69 067 (submitted within 60 seconds), #70 078
 <2010-03-28 Thu> #67: 179 
