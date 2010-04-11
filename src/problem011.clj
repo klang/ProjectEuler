@@ -1,5 +1,7 @@
-; In the 2020 grid below, four numbers along a diagonal line have been marked in red. [coordinates [8,6][9,7][10,8][11,9] counting from 0]
+(ns problem011
+  (:use [clojure.test]))
 
+; In the 2020 grid below, four numbers along a diagonal line have been marked in red. [coordinates [8,6][9,7][10,8][11,9] counting from 0]
 
 (def grid 
      [[ 8  2 22 97 38 15  0 40  0 75  4  5  7 78 52 12 50 77 91  8]
@@ -27,6 +29,8 @@
 
 ; What is the greatest product of four adjacent numbers in any direction 
 ; (up, down, left, right, or diagonally) in the 20x20 grid?
+
+(defn point [i j] ((grid i) j))
 
 ;; going east == going west a bit further to the east
 (defn east [[i j]] 
@@ -60,14 +64,11 @@
 
 (defn max-in-point [p] (max (south-east p) (south-west p) (east p) (south p)))
 
-(defn point [i j] ((grid i) j))
-
 ;(for [i (range 0 20) j (range 0 20)] [i j])
 
 ;; (map #(max-in-point %) (for [i (range 0 2) j (range 0 2)] [i j]))
 ;; (map #(max-in-point %) (for [i (range 18 20) j (range 18 20)] [i j]))
 ;; (reduce max (map #(max-in-point %) (for [i (range 0 2) j (range 0 2)] [i j])))
 ;; (reduce max (map #(max-in-point %) (for [i (range 18 20) j (range 18 20)] [i j])))
-;; 
-;;user> (reduce max (map #(max-in-point %) (for [i (range 0 20) j (range 0 20)] [i j])))
+;;problem011> (reduce max (map #(max-in-point %) (for [i (range 0 20) j (range 0 20)] [i j]))) 
 ;;70600674
