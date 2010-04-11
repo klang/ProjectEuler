@@ -2,8 +2,9 @@
   "~/projects/ProjectEuler/project.org"
   "~/projects/ProjectEuler/src/tools.clj"
   "~/projects/ProjectEuler/src/problem078.clj"
-  "~/projects/ProjectEuler/src/problem23.clj"
-)
+  "~/projects/ProjectEuler/src/problem031.clj"
+  "~/projects/ProjectEuler/tools/parts.clj")
+
 (defwrk project-euler-stuck "stuck problems"
   "~/projects/ProjectEuler/src/tools.clj"
   "~/projects/ProjectEuler/src/problem216.clj"
@@ -17,8 +18,19 @@
   "~/projects/ProjectEuler/src/problem044.clj"
   "~/projects/ProjectEuler/src/problem046.clj"
   "~/projects/ProjectEuler/src/problem050.clj"
+  "~/projects/ProjectEuler/src/problem051.clj"
+  "~/projects/ProjectEuler/src/problem054.clj"
+  "~/projects/ProjectEuler/src/problem060.clj"
+  "~/projects/ProjectEuler/src/problem061.clj"
+  "~/projects/ProjectEuler/src/problem062.clj"
+  "~/projects/ProjectEuler/src/problem066.clj"
+  "~/projects/ProjectEuler/src/problem068.clj"
+  "~/projects/ProjectEuler/src/problem072.clj"
+  "~/projects/ProjectEuler/src/problem073.clj"
   "~/projects/ProjectEuler/src/problem074.clj"
   "~/projects/ProjectEuler/src/problem075.clj"
+  "~/projects/ProjectEuler/src/problem077.clj"
+  "~/projects/ProjectEuler/src/problem079.clj"
 )
 
 (defun project-euler nil
