@@ -2,12 +2,10 @@
   "~/projects/ProjectEuler/project.org"
   "~/projects/ProjectEuler/src/tools.clj"
   "~/projects/ProjectEuler/src/problem078.clj"
-  "~/projects/ProjectEuler/src/problem203.clj"
+  "~/projects/ProjectEuler/src/problem23.clj"
 )
 (defwrk project-euler-stuck "stuck problems"
   "~/projects/ProjectEuler/src/tools.clj"
-  "~/projects/ProjectEuler/src/problem179.clj"
-  "~/projects/ProjectEuler/src/problem023.clj"
   "~/projects/ProjectEuler/src/problem216.clj"
   "~/projects/ProjectEuler/src/problem191.clj"
   ;"~/projects/ProjectEuler/src/problem282.clj"
