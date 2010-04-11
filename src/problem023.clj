@@ -143,3 +143,16 @@
 ;; 4179871
 
 
+(defn sums-of-abundant-numbers [limit]
+  ;; just subract (first (make-divs-seq limit)) from the sums-of-abundant-numbers to get the answer to problem 23
+  (let [divs (make-divs-seq limit)
+	total (first divs)]
+    (loop [a (abundants divs)
+	   sums #{}]
+      (if (zero? (count a))
+	(- total (reduce + sums))
+	(recur (rest a) (into sums (take-while #(<= % limit) (map #(+ (first a) %) a))) )))))
+
+;; problem023> (time (sums-of-abundant-numbers limit))
+;; "Elapsed time: 61931.67402 msecs"
+;; 4179871
