@@ -60,7 +60,7 @@
 			     (pn (- n (second-pentagonal k))))))
 	       (range 1 (+ n 1))))))
 
-;(def pn (memoize pn))
+(def pn (memoize pn))
 
 (defn partitions [n]
   "returns the partitions of n as a list")
@@ -141,8 +141,11 @@
 (defn init-vars [n] (list :x1 ((init-vector n) 0) :m 1 :h 1))
 (defn change-item-i [x i v] (assoc x i v))
 (def x (init-vector 5))
-(def m 1)
-(def h 1)
+(def m 0)
+(def h 0)
+(def r (- (x h) 1))
+(def t (+ (- h m) 1))
+(def x (assoc x h r))
 (comment
   (defn zs1 [n]
     (loop [x (transient (assoc (vec (take n (repeat 1))) 0 n)) ; [n 1 1 1 ... 1]
@@ -157,17 +160,45 @@
 		]
 	    (loop [h h
 		   t (+ (- h m) 1)	; t=m-h+1
-		   x (assoc x h r) ; x[h]=r      .. make the template for the next run
+		   x (assoc x h r)      ; x[h]=r   .. make the template for the next run
 		   ]
 	      (do (println (list h t x)))
 	      (if (and (>= t r) (<= h 5)) ; (<= h 5) guard to control the recursion
+		
 		(recur (+ h 1) (- t r) (assoc x (+ h 1) r))
-		)))
+		))
+	    
+	    )
 	  )))))
 
+(comment
+  (while (>= t r) (let [ (+ h 1)]))
+
+  (let [m (if (zero? t) h (inc h))])
+  (let [h (if (< 1 t) (inc h) h)
+	]))
+
+(comment
+([5], [4 1], [3 2], [3 1 1], [2 2 1], [2 1 1 1], [1 1 1 1 1]))
+(defn next-partition1 [x m h]
+  (cond (= (x h) 2) (do {:x x :m m :h h :next (subvec x 0 m)}
+			(subvec x 0 m))
+	:else
+	nil))
+(defn next-partition [x m h]
+  (cond (= (x h) 2) (subvec x 0 m)
+	:else
+	(let [r (- (x h) 1), t (- m (- h 1)), x (assoc x h r)] 
+	  (do (println {:x x :m m :h h :r r :t t})
+	      (let [h (inc h), x (assoc x h r), t (dec r)]
+		(do (let [m (if (zero? t) h (inc h))
+			  h (if (< 1 t) (inc h) h)
+			  x (assoc x h t)]
+		      (println {:x x :m m :h h :r r :t t})
+			  )))))))
 
 
-
+;(let [m (if (zero? t) h (inc h))])
 
 
 
