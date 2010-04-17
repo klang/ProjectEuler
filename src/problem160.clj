@@ -114,3 +114,96 @@
 ;; "Elapsed time: 28711.281465 msecs"
 ;; 62496
 ;; not the correct answer..
+
+(defn f2 [n]
+  (let [ex (expt 10 5)]
+    (loop [current (range 10 (+ n 1))
+	   ;current (range 100000 (+ n 1))
+	   ;so-far 62496
+	   so-far 36288
+	   ]
+      (if (empty? current)
+	so-far
+	(let [candidate (mod (* (first current) so-far) ex)
+	      check (mod candidate 10)]
+	  (recur (rest current) (if (zero? check) so-far candidate)))))))
+
+;; under an int
+;; (last (take-while #(< (factorial %) 2147483647) (iterate inc 1)))
+
+;; (* (*  (* 399168 12) 13) 14)
+;; (* (* (*  (* 399168 12) 13) 14) 15)
+;; 13076743680
+;; (* 1307674368 16)
+;; 20922789888
+;; (factorial 16)
+;; 20922789888000
+;; 
+
+;--- 
+;; problem160> (type (* (* (*  (* 399168 12) 13) 14)))
+;; java.lang.Integer
+
+;(defn factorial [n] (reduce * (range n 0 -1)))
+(defn f3 [n]
+  (letfn [(fac [n] (reduce * (range 1 (+ n 1))))]
+    (integer (reverse 
+	      (take 5 
+		    (drop-while zero? 
+				(reverse 
+				 (digits (fac n)))))))))
+
+(defn f3partial [start end]
+  (letfn [(fac [start end] (reduce * (range start (+ end 1))))]
+    (integer (reverse 
+	      (take 5 
+		    (drop-while zero? 
+				(reverse 
+				 (digits (fac start end)))))))))
+(defn f3p [n]
+  (f3partial 1 n))
+
+(defn interesting [n number]
+  (integer (reverse (take n (drop-while zero? (reverse (digits number)))))))
+
+(defn fac-partial [start end] (reduce * (range start (+ end 1))))
+
+(deftest test-f3partial
+  (is (=  (interesting 5 (* (f3partial 1 500) (f3partial 501 1000)))
+	  (f3partial 1 1000)))
+  (is (=  (interesting 5 (* (f3partial 1 500) (f3partial 501 1000) (f3partial 1001 10000)))
+	  (f3partial 1 10000)))
+  (is (= (* (fac-partial 1 10) (fac-partial 11 15)) (fac-partial 1 15) (factorial 15))))
+
+
+(defn f4 [n]
+  (loop [current (range 1 (+ n 1)) so-far 1]
+    (cond 
+      (zero? (mod so-far 10)) (recur current (quot so-far 10)) ;; knock down result if there are trailing zeroes
+      (empty? current) (mod so-far (expt 10 5))
+      (zero? (mod (first current) 10)) (recur (rest current) (* (quot (first current) 10) so-far))
+      :else
+      (recur (rest current) (* (first current) so-far))
+      )))
+
+(defn f5 [n]
+  (let [ex (expt 10 12)]
+    (loop [current (range 1 (+ n 1)) so-far 1]
+      (cond 
+	(zero? (mod so-far 10)) (recur current (quot so-far 10)) ;; knock down result if there are trailing zeroes
+	(empty? current) (mod so-far (expt 10 5))
+	(zero? (mod (first current) 10)) (recur (rest current) (* (quot (first current) 10) (mod so-far ex)))
+	:else
+	(recur (rest current) (* (first current) (mod so-far ex)))
+	))))
+
+;; problem160> (time (f5 (expt 10 7)))
+;; "Elapsed time: 50709.247663 msecs"
+;; 94688
+;; problem160> (time (count (range 1 (expt 10 7))))
+;; "Elapsed time: 7301.081969 msecs"
+;; 9999999
+
+
+;(into [] (map #(prime-factors %) (range 1 20)))
+
