@@ -20,7 +20,8 @@
 ; 1777↑↑1855 = 1777↑(1777↑↑1854) = 1777↑(1777↑(1777↑↑1853)) =  1777↑1777↑ ..↑1777 
 ;                                                               \              /
 ;                                                                 --1855times--
-(use 'clojure.contrib.math)
+(ns problem188 
+  (:use clojure.contrib.math))
 
 ;; http://en.wikipedia.org/wiki/Modular_exponentiation#Memory-efficient_method
 (defn mod-expt [base exp m]
