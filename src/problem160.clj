@@ -322,9 +322,63 @@
     (loop [current 1 so-far 1]
       (cond 
 	(zero? (rem so-far 10)) (recur current (quot so-far 10))
-	(< n current) (rem so-far (expt 10 5))
+	(< n current) so-far;(rem so-far (expt 10 5))
 	:else
 	(recur (+ 1 current) (* current (rem so-far ex)))))))
+
+(defn f9s [start end]
+  (let [ex (expt 10 12)]
+    (loop [current start so-far 1]
+      (cond 
+	(zero? (rem so-far 10)) (recur current (quot so-far 10))
+	(< end current) (rem so-far (expt 10 5))
+	:else
+	(recur (+ 1 current) (* current (rem so-far ex)))))))
+
+(comment
+  (= (f9s 1 1000000) 
+     (rem (* (rem (* (f9s 1 10000) (f9s 10000 20000)) (expt 10 5)) 
+	     (f9s 100000 200000)) (expt 10 5)))
+
+  (= 12544 ;;(f9s 1 1000000) 
+     (rem (* (rem (* (f9s 1 10000) (f9s 10000 20000)) (expt 10 5)) 
+	     (f9s 100000 200000)) (expt 10 5)))
+
+  (= 12544 ;;(f9s 1 1000000) 
+     (rem  (* (f9s 1 10000) (f9s 10000 20000) (f9s 100000 200000) ) (expt 10 5)))
+  (= 94688 ;;(f9s 1 10000000) 
+     (rem  (* (f9s 1 10000) (f9s 10000 20000) (f9s 100000 200000) (f9s 1000000 2000000)) (expt 10 5)))
+  (= 54176 ;;(f9s 1 100000000) 
+     (rem  (* 79008 89312 96864 77152 48352) (expt 10 5)))
+  (= 38144 ;;(f9s 1 1000000000)
+     (rem  (* 79008 89312 96864 77152 48352 46944) ;;(f9s 100000000 200000000) 
+	   (expt 10 5)))
+  (= 38144 (rem (* 54176 46944) (expt 10 5)))
+  (= 46112 ;;(f9s 1 10000000000)
+     (rem (* 38144 50848) (expt 10 5))) ;; (f9s 1000000000 2000000000)
+  (= ;;(f9s 1 100000000000)
+   )
+  (= ;;(f9s 1 1000000000000)
+   ))
+;; problem160=> (time (f9s 100000000 200000000))
+;; "Elapsed time: 228767.66 msecs"
+;; 46944
+;; problem160=> (time (f9s 1000000000 2000000000))
+;; "Elapsed time: 2548729.864 msecs"
+;; 50848
+;; 
+(= (f9s 100000 200000)
+   (rem (* (f9s 100001 110000) (f9s 110001 120000) (f9s 120001 130000)
+	   (f9s 130001 140000) (f9s 140001 150000) (f9s 150001 160000)
+	   (f9s 160001 170000) (f9s 170001 180000) (f9s 180001 190000)
+	   (f9s 190001 200000))
+    (expt 10 5)))
+
+;(= 46112 (f9s 1 1000000000)) ;; do not evaluate
+
+
+
+
 
 
 
