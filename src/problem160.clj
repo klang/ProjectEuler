@@ -253,7 +253,7 @@
      ;(f5 1000000000)
      );? 
   (= 88096 (f5 9000000))
-  ; (f5 80000000)
+  (= 46112 (f5 80000000))
   ; (f5 400000000)
   ; (f5 2000000000)
   ; (f5 10000000000)
@@ -263,6 +263,9 @@
   ;;(f5 200000000000)
   ;;(f5 1000000000000)
 )
+;problem160=> (time (f6 80000000))
+;"Elapsed time: 500162.264 msecs"
+;(46112 2583)
 
 (defn f6 [n]
   (let [ex (expt 10 12)]
@@ -297,11 +300,10 @@
 
 (defn f7 [n]
   (let [ex (expt 10 12)]
-    (loop [current (range 1 (+ n 1)) so-far 1]
+    (loop [current 1 so-far 1]
       (cond 
 	(zero? (mod so-far 10)) (recur current (quot so-far 10)) ;; knock down result if there are trailing zeroes
-	(empty? current) (mod so-far (expt 10 5))
-	(zero? (mod (first current) 10)) (recur (rest current) (* (quot (first current) 10) (mod so-far ex)))
+	(< n current) (mod so-far (expt 10 5))
+	(zero? (mod current 10)) (recur (+ 1 current) (* (quot current 10) (mod so-far ex)))
 	:else
-	(recur (rest current) (* (first current) (mod so-far ex)))
-	))))
+	(recur (+ 1 current) (* current (mod so-far ex)))))))
