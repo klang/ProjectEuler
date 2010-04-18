@@ -81,29 +81,6 @@
 
 (defn s [next so-far] (mod (* next so-far) (expt 10 5)))
 
-(defn f2 [n]
-  (let [ex (expt 10 5)]
-    (loop [current (range 10 (+ n 1))
-	   ;current (range 100000 (+ n 1))
-	   ;so-far 62496
-	   so-far 36288
-	   ]
-      (if (empty? current)
-	so-far
-	(let [candidate (mod (* (first current) so-far) ex)
-	      check (mod candidate 10)]
-	  (recur (rest current) (if (zero? check) so-far candidate)))))))
-
-(deftest test-f-f1
-  (is (every? true? (map #(= (f %) (f1 %)) (range 1 100)))))
-
-(deftest test-f-f1-f2
-  (is (every? true? (map #(= (f %) (f1 %) (f2 %)) (range 10 17)))))
-
-(deftest test-f-f1-f2-short
-  (is (= (f 15) (f1 15) (f2 15)))
-  (is (= (f 16) (f1 16) (f2 16))))
-
 ;; problem160> (time (f2 100000))
 ;; "Elapsed time: 0.29473 msecs"
 ;; 62496
@@ -186,6 +163,11 @@
       (recur (rest current) (* (first current) so-far))
       )))
 
+(deftest test-f4
+  (is (= 36288 (f4 9)))
+  (is (= 36288 (f4 10)))
+  (is (= 17664 (f4 20))))
+
 (defn f5 [n]
   (let [ex (expt 10 12)]
     (loop [current (range 1 (+ n 1)) so-far 1]
@@ -196,6 +178,20 @@
 	:else
 	(recur (rest current) (* (first current) (mod so-far ex)))
 	))))
+
+(deftest test-f5
+  (is (= 36288 (f5 9)))
+  (is (= 36288 (f5 10)))
+  (is (= 17664 (f5 20))))
+
+(deftest test-f
+  (is (every? true? (map #(= (f %) 
+			     (f1 %) 
+			     (f3 %) 
+			     (f4 %) 
+			     (f5 %)) (range 1 20)))))
+
+
 
 ;; problem160> (time (f5 (expt 10 7)))
 ;; "Elapsed time: 50709.247663 msecs"
@@ -217,3 +213,95 @@
 ;; (mod (* (expt 2 x) (expt 5 x)) 10) = 0 =>  
 ;; problem160> (* (expt 2 14) (expt 3 8) (expt 7 2) 11 13 17 19) 
 ;; 243290200817664
+
+
+;; we only have to factor until a certain limited point
+(comment
+  (= 79008 (f5 10000) (f5 50000))
+  (= 62496 
+     (f5 20000) 
+     (f5 500000) 
+     (f5 100000))
+  (= 27296 (f5 30000))
+  (= 12544 
+     (f5 40000) 
+     (f5 200000) 
+     (f5 5000000) 
+     (f5 1000000))
+  (= 20096 (f5 60000) (f5 300000))
+  (= 23264 (f5 70000))
+  (= 94688 
+     (f5 80000) 
+     (f5 400000) 
+     (f5 2000000) 
+     (f5 10000000))
+  (= 15776 (f5 90000))
+  (= 20736 (f5 600000) (f5 3000000))
+  (= 70112 (f5 700000))
+  (= 54176 
+     (f5 800000) 
+     (f5 4000000) 
+     (f5 20000000) 
+     (f5 100000000))
+  (= 84736 (f5 900000))
+  (= 92576 (f5 6000000))
+  (= 98656 (f5 7000000))
+  (= 38144 
+     (f5 8000000)
+     ;(f5 40000000) 
+     ;(f5 200000000) 
+     ;(f5 1000000000)
+     );? 
+  (= 88096 (f5 9000000))
+  ; (f5 80000000)
+  ; (f5 400000000)
+  ; (f5 2000000000)
+  ; (f5 10000000000)
+
+  ;;(f5 8000000000)
+  ;;(f5 40000000000)
+  ;;(f5 200000000000)
+  ;;(f5 1000000000000)
+)
+
+(defn f6 [n]
+  (let [ex (expt 10 12)]
+    (loop [current (range 1 (+ n 1)) so-far 1 catch #{}]
+      (cond 
+	(zero? (mod so-far 10)) (recur current (quot so-far 10) catch) ;; knock down result if there are trailing zeroes
+	(empty? current) (list (mod so-far (expt 10 5)) (count catch))
+	(zero? (mod (first current) 10)) (recur (rest current) (* (quot (first current) 10) (mod so-far ex)) catch)
+	:else
+	(recur (rest current) (* (first current) (mod so-far ex)) (conj catch (mod so-far (expt 10 5))))
+	))))
+;; 
+;; problem160> (f6 100)
+;; (16864 88)
+;; problem160> (f6 1000)
+;; (53472 760)
+;; problem160> (f6 10000)
+;; (79008 2435)
+;; problem160> (f6 100000)
+;; (62496 2507)
+;; problem160> (f6 1000000)
+;; (12544 2507)
+;; problem160> (f6 10000000)
+;; (94688 2514)
+;; problem160> (f6 100000000)
+;; (54176 2609)
+
+(use 'tools.primes)
+(reduce into [] (map #(prime-factors %) (range 2 21)))
+(def p (reduce into [] (map #(prime-factors %) (range 2 10001))))
+(count (filter #(= 2 %) (sort p)))
+
+(defn f7 [n]
+  (let [ex (expt 10 12)]
+    (loop [current (range 1 (+ n 1)) so-far 1]
+      (cond 
+	(zero? (mod so-far 10)) (recur current (quot so-far 10)) ;; knock down result if there are trailing zeroes
+	(empty? current) (mod so-far (expt 10 5))
+	(zero? (mod (first current) 10)) (recur (rest current) (* (quot (first current) 10) (mod so-far ex)))
+	:else
+	(recur (rest current) (* (first current) (mod so-far ex)))
+	))))
