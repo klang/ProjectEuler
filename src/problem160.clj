@@ -258,14 +258,11 @@
   ; (f5 2000000000)
   ; (f5 10000000000)
 
-  ;;(f5 8000000000)
+  ;;(f5 8 000 000 000)
   ;;(f5 40000000000)
   ;;(f5 200000000000)
   ;;(f5 1000000000000)
 )
-;problem160=> (time (f6 80000000))
-;"Elapsed time: 500162.264 msecs"
-;(46112 2583)
 
 (defn f6 [n]
   (let [ex (expt 10 12)]
@@ -298,12 +295,36 @@
 (def p (reduce into [] (map #(prime-factors %) (range 2 10001))))
 (count (filter #(= 2 %) (sort p)))
 
+;; using "normal" count instead of range reduces the execution time by 50% (compare with f5
 (defn f7 [n]
   (let [ex (expt 10 12)]
     (loop [current 1 so-far 1]
       (cond 
-	(zero? (mod so-far 10)) (recur current (quot so-far 10)) ;; knock down result if there are trailing zeroes
+	(zero? (mod so-far 10)) (recur current (quot so-far 10))
 	(< n current) (mod so-far (expt 10 5))
 	(zero? (mod current 10)) (recur (+ 1 current) (* (quot current 10) (mod so-far ex)))
 	:else
 	(recur (+ 1 current) (* current (mod so-far ex)))))))
+
+;; one of the branches is really not needed
+(defn f8 [n]
+  (let [ex (expt 10 12)]
+    (loop [current 1 so-far 1]
+      (cond 
+	(zero? (mod so-far 10)) (recur current (quot so-far 10))
+	(< n current) (mod so-far (expt 10 5))
+	:else
+	(recur (+ 1 current) (* current (mod so-far ex)))))))
+
+;; rem is very much faster than mod .. 
+(defn f9 [n]
+  (let [ex (expt 10 12)]
+    (loop [current 1 so-far 1]
+      (cond 
+	(zero? (rem so-far 10)) (recur current (quot so-far 10))
+	(< n current) (rem so-far (expt 10 5))
+	:else
+	(recur (+ 1 current) (* current (rem so-far ex)))))))
+
+
+
