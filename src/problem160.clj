@@ -218,31 +218,22 @@
 ;; we only have to factor until a certain limited point
 (comment
   (= 79008 (f5 10000) (f5 50000))
-  (= 62496 
-     (f5 20000) 
-     (f5 500000) 
-     (f5 100000))
+  (= 62496 (f5 20000) (f5 500000) (f5 100000))
   (= 27296 (f5 30000))
-  (= 12544 
-     (f5 40000) 
-     (f5 200000) 
-     (f5 5000000) 
-     (f5 1000000))
+  (= 12544 (f5 40000) (f5 200000) (f5 1000000) (f5 5000000)) ; (f9 8000)=32544
   (= 20096 (f5 60000) (f5 300000))
   (= 23264 (f5 70000))
-  (= 94688 
-     (f5 80000) 
-     (f5 400000) 
-     (f5 2000000) 
-     (f5 10000000))
+  (= 94688 (f5 80000) (f5 400000) (f5 2000000) (f5 10000000) (f5 50000000))
   (= 15776 (f5 90000))
   (= 20736 (f5 600000) (f5 3000000))
   (= 70112 (f5 700000))
   (= 54176 
      (f5 800000) 
      (f5 4000000) 
-     (f5 20000000) 
-     (f5 100000000))
+     (f5 20000000)
+     (f5 100000000)
+     ;?(f5 500000000)
+     )
   (= 84736 (f5 900000))
   (= 92576 (f5 6000000))
   (= 98656 (f5 7000000))
@@ -291,9 +282,10 @@
 ;; (54176 2609)
 
 (use 'tools.primes)
-(reduce into [] (map #(prime-factors %) (range 2 21)))
-(def p (reduce into [] (map #(prime-factors %) (range 2 10001))))
-(count (filter #(= 2 %) (sort p)))
+(comment
+  (reduce into [] (map #(prime-factors %) (range 2 21)))
+  (def p (reduce into [] (map #(prime-factors %) (range 2 10001))))
+  (count (filter #(= 2 %) (sort p))))
 
 ;; using "normal" count instead of range reduces the execution time by 50% (compare with f5
 (defn f7 [n]
@@ -322,7 +314,7 @@
     (loop [current 1 so-far 1]
       (cond 
 	(zero? (rem so-far 10)) (recur current (quot so-far 10))
-	(< n current) so-far;(rem so-far (expt 10 5))
+	(< n current) (rem so-far (expt 10 5))
 	:else
 	(recur (+ 1 current) (* current (rem so-far ex)))))))
 
@@ -349,11 +341,16 @@
   (= 94688 ;;(f9s 1 10000000) 
      (rem  (* (f9s 1 10000) (f9s 10000 20000) (f9s 100000 200000) (f9s 1000000 2000000)) (expt 10 5)))
   (= 54176 ;;(f9s 1 100000000) 
-     (rem  (* 79008 89312 96864 77152 48352) (expt 10 5)))
+     (rem  (* 79008 89312 96864 77152 48352) (expt 10 5))
+     (f9s 1 800000))
+ 
   (= 38144 ;;(f9s 1 1000000000)
      (rem  (* 79008 89312 96864 77152 48352 46944) ;;(f9s 100000000 200000000) 
 	   (expt 10 5)))
+  ;(= (f9s 1 1000000000) (f9s 1 1000000) (f9s 1000000 8000000))
+  (= 38144 (rem (* 12544 91776) (expt 10 5)))
   (= 38144 (rem (* 54176 46944) (expt 10 5)))
+  ;(= (f9s 1 1000000000) (f9s 1 1000000) (f9s 10000000 80000000))
   (= 46112 ;;(f9s 1 10000000000)
      (rem (* 38144 50848) (expt 10 5))) ;; (f9s 1000000000 2000000000)
   (= ;;(f9s 1 100000000000)
@@ -367,18 +364,42 @@
 ;; "Elapsed time: 2548729.864 msecs"
 ;; 50848
 ;; 
-(= (f9s 100000 200000)
-   (rem (* (f9s 100001 110000) (f9s 110001 120000) (f9s 120001 130000)
-	   (f9s 130001 140000) (f9s 140001 150000) (f9s 150001 160000)
-	   (f9s 160001 170000) (f9s 170001 180000) (f9s 180001 190000)
-	   (f9s 190001 200000))
-    (expt 10 5)))
+(comment
+  (= (f9s 100000 200000)
+     (rem (* (f9s 100001 110000) (f9s 110001 120000) (f9s 120001 130000)
+	     (f9s 130001 140000) (f9s 140001 150000) (f9s 150001 160000)
+	     (f9s 160001 170000) (f9s 170001 180000) (f9s 180001 190000)
+	     (f9s 190001 200000))
+	  (expt 10 5))))
 
 ;(= 46112 (f9s 1 1000000000)) ;; do not evaluate
 
+;(list (f9s 10000 20000) (f9s 20001 30000) (f9s 30001 40000) (f9s 40001 50000) (f9s 50001 60000) (f9s 60001 70000))
 
+(comment (map #(f9s (+ 1 (* % (expt 10 4))) (* (+ 1 %) (expt 10 4))) (range 1 10)))
+;; 79008 (89312 18176 53664 90432 96512 58784 52192 71552 48096)
+(comment (map #(f9s (+ 1 (* % (expt 10 5))) (* (+ 1 %) (expt 10 5))) (range 1 10)))
+;; 62496 (96864 73184 54528 64992 94816 992 12448 51936 75104)
+(comment (map #(f9s (+ 1 (* % (expt 10 6))) (* (+ 1 %) (expt 10 6))) (range 1 10)))
+;; 12544 (77152 81472 48416 1344 27104 59456 43424 23584 30528)
 
+;(assoc s 4 (conj (s 4) 34))
 
-
-
-
+(defn f10c [start end]
+  (let [ex (expt 10 12)
+	e5 (expt 10 5)
+	e4 (expt 10 4)]
+    (loop [current start so-far 1 catch {}]
+      (cond 
+	(zero? (rem so-far 10)) (recur current (quot so-far 10) catch)
+	(< end current) (list (rem so-far e5) catch)
+	:else
+	(recur 
+	 (+ 1 current) (* current (rem so-far ex))
+	 (if (zero? (mod (- current 1) e4)) 
+	   (let [item (rem (* current (rem so-far ex)) e5)
+		 c (- current 1)]
+	     (assoc catch item (conj (catch item) c)))
+	   catch)
+	 )))))
+;(def px (f10c 1 10000000))
