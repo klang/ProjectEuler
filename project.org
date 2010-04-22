@@ -22,9 +22,7 @@
 ** memory/time
 *** 023 - Find the sum of all the positive integers which cannot be written as the sum of two abundant numbers.
 * pipeline
-** 123 - Determining the remainder when (pn − 1)^n + (pn + 1)^n is divided by pn^2.
 ** 191 - Prize Strings
-** 018 - Find the maximum sum travelling from the top of the triangle to the base.
 ** 031 - Investigating combinations of English currency denominations.
 ** 032 - Find the sum of all numbers that can be written as pandigital products.
 ** 038 - What is the largest 1 to 9 pandigital that can be formed by multiplying a fixed number by 1, 2, 3, ... ?
@@ -33,7 +31,7 @@
 ** 046 - What is the smallest odd composite that cannot be written as the sum of a prime and twice a square?
 ** 050 - Which prime, below one-million, can be written as the sum of the most consecutive primes?
 * done
-<2010-04-22 Thu> #74: 160, #74 062
+<2010-04-22 Thu> #74: 160, #75 062, #76 123
 <2010-04-11 Sun> #73: 023
 <2010-04-10 Sat> #72: 203
 <2010-04-05 Mon> #71: 015
