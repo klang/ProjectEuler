@@ -16,7 +16,6 @@
 ** found efficient prime checker .. use it for 23, 216 and one or two more
 ** do not use subsets for anything big! (think proper-divisors)
 * working
-
 * stuck
 ** understanding
 *** 282 - The Ackermann function
@@ -24,7 +23,6 @@
 *** 023 - Find the sum of all the positive integers which cannot be written as the sum of two abundant numbers.
 * pipeline
 ** 123 - Determining the remainder when (pn − 1)^n + (pn + 1)^n is divided by pn^2.
-** 062 - Find the smallest cube for which exactly five permutations of its digits are cube.
 ** 191 - Prize Strings
 ** 018 - Find the maximum sum travelling from the top of the triangle to the base.
 ** 031 - Investigating combinations of English currency denominations.
@@ -35,6 +33,7 @@
 ** 046 - What is the smallest odd composite that cannot be written as the sum of a prime and twice a square?
 ** 050 - Which prime, below one-million, can be written as the sum of the most consecutive primes?
 * done
+<2010-04-22 Thu> #74: 160, #74 062
 <2010-04-11 Sun> #73: 023
 <2010-04-10 Sat> #72: 203
 <2010-04-05 Mon> #71: 015
