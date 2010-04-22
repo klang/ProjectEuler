@@ -3,7 +3,7 @@
   "~/projects/ProjectEuler/src/tools.clj"
   "~/projects/ProjectEuler/src/problem078.clj"
   "~/projects/ProjectEuler/src/problem031.clj"
-  "~/projects/ProjectEuler/tools/parts.clj")
+  "~/projects/ProjectEuler/src/tools/parts.clj")
 
 (defwrk project-euler-stuck "stuck problems"
   "~/projects/ProjectEuler/src/tools.clj"
@@ -22,7 +22,6 @@
   "~/projects/ProjectEuler/src/problem054.clj"
   "~/projects/ProjectEuler/src/problem060.clj"
   "~/projects/ProjectEuler/src/problem061.clj"
-  "~/projects/ProjectEuler/src/problem062.clj"
   "~/projects/ProjectEuler/src/problem066.clj"
   "~/projects/ProjectEuler/src/problem068.clj"
   "~/projects/ProjectEuler/src/problem072.clj"
@@ -39,6 +38,7 @@
   (setq default-directory "~/projects/ProjectEuler/")
   (load "~/projects/gists/gist-337280/clojure-font-lock-setup.el")
   (project-euler-current)
+  (add-hook 'slime-connected-hook 'slime-redirect-inferior-output)
 ;  (swank-clojure-project default-directory)
   )
 
