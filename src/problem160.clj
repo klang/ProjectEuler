@@ -348,18 +348,13 @@
 ;; problem160=> (time (f9s 500000001 800000000))
 ;; "Elapsed time: 775592.629 msecs"
 ;; 89408
+;; problem160> (time (f9s 1000000000 8000000000))
+;; "Elapsed time: 3.8096723603922E7 msecs"
+;; 93504
+;; (rem (* (f9s 1 1000000000) (f9s 1 1000000) (f9s 1000000000 8000000000)) (expt 10 5))
+;; user> (rem (* 54176 46944 93504) (expt 10 5))
+;; 16576  
 
-(comment
-  (= (f9s 100000 200000)
-     (rem (* (f9s 100001 110000) (f9s 110001 120000) (f9s 120001 130000)
-	     (f9s 130001 140000) (f9s 140001 150000) (f9s 150001 160000)
-	     (f9s 160001 170000) (f9s 170001 180000) (f9s 180001 190000)
-	     (f9s 190001 200000))
-	  (expt 10 5))))
-
-;(= 46112 (f9s 1 1000000000)) ;; do not evaluate
-
-;(list (f9s 10000 20000) (f9s 20001 30000) (f9s 30001 40000) (f9s 40001 50000) (f9s 50001 60000) (f9s 60001 70000))
 
 (comment (map #(f9s (+ 1 (* % (expt 10 4))) (* (+ 1 %) (expt 10 4))) (range 1 10)))
 ;; 79008 (89312 18176 53664 90432 96512 58784 52192 71552 48096)
@@ -396,16 +391,8 @@
 	(contains? (set ((second px) k)) value)] 
     (list k ((second px) k))))
 
-
 ;;;---------------------------
 
-(defn f9c [n]
-  (let [ex (expt 10 12)]
-    (loop [current 1 so-far 1]
-      (cond 
-	(zero? (rem so-far 10)) (recur current (quot so-far 10))
-	(< n current) (rem so-far (expt 10 5))
-	:else
-	(recur (+ 1 current) (* current (rem so-far ex)))))))
+
 
 
