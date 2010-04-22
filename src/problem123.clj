@@ -55,3 +55,20 @@
 
 ;; but (time (foo (expt 10 9))) takes a looong time
 ;; obviously brute force is not the way to go here
+
+;; -- well, for every second prime, the remainder seems to reduce to 2 .. less work
+
+(defn foo [limit]
+  (loop [primes primes
+	 index 1]
+    ;(do  (println (list (first primes) index (euler (first primes) index))))
+    (if (< limit (euler (first primes) index))
+      index
+      (recur (rest (rest primes)) (+ index 2)))))
+
+;; problem123> (time (foo (expt 10 7)))
+;; "Elapsed time: 314.462429 msecs"
+;; 807
+;; problem123> (time (foo (expt 10 8)))
+;; "Elapsed time: 8588.300133 msecs"
+;; 2371
