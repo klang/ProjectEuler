@@ -72,3 +72,19 @@
 ;; problem123> (time (foo (expt 10 8)))
 ;; "Elapsed time: 8588.300133 msecs"
 ;; 2371
+
+(defn fii [n] (euler (nth primes n) n))
+
+;; problem123> (fii 7037)
+;; 1000084366
+;; problem123> (fii 7036)
+;; 2
+;; problem123> (fii 7035)
+;; 999293610
+
+;; simpel manual binary search
+;;problem123> (fii 21033)
+;;9999382662
+;;problem123> (fii 21035)
+;;10001595590
+
