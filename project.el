@@ -3,6 +3,7 @@
   "~/projects/ProjectEuler/src/tools.clj"
   "~/projects/ProjectEuler/src/problem078.clj"
   "~/projects/ProjectEuler/src/problem031.clj"
+  "~/projects/ProjectEuler/src/problem196.clj"
   "~/projects/ProjectEuler/src/tools/parts.clj")
 
 (defwrk project-euler-stuck "stuck problems"
