@@ -85,7 +85,7 @@
 	 catch [(first foo)]]
     ;(println (first foo))
     (if (nil? (second foo))
-      catch 
+      {:start (first catch) :cycle (rest catch)};catch 
       (recur (rest foo) (conj catch (- (second foo) (first foo)))))))
 
 ;; A jump-cycle that matches 8_9_0 found by trial and error 
@@ -98,18 +98,17 @@
   (let [end (+ 1 (first (exact-integer-sqrt 1929394959697989990)))
 	start (first (exact-integer-sqrt 1020304050607080900))
 	jc (jump-cycle 7)]
-    (loop [current (first jc)
-	   jump (cycle (rest jc))
-	   limit 1]
-      ;; as we start from 1010101030, we know that the third to last digit in
+    (loop [current (:start jc)
+	   jump (cycle (:cycle jc))]
+      ;; as we start from (:start (jump-cycle 7)), we know that the third to last digit in
       ;; the square is 9 and the last is 0, if the fourth to last digit is not 8, we jump .. 
-      (if (< current end) ; (< limit 1000000)		
+      (if (< current end)
 	(let [square (* current current)]
 	  (if (and ;(d0? square) (d9? square) (d8? square) 
 	       (d7? square) (d6? square)  (d4? square) (d3? square)
 	       (d5? square) (d2? square) (d1? square))
 	    square
-	    (recur (+ (first jump) current) (rest jump) (inc limit))))))))
+	    (recur (+ (first jump) current) (rest jump))))))))
 
 
 ;; problem206> (time (f))
