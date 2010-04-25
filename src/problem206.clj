@@ -79,16 +79,7 @@
 (comment
   (loop [foo (map sqrt (filter #(and (d8? % ) (d9? %) (d0? %)) (map #(* % %) (range 1 10000)))) catch []] (if (= 10 (count foo)) catch (recur (rest foo) (conj catch (- (second foo) (first foo)))))))
 
-;; let's make a funcion instead of a one-liner .. 
-
-(defn jump-cycle [n]
-  (loop [foo (map sqrt (filter #(and (d8? %) (d9? %) (d0? %)) (map #(* % %) (range 1 n)))) 
-	 catch []]
-    ;(println (first foo))
-    (if (nil? (second foo))
-      catch 
-      (recur (rest foo) (conj catch (- (second foo) (first foo)))))))
-
+;; let's make a funcion instead of a one-liner .. (and use the correct range)
 (defn jump-cycle [n]
   (loop [foo (take n (map sqrt (filter #(and (d8? %) (d9? %) (d0? %)) (map #(* % %) total-range)))) 
 	 catch [(first foo)]]
@@ -97,76 +88,35 @@
       catch 
       (recur (rest foo) (conj catch (- (second foo) (first foo)))))))
 
-(def total-range-10 (range (first (exact-integer-sqrt 1020304050607080900)) 
-			   (+ 1 (first (exact-integer-sqrt 1929394959697989990))) 10))
-
 ;; A jump-cycle that matches 8_9_0 found by trial and error 
 ;;(jump-cycle 7)
 ;;[1010101670 100 300 840 300 100 860]
 ;; should return
 ;;{:start 1010101670 :cycle [100 300 840 300 100 860]}
 
-; with d7?:  (jump-cycle 122)
-
 (defn f []
   (let [end (+ 1 (first (exact-integer-sqrt 1929394959697989990)))
-	;end (- (first (exact-integer-sqrt 1929394959697989990)) 3)
-	;end (- (first (exact-integer-sqrt 1929394959697989990)) 0)
-	end 989026640;1189026630
 	start (first (exact-integer-sqrt 1020304050607080900))
-	jc [end -10]
-	;jc [start 10]
-	;jc [end -1]
-	;jc [1350100950 10]
-	;jc (jump-cycle 7)
-	;jc (jump-cycle 122)
-	]
+	jc (jump-cycle 7)]
     (loop [current (first jc)
 	   jump (cycle (rest jc))
 	   limit 1]
       ;; as we start from 1010101030, we know that the third to last digit in
       ;; the square is 9 and the last is 0, if the fourth to last digit is not 8, we jump .. 
-      (if (< limit 20000000)		; (< current end)
+      (if (< current end) ; (< limit 1000000)		
 	(let [square (* current current)]
-	  (if (and (d0? square) (d9? square) (d8? square) 
-		   (d7? square) (d6? square) (d5? square) (d4? square) (d3? square))
-	    (if (d2? square)
-	      square
-	      (do (println (list :2 square current limit)))))
-	  (recur (+ (first jump) current) (rest jump) (inc limit))
-	  )
-	(list current (- current start) (- current end)  (expt current 2) (dall? (expt current 2)) (< current end))))))
+	  (if (and ;(d0? square) (d9? square) (d8? square) 
+	       (d7? square) (d6? square)  (d4? square) (d3? square)
+	       (d5? square) (d2? square) (d1? square))
+	    square
+	    (recur (+ (first jump) current) (rest jump) (inc limit))))))))
 
 
-(comment
-(if (and (d8? square) (d7? square) (d6? square) (d5? square) 
-		  (d4? square) (d3? square) (d2? square) (d1? square)))
-)
-(defn dd? [digit number] (= digit (quot (mod number (expt 10 (- 9 (- digit 3)))) (expt 10 (- 9 (- digit 1))))))
-;;[2 4 6 8 10 12 14 15 16]
-;;[9 8 7 6  5  4  3  2  1]
+;; problem206> (time (f))
+;; "Elapsed time: 1819.530397 msecs"
+;; 1929374254627488900
+;; problem206> (dall? 1929374254627488900)
+;; true
+;; problem206> (exact-integer-sqrt 1929374254627488900)
+;; [1389019170 0]
 
-
-(defn d89? [n] (let [d9 (mod n 100)]))
-
-;; 100 
-;192939495969798999
-;100000000000000000
-;;; ---
-; [1 2 3 4 5 6 7 8 9 0]
-;  
-
-(def s (map #(integer 
-	 (drop-last 
-	  (interleave [1 2 3 4 5 6 7 8 9 0] (cycle [%])))) 
-       (range 0 10)))
-
-(map #(exact-integer-sqrt %) s)
-
-;([1010101010 204060800] [1058921220 1450893510] [1105587740 1788975320] [1150362705 582466905] [1193459029 745862099] [1235052450 1406583450] [1275290028 1151446176] [1314296297 1369875761] [1352177820 1787936580] [1389026623 295205861])
-
-;; (exact-integer-sqrt n) ==> [1_2_3_4_5_6_7_8_9_0]
-;; number of digits in sqrt: 19
-;; first digit:               1
-;; last digit:                0 --> jump by 10
-;; second to last digit       9 --> jump by 10 * 3 or 10 * 7
