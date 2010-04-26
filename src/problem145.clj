@@ -40,8 +40,8 @@
 ;;  3000000   4000000  100    2500
 ;;  1000000  10000000  400   50000
 ;; 12000000  13000000  400   14400
-;; 10000000 100000000  400? 129600?    
-;; 10000000 100000000    ?     
+;; 10000000 100000000  500  540000     
+;; (+ 540000 50000 18000 0 600 100 20)
 
 (defn reversible-number-sums [number]
   (if (zero? (mod number 10)) 0
@@ -118,3 +118,22 @@
 ;; #'p145/f
 ;; p145> (stats f)
 ;; {:distinct 400, :count 50000}
+;; p145> (time (def f (part  10000000 100000000)))
+;; "Elapsed time: 1.4706084966347E7 msecs"
+;; #'p145/f
+;; p145> (stats f)
+;; {:distinct 500, :count 540000}
+
+;; brute force galore
+;; user> (+ 540000 50000 18000 0 600 100 20)
+;; 608720
+
+
+(def explanation
+     "a) for n = 2k for some integer k, none of the digit-additions can carry, so the outside pair of digits can be any one of 20 choices, and each of the inside pairs can be any one of thirty choices, for a total of 20*30^(k-1) n-digit reversible numbers 
+
+b) for n = 4k + 1 for some integer k, there are no solutions -- the middle digit would be required to add with itself to produce an odd result. 
+
+c) for n = 4k + 3 for some integer k, the outside pair must have an odd sum >10, so there are again 20 choices; the next-to-outer pair must have an even sum without carry (25 choices), the next-inner pair must again have odd sum >10, the next an even sum, etc., to the middle digit which must not carry when added to itself (5 choices), for a total of 100*500^k n-digit reversible numbers. 
+
+There are then 0 + 20*30^0 + 100*500^0 + 20*30^1 + 0 + 20*30^2 + 100*500^1 + 20*30^3 + 0 = 20 + 100 + 600 + 18000 + 50000 + 540000 = 608720 reversible numbers < 10^9.")
