@@ -31,6 +31,8 @@
 ** 046 - What is the smallest odd composite that cannot be written as the sum of a prime and twice a square?
 ** 050 - Which prime, below one-million, can be written as the sum of the most consecutive primes?
 * done
+<2010-04-28 Wed> #80: 050
+<2010-04-26 Mon> #79: 145
 <2010-04-25 Sun> #78: 206
 <2010-04-23 Fri> #77: 120
 <2010-04-22 Thu> #74: 160, #75 062, #76 123
