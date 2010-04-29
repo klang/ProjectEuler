@@ -54,3 +54,30 @@ How many different ways can £2 be made using any number of coins?
 ;; problem031> (time (count (change)))
 ;; "Elapsed time: 16083.125168 msecs"
 ;; 73682
+
+;; scheme function found on the forums
+;;(define (num-ways amount coins) 
+;;  (cond ((= amount 0) 1) 
+;;	((or (< amount 0) (null? coins)) 0) 
+;;	(else (+ (num-ways amount (cdr coins)) 
+;;		 (num-ways (- amount (car coins)) coins))))) 
+
+(defn num-ways [amount coins]
+  (cond (= amount 0) 1
+	(or (< amount 0) (nil? coins)) 0
+	:else (+ (num-ways amount (rest coins))
+		 (num-ways (- amount (first coins)) coins))))
+
+;;(memoize! num-ways) 
+(def num-ways (memoize num-ways))
+
+;;(define coins '(1 2 5 10 20 50 100 200)) 
+(def coins '(1 2 5 10 20 50 100 200))
+
+;;(num-ways 200 coins) 
+;;(num-ways 200 coins) 
+;; problem031> (time (num-ways 200 coins))
+;; ; Evaluation aborted.
+;; StackOverflowError
+
+;; though the translation from Scheme to Clojure is very easy and understandable, the lack of tail call optimation kills the function
