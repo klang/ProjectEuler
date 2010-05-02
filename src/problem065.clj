@@ -1,4 +1,5 @@
-(use 'clojure.contrib.math)
+(ns problem065
+  (:use clojure.contrib.math))
 
 ;; http://en.wikipedia.org/wiki/Continued_fraction
 ;; convert number to continued fraction representation
