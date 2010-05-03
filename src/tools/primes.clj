@@ -1,6 +1,6 @@
 (ns tools.primes
-  (:use [clojure.contrib.combinatorics]))
-(use '[clojure.contrib.lazy-seqs :only (primes)])
+  (:use [clojure.contrib.combinatorics])
+  (:use [clojure.contrib.lazy-seqs :only (primes)]))
 
 (def prime-gen
      (let [primes (atom [])]
