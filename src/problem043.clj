@@ -44,7 +44,7 @@
 (defn special-property? [n]
   (every? #(and true %) (map #(divisible (integer %1) %2) (partition 3 1 (rest n)) primes)))
 
-; (special-property? (digits 1406357289))
+;; (special-property? (digits 1406357289))
 
 ;; (reduce + (filter #(special-property? %) pandigital))
 
@@ -53,7 +53,6 @@
 		     (partition 3 1 (rest n)) 
 		     primes)))
 
-(def known [1406357289 1460357289])
 (def known  '(1406357289 1430952867 1460357289))
 
 (defn controlled-loop []
@@ -116,37 +115,8 @@
 
 ;; too slow .. there are too many numbers generated, and too many calculations done to cut it down
 
-(deftest test-general
-  (is (zero? (rem (quot  (rem 1406357289 1000) 1) 17)))
-  (is (zero? (rem (quot  (rem 1406357289 10000) 10) 13)))
-  (is (zero? (rem (quot  (rem 1406357289 100000) 100) 11)))
-  (is (zero? (rem (quot  (rem 1406357289 1000000) 1000) 7)))
-  (is (zero? (rem (quot  (rem 1406357289 10000000) 10000) 5)))
-  (is (zero? (rem (quot  (rem 1406357289 100000000) 100000) 3)))
-  (is (zero? (rem (quot  (rem 1406357289 1000000000) 1000000) 2)))
-  )
-
 ;; ---
 ;; back to the start
-
-;; http://en.wikipedia.org/wiki/Divisibility_rule
-(defn divides-2 [n]
-  "The last digit is even (0, 2, 4, 6, or 8)")
-(defn divides-3 [n]
-  "The sum of the digits is divisible by 3. For large numbers, digits may be summed iteratively.")
-(defn divides-5 [n]
-  "The last digit is 0 or 5.")
-(defn divides-7 [n]
-  "Subtract 2 times the last digit from the rest.")
-(defn divides-11 [n]
-  "Subtract the last digit from the rest." )
-(defn divides-13 [n]
-  "Add 4 times the last digit to the rest." )
-(defn divides-17 [n]
-  "Subtract 5 times the last digit from the rest"
-  ;(= 17) 
-  (- (quot n 10) (* 5 (rem n 10))))
-
 
 (defn special-property? [n]
   (every? true? (map #(= 0 (rem (integer %1) %2)) 
@@ -159,25 +129,12 @@
 
 (def pandigital (drop (factorial 9) (permutations '(0 1 2 3 4 5 6 7 8 9))))
 
+;; http://en.wikipedia.org/wiki/Divisibility_rule
 ;; the special property can be reduced further, as we know that
 ;; d4 has to be even, for the first group to be divisible by 2 
 ;; --> (even? (nth (digits n) 3))
 ;; d5 has to be 0 or 5, for the 3rd group to be divisible by 5 
 ;; --> (or (zero? (nth (digits n) 4)) (= 5 (nth (digits n) 4)))
-(comment
-  (even? (nth the-digits 3))		; divides 2
-  (or (= 0 (nth the-digits 4)) 
-      (= 5 (nth the-digits 4))))		; divides 5
-
-  (comment (every? true? (map #(= 0 (rem (integer %1) %2)) 
-		       (partition 3 1 (rest n)) 
-		       [2 3 5 7 11 13 17])))
-
-(defn pre-test [the-digits]
-  (and (even? (nth the-digits 3))
-       (or (= 0 (nth the-digits 4)) 
-      (= 5 (nth the-digits 4)))))
-
 (def pandigital (filter #(and (even? (nth % 3))
 			      (or (= 5 (nth % 5)) 
 				  (= 0 (nth % 5)))) 
@@ -189,15 +146,14 @@
 (defn controlled-loop []
   (let [primes '(2 3 5 7 11 13 17)]
     (loop [pandigital pandigital
-	   ;limit 1000
 	   catch []
 	   i 0]
-      (if (= '() pandigital);(= 0 limit)
+      (if (= '() pandigital)
 	catch
 	(let [p (first pandigital)
 	      s (special-property? p)]
 	  (do (if s (println (list p i)))
-	    (recur (rest pandigital) (if s (conj catch s) catch) (inc i))))))))
+	    (recur (rest pandigital) (if s (conj catch (integer p)) catch) (inc i))))))))
 
 ; the version of pandigital, that just drops 9! members
 ;((1 4 0 6 3 5 7 2 8 9) 123270)
@@ -221,3 +177,46 @@
 
 ;; execution time acceptable
 ;(+ 1406357289 1430952867 1460357289 4106357289 4130952867 4160357289)
+
+;; problem043> (time (reduce + (map integer (filter #(special-property? %) pandigital))))
+;; "Elapsed time: 72894.258687 msecs"
+;; 16695334890
+
+;; avoid doing check for divisibility by 2 too many times
+(defn special-property? [n]
+  (every? true? (map #(= 0 (rem (integer %1) %2)) 
+		     (rest (partition 3 1 (rest n))) 
+		     [3 5 7 11 13 17])))
+
+;; problem043> (time (reduce + (map integer (filter #(special-property? %) pandigital))))
+;; "Elapsed time: 16283.836793 msecs"
+;; 16695334890
+
+(defn special-property? [n]
+  (let [parts (partition 3 1 (rest n))]
+    (and ;(zero? (rem (integer (nth parts 0)) 2))
+	 (zero? (rem (integer (nth parts 1)) 3))
+	 ;(zero? (rem (integer (nth parts 2)) 5))
+	 (zero? (rem (integer (nth parts 3)) 7))
+	 (zero? (rem (integer (nth parts 4)) 11))
+	 (zero? (rem (integer (nth parts 5)) 13))
+	 (zero? (rem (integer (nth parts 6)) 17)))))
+
+;; problem043> (time (reduce + (map integer (filter #(special-property? %) pandigital))))
+;; "Elapsed time: 13275.54887 msecs"
+;; 16695334890
+
+;; the time can probably be squeezed further by using the following ideas
+
+(defn divides-7 [n]
+  "Subtract 2 times the last digit from the rest.")
+(defn divides-11 [n]
+  "Subtract the last digit from the rest." )
+(defn divides-13 [n]
+  "Add 4 times the last digit to the rest." )
+(defn divides-17 [n]
+  "Subtract 5 times the last digit from the rest"
+  (= 17 (- (* 5 (rem n 10)) (quot n 10) )))
+
+
+
