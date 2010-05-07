@@ -144,10 +144,10 @@ Find the pair of pentagonal numbers, Pj and Pk, for which their sum and differen
 ;; http://gist.github.com/391238
 (defn flatten [s] (remove seq? (tree-seq seq? seq s)))
 
-(defn pentagonal-diff-and-sum-reduced [n]
-  (map #(conj % {:sum pj} )) 
-       (filter #(not (nil? %))  
-	       (map (fn [s] (if (pentagonal? (:diff s)) s) ) (pentagonal-diff n)))))
+;(defn pentagonal-diff-and-sum-reduced [n]
+;  (map #(conj % {:sum pj} )) 
+;       (filter #(not (nil? %))  
+;	       (map (fn [s] (if (pentagonal? (:diff s)) s) ) (pentagonal-diff n)))))
 
 (defn pentagonal-data [n] (take-while #(< 0 (:diff %)) (map #(hash-map :pj n :pk % :diff (- n %) :sum (+ n %)) pentagonals)))
 (defn pentagonal-diff [n] (filter #(pentagonal? (:diff %)) (pentagonal-data n)))
@@ -174,81 +174,6 @@ Find the pair of pentagonal numbers, Pj and Pk, for which their sum and differen
 	     (first candidates)
 	     (recur (rest candidates) (inc i))))
       )))
-
-;; delete everything below this line ------------------------
-(comment
-  (take 3 (filter not-empty (map #(pentagonal-diff-and-sum-reduced %) pentagonals)))
-
-  (take 1 (map (fn [s] (if (pentagonal? (:sum s)) s))
-	       (filter not-empty (map #(pentagonal-diff-and-sum-reduced %) pentagonals))))
-
-  (take 4 (map (fn [s] (map #(if (pentagonal? (:sum %)) %) s)) 
-	       (filter not-empty (map #(pentagonal-diff-and-sum-reduced %) pentagonals)))))
-
-;; http://gist.github.com/391238
-(defn flatten [s] (remove seq? (tree-seq seq? seq s)))
-
-(comment
-  (take 3 (flatten (filter not-empty (map #(pentagonal-diff-and-sum-reduced %) pentagonals))))
-  (take 3 (filter #(pentagonal? (:sum %)) (flatten (filter not-empty (map #(pentagonal-diff-and-sum-reduced %) pentagonals)))))
-  (first (filter #(pentagonal? (:sum %)) (flatten (filter not-empty (map #(pentagonal-diff-and-sum-reduced %) pentagonals))))))
-
-(defn pentagonal-diff-and-sum-reduced [n] (filter #(and (pentagonal? (:diff %)) (pentagonal? (:sum %))) (pentagonal-data n)))
-(defn redd [n] (filter #(pentagonal? (:diff %)) (pentagonal-data n)))
-(defn foo []
-  (letfn [	  
-	  (redX [n] (filter #(and (pentagonal? (:diff %)) (pentagonal? (:sum %))) (pentagonal-data n)))
-	  ]
-    (loop [candidates (flatten (filter not-empty (map #(pentagonal-diff-and-sum-reduced %) pentagonals)))]
-      (do  (println (:pentagonal (first candidates)))
-	   (if (pentagonal? (:sum (first candidates)))
-	     (first candidates)
-	     (recur (rest candidates))))
-      )))
-;; checked up to 13888252
-;; nothing
-;; something is seriously wrong
-
-;;; --- delete this idea befor commit
-(comment
-;(count  (take-while #(< (first %) 100) mapped-pentagonals))
-;(count  (take-while #(< (first %) 200) (drop 8 mapped-pentagonals)))
-
-  (defn findD []
-    (letfn [(diff-considered [n considered] (map #(- n %) considered))]
-      (loop [j 0
-	     k 0
-	     differences [] ;;   difference between p(k)-p(j), keeping j<k and the result positive    
-	     sums        [] ;;   if the differnce 
-	     distance    0
-	     ;;   pentagonals are moved from the sequence to this vector (use {p(i) i} for easy lookup)
-	     considered  []   
-	     pentagonals pentagonals
-	     ]
-	(cond (= k j) ;; increese j, reset k and add another element to the considered numbers
-	      (recur (inc j) 0 [] [] distance (conj considered (first pentagonals)) (rest pentagonals))
-	      (zero? k) ;; produce the differences 
-	      (recur j (inc k) (vec (map #(- (nth considered (- j 1)) %) considered)) sums distance considered pentagonals)
-	      (< k j) (recur j (inc k) [] [] 0 considered pentagonals)
-	    
-	      )
-	))
-    )
-
-
-  (defn findD []
-    (letfn [(pentagonal [n] (quot (- (* 3 n n) n) 2))]
-      (loop [j 1			;
-	     k 1			;
-	     pentagonals [1]		; pentagonals created as we go
-	     differences [0]
-	     current     (nth pentagonals j)
-	     limit 100
-	     ]
-	(if (zero? limit) minimum
-	    (recur ))
-	)))
-
-  (take-while #(< (first %) 100) mapped-pentagonals))
-
+;; not the minimum .. simply the first
+;; {:pk 1560090, :pj 7042750, :diff 5482660, :sum 8602840}
 
