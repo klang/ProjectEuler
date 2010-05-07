@@ -141,10 +141,6 @@ Find the pair of pentagonal numbers, Pj and Pk, for which their sum and differen
 (defn pentagonal-diff-and-sum [n]
   (map #(conj % {:sum (+ (:pj %) (:pk %))}) (pentagonal-diff n)))
 
-(defn pentagonal-data [n] (take-while #(< 0 (:diff %)) (map #(hash-map :pj n :pk % :diff (- n %) :sum (+ n %)) pentagonals)))
-
-
-
 ;; http://gist.github.com/391238
 (defn flatten [s] (remove seq? (tree-seq seq? seq s)))
 
@@ -153,13 +149,35 @@ Find the pair of pentagonal numbers, Pj and Pk, for which their sum and differen
        (filter #(not (nil? %))  
 	       (map (fn [s] (if (pentagonal? (:diff s)) s) ) (pentagonal-diff n)))))
 
+(defn pentagonal-data [n] (take-while #(< 0 (:diff %)) (map #(hash-map :pj n :pk % :diff (- n %) :sum (+ n %)) pentagonals)))
+(defn pentagonal-diff [n] (filter #(pentagonal? (:diff %)) (pentagonal-data n)))
+(defn pentagonal-sum [n] (filter #(pentagonal? (:sum %)) (pentagonal-data n)))
 
-
-
+(defn pentagonal-diff-and-sum [n] (filter #(and (pentagonal? (:diff %)) (pentagonal? (:sum %))) (pentagonal-data n)))
 
 (comment
-  (take 3 (filter not-empty (map #(pentagonal-diff-and-sum-reduced %) pentagonals)))
+  (take 1 (flatten (filter not-empty (map #(pentagonal-diff %) pentagonals))))
+  (take 1 (flatten (filter not-empty (map #(pentagonal-sum %) pentagonals))))
+  (take 1 (flatten (filter not-empty (map #(pentagonal-diff-and-sum %) pentagonals))))
+ )
+(defn foo []
+  (letfn [(pentagonal-data [n] (take-while #(< 0 (:diff %)) 
+					   (map #(hash-map :pj n :pk % :diff (- n %) :sum (+ n %))
+						pentagonals)))
+	  (pentagonal-sum [n] (filter #(pentagonal? (:sum %)) 
+				      (pentagonal-data n)))	  
+	  ]
+    (loop [candidates (flatten (filter not-empty (map #(pentagonal-sum %) pentagonals)))
+	   i 0]
+      (do  (println i (first candidates))
+	   (if (pentagonal? (:diff (first candidates)))
+	     (first candidates)
+	     (recur (rest candidates) (inc i))))
+      )))
 
+;; delete everything below this line ------------------------
+(comment
+  (take 3 (filter not-empty (map #(pentagonal-diff-and-sum-reduced %) pentagonals)))
 
   (take 1 (map (fn [s] (if (pentagonal? (:sum s)) s))
 	       (filter not-empty (map #(pentagonal-diff-and-sum-reduced %) pentagonals))))
@@ -175,13 +193,18 @@ Find the pair of pentagonal numbers, Pj and Pk, for which their sum and differen
   (take 3 (filter #(pentagonal? (:sum %)) (flatten (filter not-empty (map #(pentagonal-diff-and-sum-reduced %) pentagonals)))))
   (first (filter #(pentagonal? (:sum %)) (flatten (filter not-empty (map #(pentagonal-diff-and-sum-reduced %) pentagonals))))))
 
+(defn pentagonal-diff-and-sum-reduced [n] (filter #(and (pentagonal? (:diff %)) (pentagonal? (:sum %))) (pentagonal-data n)))
+(defn redd [n] (filter #(pentagonal? (:diff %)) (pentagonal-data n)))
 (defn foo []
-  (loop [candidates (flatten (filter not-empty (map #(pentagonal-diff-and-sum-reduced %) pentagonals)))]
-    (do  (println (:pentagonal (first candidates)))
-	(if (pentagonal? (:sum (first candidates)))
-	  (first candidates)
-	  (recur (rest candidates))))
-    ))
+  (letfn [	  
+	  (redX [n] (filter #(and (pentagonal? (:diff %)) (pentagonal? (:sum %))) (pentagonal-data n)))
+	  ]
+    (loop [candidates (flatten (filter not-empty (map #(pentagonal-diff-and-sum-reduced %) pentagonals)))]
+      (do  (println (:pentagonal (first candidates)))
+	   (if (pentagonal? (:sum (first candidates)))
+	     (first candidates)
+	     (recur (rest candidates))))
+      )))
 ;; checked up to 13888252
 ;; nothing
 ;; something is seriously wrong
