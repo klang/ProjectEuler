@@ -20,17 +20,14 @@
 ** understanding
 *** 282 - The Ackermann function
 ** memory/time
-*** 023 - Find the sum of all the positive integers which cannot be written as the sum of two abundant numbers.
 * pipeline
 ** 191 - Prize Strings
-** 031 - Investigating combinations of English currency denominations.
 ** 032 - Find the sum of all numbers that can be written as pandigital products.
 ** 038 - What is the largest 1 to 9 pandigital that can be formed by multiplying a fixed number by 1, 2, 3, ... ?
-** 043 - Find the sum of all pandigital numbers with an unusual sub-string divisibility property.
-** 044 - Find the smallest pair of pentagonal numbers whose sum and difference is pentagonal.
-** 046 - What is the smallest odd composite that cannot be written as the sum of a prime and twice a square?
-** 050 - Which prime, below one-million, can be written as the sum of the most consecutive primes?
 * done
+<2010-05-08 Sat> #85: 079
+<2010-05-07 Fri> #84: 044
+<2010-05-05 Wed> #83: 046
 <2010-05-02 Sun> #82: 043
 <2010-04-29 Thu> #81: 031
 <2010-04-28 Wed> #80: 050
