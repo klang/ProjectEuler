@@ -1,14 +1,13 @@
 (ns tools.numbers
-  )
+  (:use clojure.test)
+  (:use [clojure.contrib.str-utils2 :only (split)])
+  ;(:use [clojure.contrib.math :only (expt sqrt exact-integer-sqrt)])
+  ;(:use [ clojure.contrib.lazy-seqs :only (primes)])
+  (:use clojure.contrib.math)
+  (:use clojure.contrib.repl-utils)
+  (:use clojure.contrib.combinatorics)
+  (:use clojure.set))
 
-(use 'clojure.contrib.test-is 
-;     '[ clojure.contrib.lazy-seqs :only (primes)]
-;     '[clojure.contrib.math :only (expt sqrt exact-integer-sqrt)]
-     '[clojure.contrib.str-utils2 :only (split)]
-     'clojure.contrib.math
-     'clojure.contrib.repl-utils
-     'clojure.contrib.combinatorics
-     'clojure.set)
 
 (defn digits [number]
   (map #(. Integer parseInt % 10) 
