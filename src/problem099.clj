@@ -1,5 +1,9 @@
-(load "tools")
-(use 'clojure.contrib.duck-streams)
+(ns problem099
+  (:use tools.numbers)
+  (:use tools.primes)
+  (:use [clojure.contrib.str-utils2 :only (split)])
+  (:use clojure.contrib.duck-streams)
+  (:use clojure.test))
 
 ;;(> (expt 632382 518061) (expt 519432 525806))
 ;; each number contains more than 3 million digits
