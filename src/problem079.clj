@@ -26,3 +26,55 @@
 ;; now we need to make a program, that can do this automatically, but this
 ;; really was too easy doing just with pen and paper.
 
+;; hundreds
+;; 1{2 9 6 0 2 8}
+;; 2{8 9 0}
+;; 3{1 6 2 8 9 0} 
+;; 6{2 0 8 9}
+;; 7{1 0 6 8 9 2 3}
+;; 8{9 0}
+
+;; (map #(hash-map (first %) (into [] (rest %))) (map #(digits (. Integer parseInt % 10)) keylog-values))
+
+;; problem079> (def a {3 [1 9]})
+;; problem079> (def b {3 [8 0]})
+;; problem079> (merge-with concat a b)
+;; {3 (1 9 8 0)}
+
+(def hundreds (map #(hash-map (first %) (into [] (rest %))) (map #(digits (. Integer parseInt % 10)) keylog-values)))
+(def tens (map #(hash-map (first %) (into [] (rest %))) (map #(rest (digits (. Integer parseInt % 10))) keylog-values)))
+
+(defn decode [group]
+  (loop [catch {} 
+	 group group] 
+    (if (empty? group) 
+      (map #(hash-map (first %) (distinct (second %))) catch)
+      (recur (merge-with concat catch (first group)) (rest group)))))
+
+;(decode hundreds)
+(comment
+  (; sorted manually after the number of elements that are to the right of the digit
+   {7 (6 2 1 0 3 9 8)}
+   {3 (1 9 8 6 2 0)}
+   {1 (8 0 2 9 6)} 
+   {6 (8 0 9 2)} 
+   {2 (9 0 8)} 
+   {8 (9 0)} 
+;; {0 ()}
+))
+
+;(decode tens)
+(comment
+  (
+   {3 (1 6)} 
+   {1 (9 8 0 6)}
+   {6 (2 8 0 9)} 
+   {2 (9 0 8)} 
+   {8 (0 9)} 
+   {9 (0)} 
+;; {0 ()}
+   ))
+
+;; .. I can't be bothered ... 
+;; I've used ten times as much time getting this far, as solving the problem with
+;; pen and paper and
