@@ -54,18 +54,19 @@ Find the minimal path sum, in matrix.txt, a text file containing a 80 by 80 matr
 		[962 803 746 422 111]
 		[537 699 497 121 956]
 		[805 732 524  37 331]])
-
-  ;; diagonals of a 5x5 square
-  ;;  [[0 0]                        ]
-  ;;  [[1 0] [0 1]                  ] 
-  ;;  [[2 0] [1 1] [0 2]            ]
-  ;;  [[3 0] [2 1] [1 2] [0 3]      ]
-  ;;  [[4 0] [3 1] [2 2] [1 3] [0 4]]
-  ;;  [      [4 1] [3 2] [2 3] [1 4]]
-  ;;  [            [4 2] [3 3] [2 4]]
-  ;;  [                  [4 3] [3 4]]
-  ;;  [                        [4 4]]
 )
+
+;; diagonals of a 5x5 square
+;;  [[0 0]                        ]
+;;  [[1 0] [0 1]                  ] 
+;;  [[2 0] [1 1] [0 2]            ]
+;;  [[3 0] [2 1] [1 2] [0 3]      ]
+;;  [[4 0] [3 1] [2 2] [1 3] [0 4]]
+;;  [      [4 1] [3 2] [2 3] [1 4]]
+;;  [            [4 2] [3 3] [2 4]]
+;;  [                  [4 3] [3 4]]
+;;  [                        [4 4]]
+
 (defn north-east-line [[x y]]
   "returns the points of the north-east-line going north east, starting in (x y)"
   (loop [i (range x (+ y -1) -1) 
@@ -86,8 +87,91 @@ Find the minimal path sum, in matrix.txt, a text file containing a 80 by 80 matr
 	    (recur i (rest j) (conj d (north-east-line [(- elements 1) (first j)]))))
 	(recur (rest i) j (conj d (north-east-line [(first i) 0])))))))
 
+;; north east lines can be used to give the coordinates of the points in the 
+;; original square, thus converting the square to two triangles, one like the 
+;; one in problem 18, one upside down
 
-(defn squeeze-min [square]
-  "squeezes a square from the top left")
+;; .. 
+;; there is no need to convert .. in the example above, we only need to what 
+;; values we have on the current north-east-line and the minimized values from
+;; the last line to get the minimized values for the next.
+
+(defn value [[x y] square] 
+  "returns the value of a point in a square of data" 
+  (nth (nth square x) y))
+
+(comment
+  (defn squeeze-min [square]
+    (let [pre-lines (north-east-lines square)]
+      (loop [lines     (drop 2 pre-lines) ;; coordinates refering to the square 
+	     minimizedC (first pre-lines) ;; minimum in the top corner is [0 0]
+	     minimized (value (first pre-lines) square)
+	     line      (second pre-lines) ;; 
+	     ]
+	(if (empty? lines)
+	  minimized
+	  (recur (rest lines) 
+		 mimimized
+		 (first lines)
+		 )))))
+) 
+
+(comment
+  (north-east-lines example)
+  ;; [[[0 0]] [[1 0] [0 1]] [[2 0] [1 1] [0 2]] [[3 0] [2 1] [1 2] [0 3]] [[4 0] [3 1] [2 2] [1 3] [0 4]] [[4 1] [3 2] [2 3] [1 4]] [[4 2] [3 3] [2 4]] [[4 3] [3 4]] [[4 4]]]
+(map (fn [[x y]] ()) (north-east-lines example))
+)
+
+;; It's even possible to just calculate every new value in the square
+;; by walking every line in the square .. the easy way
+
+(defn v [[x y] square]
+  "calculates the minimum of going from the north-west to the point specified of a square (an nxn matrix)"
+  (+ (nth (nth square x) y) 
+     (cond 
+       (and (zero? x) (zero? y) )    0
+       (zero? x) (v [x (dec y)] square)	;(nth (nth square x) (dec y))
+       (zero? y) (v [(dec x) y] square);(nth (nth square (dec x)) y)
+       :else ; x y
+       ;(min ((nth (nth square (dec x)) y) (nth (nth square x) (dec y))))
+       (min (v [(dec x) y] square) (v [x (dec y)] square))
+       )))
+
+;;(time (v [79 79] s-full))
+;; not efficient
+
+
+;(v i j) + (min (v (dec i) j) (v i (dec j)))
+(defn v [[x y] square]
+  "returns (v i j) + (min (v (dec i) j) (v i (dec j))) of a point inside the square
+But expects another mechanism to sum the results"
+  (+ (nth (nth square x) y) 
+     (cond 
+       (and (zero? x) (zero? y) )    0
+       (zero? x) (nth (nth square x) (dec y))
+       (zero? y) (nth (nth square (dec x)) y)
+       :else ; x y
+       (min (nth (nth square (dec x)) y)
+	    (nth (nth square x) (dec y))))))
+
+(defn calculate-minimum [square]
+  (let [elements (count (first square))]
+    (loop [points (for [i (range 0 elements) j (range 0 elements)] [i j])
+	   square square] 
+      (if (empty? points) 
+	    ;; the result will be in the south-west most point
+	    (nth (nth square (dec elements)) (dec elements))
+	    (let [x (first (first points))
+		  y (second (first points))]
+	      (recur (rest points)
+		     (assoc square x
+			    (assoc (nth square x) y (v [x y] square)))))))))
+
+; replace (0,0) with 42
+; (assoc example 0 (assoc (nth example 0) 0 42))
+
+;; problem081> (time  (calculate-minimum s-full))
+;; "Elapsed time: 81.554255 msecs"
+;; 427337
 
 
