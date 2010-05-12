@@ -23,8 +23,10 @@
 * pipeline
 ** 191 - Prize Strings
 ** 032 - Find the sum of all numbers that can be written as pandigital products.
-** 038 - What is the largest 1 to 9 pandigital that can be formed by multiplying a fixed number by 1, 2, 3, ... ?
+** 038 - What is the largest 1 to 9 pandigital that can be formed by multiplying a fixed number by 1, 2, 3, ... ?<2010-05-10 Mon>
 * done
+<2010-05-12 Wed> #87: 072
+<2010-05-10 Mon> #86: 081
 <2010-05-08 Sat> #85: 079
 <2010-05-07 Fri> #84: 044
 <2010-05-05 Wed> #83: 046
