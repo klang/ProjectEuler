@@ -39,10 +39,10 @@ How many elements would be contained in the set of reduced proper fractions for 
   (is (= (count f7) (F 7)))
   (is (= (count f8) (F 8))))
 
-;;problem072> (F 100000)
-;;3039650755
+;; problem072> (time (- (F 1000000) 2))
+;; "Elapsed time: 215707.091089 msecs"
+;; 303963552391
 
-;;problem072> (time (- (F 100000) 2))
-;;"Elapsed time: 11475.464258 msecs"
-;;3039650753
-;; not correct
+;; maybe a more efficient totient function would be in order?
+
+
