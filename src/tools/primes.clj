@@ -99,3 +99,8 @@ where p1...pm are the unique prime factors of n."
 ; n=p1^e1*p2^e2...p1^e1, φ(n)=n(1-1/p1)(1-1/p2)...(1-1/pk).
 ; n=p1*p2
 ; φ(p1*p2)=p1*p2*(1-1/p1)(1-1/p2)=(p1-1)(p2-1)
+
+(meta {:hint "... the number of primes below n, pi(n)~Li(n) [Gauss' Li function] 
+Li(n) = n/ln(n) + n/[ln(n)]2 + 2n/[ln(n)]3 + ... + k!n/[ln(n)]k + 1 + ... (to infinity) 
+Hence n/ln(n) is a first approximation, n/ln(n) + n/[ln(n)]2 is better, and so on. 
+In fact, for relatively small n, n/(ln(n)-1) turns out to be a better approximation. "})
