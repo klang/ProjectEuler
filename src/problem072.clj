@@ -45,4 +45,18 @@ How many elements would be contained in the set of reduced proper fractions for 
 
 ;; maybe a more efficient totient function would be in order?
 
+;;
 
+(defn a [n]
+  (meta {:description ""
+	 :url "http://www.research.att.com/~njas/sequences/A005728"
+	 :formular "a(n) = 1+Sum_{i=1..n} phi(i).
+a(n) = n(n+3)/2 - Sum(k = 2 to n, a([n/k])). - David W. Wilson, May 25, 2002"})
+  (- (/ (* n (+ n 3)) 2) 
+     (reduce + (map (fn [k] (a (int (/ n k)))) (range 2 (inc n))))))
+
+;; n 1000              10000              1000000
+;; F  84.25376 msecs     963.177193 msecs  215707.091089
+;; a 486.153576 msecs  25622.780795 msecs  -
+(def a (memoize a))
+;; a 61.883309 msecs     404.298746 msecs   64763.338642 msecs
