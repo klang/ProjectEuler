@@ -5,21 +5,29 @@ The algorithm computes each successive entry in terms of the previous two entrie
 
 (defn farey [n]
   (map #(/ (first %) (second %)) 
-       (iterate 
-	(fn [[a b c d]] 
-	  (let [k (int (/ (+ n b) d))] 
-	    [c d (- (* k c) a) (- (* k d) b)])) [0 1 1 n])))
+       (lazy-cat
+	(take-while 
+	 (fn [[a b c d]] (<= c n))
+	 (iterate 
+	  (fn [[a b c d]] 
+	    (let [k (int (/ (+ n b) d))] 
+	      [c d (- (* k c) a) (- (* k d) b)])) [0 1 1 n]))
+	(list (list n n)))))
 
 (defn farey-seq [n]
-  "returns a farey sequence except the "
+  "returns a farey sequence of numerator, denominator pairs. "
   (map #(list (first %) (second %)) 
        (lazy-cat
-	(take-while (fn [[a b c d]] (<= c n))
-		    (iterate 
-		     (fn [[a b c d]] 
-		       (let [k (int (/ (+ n b) d))] 
-			 [c d (- (* k c) a) (- (* k d) b)])) [0 1 1 n]))
+	(take-while 
+	 (fn [[a b c d]] (<= c n))
+	 (iterate 
+	  (fn [[a b c d]] 
+	    (let [k (int (/ (+ n b) d))] 
+	      [c d (- (* k c) a) (- (* k d) b)])) [0 1 1 n]))
 	(list (list n n)))))
+
+(defn farey [n]
+  (map #(/ (first %) (second %)) (take 10 (farey-seq n))))
 
 (defn fraction-compare [[n d] [cn cd]]
   "a cheap way to compare fractions returned by farey-seq"
