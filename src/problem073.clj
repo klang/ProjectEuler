@@ -12,6 +12,7 @@ How many fractions lie between 1/3 and 1/2 in the sorted set of reduced proper f
   (:use tools.numbers)
   (:use tools.primes)
   (:use problem072)
+  (:use tools.farey)
   (:use clojure.test))
  
 (defn fractions [min max limit] 
@@ -45,12 +46,13 @@ How many fractions lie between 1/3 and 1/2 in the sorted set of reduced proper f
 ;; 43772257
 ;; we also know, that 1/2 is always the middle element in farley series.
 
-(defn farey [n]
-  (map #(/ (first %) (second %)) 
-       (iterate 
-	(fn [[a b c d]] 
-	  (let [k (int (/ (+ n b) d))] 
-	    [c d (- (* k c) a) (- (* k d) b)])) [0 1 1 n])))
+(comment
+  (defn farey [n]
+    (map #(/ (first %) (second %)) 
+	 (iterate 
+	  (fn [[a b c d]] 
+	    (let [k (int (/ (+ n b) d))] 
+	      [c d (- (* k c) a) (- (* k d) b)])) [0 1 1 n]))))
 
 (deftest test-fractions
   (is
@@ -84,3 +86,19 @@ How many fractions lie between 1/3 and 1/2 in the sorted set of reduced proper f
 ;; "Elapsed time: 364597.112721 msecs"
 ;; 7295372
 
+(comment
+(drop-while #(fraction-compare % [1 3])
+	    (take-while #(fraction-compare % [1 2])
+			(farey-seq 8)))
+)
+
+(defn count-fractions-faster []
+  (loop [fractions (drop-while #(fraction-compare % [1 3])
+	    (take-while #(fraction-compare % [1 2])
+			(farey-seq 12000)))
+	 number 0]
+    (if (empty? fractions)
+      number
+      (recur (rest fractions) (inc number)))))
+
+;; .. well, not really faster. Got bored waiting.
