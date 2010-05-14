@@ -1,3 +1,4 @@
+(ns problem026
 ;; A unit fraction contains 1 in the numerator. The decimal representation of the unit fractions with denominators 2 to 10 are given:
 
 ;; 1/2	= 	0.5
@@ -16,8 +17,12 @@
 ;; http://en.wikipedia.org/wiki/Repeating_decimal
 
 ;;On the one hand, the decimal representation of a rational number is ultimately periodic because it can be determined by a long division process, which must ultimately become periodic as there are only finitely many different remainders and so eventually it will find a remainder that has occurred before.
-(use 'clojure.contrib.test-is 'clojure.contrib.math 'clojure.set)
-(load "tools")
+  (:use tools.numbers)
+  (:use tools.primes)
+  (:use clojure.test)
+  (:use clojure.contrib.math)
+  (:use clojure.set))
+
 (defn long-divide-cycle-length [num div] 
   (loop [number    (quot num div)
 	 remainder (rem num div)
@@ -113,7 +118,7 @@
 
 ;; http://groups.google.com/group/k12.ed.math/browse_thread/thread/19f74d278e88b65d/bd50b5ae25c74465?lnk=st&q=computing+euler+totient+function&rnum=4&pli=1
 ;; translated from scheme
-(defn totient [n]
+(defn totient-scheme [n]
   (loop [tot 0, pos (- n 1)]
     (if (> pos 0)
       (if (= 1 (gcd n pos))
@@ -121,10 +126,6 @@
 	(recur tot (- pos 1)))
       tot)))
 
-(defn totient [n]
-  "totient(n) = n * (1 - 1/p1)(1 - 1/p2)(1 - 1/p3)...(1 - 1/pm) 
-where p1...pm are the unique prime factors of n."
-  (* n (reduce * (map #(- 1 (/ 1 %)) (set (factors n))))))
 
 (defn cyclic-number [n]
   "If the period of the repeating decimal of 1⁄p is equal to p − 1 then the repeating decimal part is called a cyclic number."
