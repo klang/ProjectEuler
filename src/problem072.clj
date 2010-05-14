@@ -62,7 +62,13 @@ a(n) = n(n+3)/2 - Sum(k = 2 to n, a([n/k])). - David W. Wilson, May 25, 2002"})
 (def a (memoize a))
 ;; a 61.883309 msecs     404.298746 msecs   64763.338642 msecs
 
-;; implementation of an algorithm from the forum
+;; implementation of an algorithm from the forum 
+
+;; make-tots-seq-prime                      9428.554381 
+;; make-tots-seq2                          10585.844771 <--- faster on LARGE values
+
+;; (time (- (reduce + (make-tots-seq-prime 1000000)) 1))
+;; (time (- (reduce + (make-tots-seq2 1000000)) 1))
 
 (meta {:description "I calculated the sum of totients in less than 1 second. Basically my algorithm was a modification of sieve. 
 
