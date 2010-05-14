@@ -92,7 +92,16 @@
 (defn totient [n]
   "totient(n) = n * (1 - 1/p1)(1 - 1/p2)(1 - 1/p3)...(1 - 1/pm) 
 where p1...pm are the unique prime factors of n."
+  (cond (= n 1) 1
+	(< n 1) nil
+	:else
+	(* n (reduce * (map #(- 1 (/ 1 %)) (distinct (prime-factors n)))))))
+
+(defn totient [n]
+  "more efficient, totient(1)=1 is not returned"
   (* n (reduce * (map #(- 1 (/ 1 %)) (distinct (prime-factors n))))))
+
+(def totient-seq (lazy-cat (list 1) (map #(totient %) (iterate inc 2))))
 
 ;; --- let's try to build a map of totient results
 
@@ -100,7 +109,10 @@ where p1...pm are the unique prime factors of n."
 ; n=p1*p2
 ; φ(p1*p2)=p1*p2*(1-1/p1)(1-1/p2)=(p1-1)(p2-1)
 
-(meta {:hint "... the number of primes below n, pi(n)~Li(n) [Gauss' Li function] 
+(comment
+  (meta {:hint "... the number of primes below n, pi(n)~Li(n) [Gauss' Li function] 
 Li(n) = n/ln(n) + n/[ln(n)]2 + 2n/[ln(n)]3 + ... + k!n/[ln(n)]k + 1 + ... (to infinity) 
 Hence n/ln(n) is a first approximation, n/ln(n) + n/[ln(n)]2 is better, and so on. 
-In fact, for relatively small n, n/(ln(n)-1) turns out to be a better approximation. "})
+In fact, for relatively small n, n/(ln(n)-1) turns out to be a better approximation. "
+	 :optimations "return n-1 if n is prime" "return n*phi(n) if n is square."
+	 }))
