@@ -10,8 +10,9 @@ It can be seen that there are 21 elements in this set.
 How many elements would be contained in the set of reduced proper fractions for d <= 1,000,000?"
 	 :hint "http://en.wikipedia.org/wiki/Farey_sequence"})
   (:use clojure.contrib.math)
-  (:use tools.numbers)
-  (:use tools.primes)
+  (:use :reload-all tools.numbers)
+  (:use :reload-all tools.primes)
+  (:use [clojure.contrib.lazy-seqs :only (primes)])
   (:use clojure.test))
 
 
@@ -60,3 +61,136 @@ a(n) = n(n+3)/2 - Sum(k = 2 to n, a([n/k])). - David W. Wilson, May 25, 2002"})
 ;; a 486.153576 msecs  25622.780795 msecs  -
 (def a (memoize a))
 ;; a 61.883309 msecs     404.298746 msecs   64763.338642 msecs
+
+;; implementation of an algorithm from the forum
+
+(meta {:description "I calculated the sum of totients in less than 1 second. Basically my algorithm was a modification of sieve. 
+
+In this initialize all elements below the limit with the number itself. Tot=i 
+
+start from p=2 increment in steps of p and for every step 
+Tot*=(p-1)/(p) 
+Now search for entry where Tot=i this corresponds to a prime put this as p,repeat the above procedure in steps of p,Tot*=(p-1)/(p) until p exeeds 1,000,000."})
+
+;; (time (def tots (int-array 40000000 (iterate inc 1))))
+;; "Elapsed time: 34747.914056 msecs"
+
+(def totseq (lazy-cat (list 1) (map #(totient %) (iterate inc 2))))
+(comment
+  (defn tots-seq2 [limit]
+    (loop [i (int) tots (int-array limit (iterate inc 1))]
+    
+      )))
+
+(defn make-tots-seq-prime [limit]
+  "proof of concept. Primes are implicitly found by the method. Here, generated twice."
+  (loop [i (int 0), ps (rest primes), p (int 2), tots (int-array limit (iterate inc 0))]
+    (if (or (<= limit p)) tots 
+      (if (<= limit i) 
+	(recur (int 0) (rest ps) (int (first ps)) tots)
+	(recur (+ i p) ps p (do (aset tots i (int (* (aget tots i) (/ (- p 1) p)))) tots))))))
+
+;; (time (- (reduce + (make-tots-seq-prime 1000000) 1)))
+;; "Elapsed time: 9590.604915 msecs"
+;; 303963152391
+;; better performance than the original algorithm for this problem
+
+(defn search [n coll]
+  "search coll from the n'th element, for the first element that equals it's index."
+  (first (drop-while nil? (map #(if (= %1 %2) % nil) 
+				     (drop n coll) (iterate inc n)))))
+(defn make-tots-seq [limit]
+  (loop [i (int 0), p (int 2), tots (int-array limit (iterate inc 0))]
+    (if (or (<= limit p) (zero? p))
+      tots
+      (if (<= limit i) 
+	(recur (int 0) (int (let [pp (search p tots)] (if (nil? pp) 0 pp))) tots)
+	(recur (+ i p) p (do (aset tots i (int (* (aget tots i) (/ (- p 1) p)))) tots))))))
+
+;; not impressing
+;; problem072> (time (count (make-tots-seq 100000)))
+;; "Elapsed time: 100495.628014 msecs"
+;; 100000
+;; problem072> (time (count (make-tots-seq-prime 100000)))
+;; "Elapsed time: 1603.569119 msecs"
+;; 100000
+
+(deftest test-tots
+  (is (= [1 1 2 2 4 2 6 4 6 4 10 4 12 6 8 8 16 6 18 8 12 
+	  10 22 8 20 12 18 12 28 8 30 16 20 16 24 12 36 18 
+	  24 16 40 12 42 20 24 22 46 16 42 20 32 24 52 18 
+	  40 24 36 28 58 16 60 30 36 32 48 20 66 32 44 24]
+	 (take 70 (tots-seq 100))
+	 (take 70 (drop 1 (make-tots-seq-prime 100)))))
+  (is (= (take 70 (tots-seq 100))
+	 (take 70 (drop 1 (make-tots-seq 100))))))
+
+(defn search [n coll]
+  "search coll from the n'th element, for the first element that equals it's index."
+  (first (drop-while nil? (map #(if (= %1 %2) % nil) 
+				     (drop n coll) (iterate inc n)))))
+;(def t [0 1 1 2 4 4 2 7 4 6 4 11])
+;(search 5 t)
+(defn search-for-index-from-i [i coll] ;; add limit to avoid count
+  (loop [i (int i)] (if (< i (count coll)) 
+		      (if (= i (aget coll i))
+			i 
+			(recur (inc i)))
+		      0)))
+
+(defn mark-off [n limit tots] 
+  "demonstrates part of the algorithm"
+  (loop [i (int 0) p (int n) tots tots]
+    (if (<= limit i)
+      tots
+      (recur (+ i p) p (do (aset tots i (int (* (aget tots i) (/ (- p 1) p)))) tots)))))
+
+(deftest test-mark-off-and-search
+  (let [t2 (int-array 15 (iterate inc 0))]
+    (do (mark-off 2 15 t2) (mark-off 3 15 t2)) ;; mark off 2 and 3
+    (is (= 5 (search-for-index-from-i 3 t2)))    ;; next prime is 5
+    (do (mark-off 5 15 t2))                     ;; mark off 5
+    (is (= 7 (search-for-index-from-i 5 t2)))    ;; next prime is 7
+    ))
+
+(defn make-tots-seq2 [limit]
+  (let [tots (int-array limit (iterate inc 0))]
+    (loop [i (int 0), p (int 2) ] ; note p does not need to be int?
+      (if (or (<= limit p) (zero? p))
+	tots
+	(if (<= limit i) 
+	  (recur (int 0) (int (search-for-index-from-i p tots)))
+	  (do (aset tots i (int (* (aget tots i) (/ (- p 1) p))))
+	      (recur (+ i p) p)))))))
+
+;;problem072> (time (count (make-tots-seq2 1000000)))
+;;"Elapsed time: 9701.404796 msecs"
+;;1000000
+
+(defn search-for-index-from-i [i coll]
+  (loop [i (int i)] (if (< i (count coll)) 
+		      (if (= i (aget coll i))
+			i 
+			(recur (inc i)))
+		      (+ (count coll) 1)))) 
+
+;; return limit + 1 to avoid zero? check
+
+(defn make-tots-seq3 [limit]
+  (let [tots (int-array limit (iterate inc 0))]
+    (loop [i (int 0), p (int 2) ]
+      (if (<= limit p)
+	tots
+	(if (<= limit i) 
+	  (recur (int 0) (int (search-for-index-from-i p tots)))
+	  (do (aset tots i (int (* (aget tots i) (/ (- p 1) p))))
+	      (recur (+ i p) p)))))))
+
+;; no significan change.
+;; tried parsing limit to search function .. no change
+;; tried ignoring typecast on p .. no change
+
+;; problem072> (time (count (make-tots-seq3 1000000)))
+;; "Elapsed time: 10648.358859 msecs"
+;; 1000000
+
