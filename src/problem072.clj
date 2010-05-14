@@ -194,3 +194,10 @@ Now search for entry where Tot=i this corresponds to a prime put this as p,repea
 ;; "Elapsed time: 10648.358859 msecs"
 ;; 1000000
 
+;; problem072> (time (count (make-tots-seq-prime 10000000)))
+;; "Elapsed time: 460870.313983 msecs"
+;; 10000000
+;; problem072> (time (count (make-tots-seq2 10000000)))
+;; "Elapsed time: 160116.005873 msecs"
+;; 10000000
+
