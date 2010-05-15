@@ -81,7 +81,7 @@ Now search for entry where Tot=i this corresponds to a prime put this as p,repea
 ;; (time (def tots (int-array 40000000 (iterate inc 1))))
 ;; "Elapsed time: 34747.914056 msecs"
 
-(def totseq (lazy-cat (list 1) (map #(totient %) (iterate inc 2))))
+(def totients (lazy-cat (list 1) (map #(totient %) (iterate inc 2))))
 
 (defn make-tots-seq-prime [limit]
   "proof of concept. Primes are implicitly found by the method. Here, generated twice."
@@ -121,9 +121,9 @@ Now search for entry where Tot=i this corresponds to a prime put this as p,repea
 	  10 22 8 20 12 18 12 28 8 30 16 20 16 24 12 36 18 
 	  24 16 40 12 42 20 24 22 46 16 42 20 32 24 52 18 
 	  40 24 36 28 58 16 60 30 36 32 48 20 66 32 44 24]
-	 (take 70 (tots-seq 100))
+	 (take 70 totients)
 	 (take 70 (drop 1 (make-tots-seq-prime 100)))))
-  (is (= (take 70 (tots-seq 100))
+  (is (= (take 70 totients)
 	 (take 70 (drop 1 (make-tots-seq 100))))))
 
 (defn search [n coll]
