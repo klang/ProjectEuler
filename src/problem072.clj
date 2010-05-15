@@ -210,8 +210,8 @@ Now search for entry where Tot=i this corresponds to a prime put this as p,repea
       (if (<= limit p)
 	tots
 	(if (<= limit i) 
-	  (let [pp (int (search-for-index-from-i p tots))] 
-	    (recur (int 0) pp (/ (- pp 1) pp)))
+	  (let [p (int (search-for-index-from-i p tots))] 
+	    (recur (int 0) p (/ (- p 1) p)))
 	  (do (aset tots i (int (* (aget tots i) calc)))
 	      (recur (+ i p) p calc)))))))
 
