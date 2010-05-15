@@ -91,7 +91,7 @@ Now search for entry where Tot=i this corresponds to a prime put this as p,repea
 	(recur (int 0) (rest ps) (int (first ps)) tots)
 	(recur (+ i p) ps p (do (aset tots i (int (* (aget tots i) (/ (- p 1) p)))) tots))))))
 
-;; (time (- (reduce + (make-tots-seq-prime 1000000) 1)))
+;; (time (- (reduce + (make-tots-seq-prime 1000000)) 1))
 ;; "Elapsed time: 9590.604915 msecs"
 ;; 303963152391
 ;; better performance than the original algorithm for this problem
@@ -220,3 +220,48 @@ Now search for entry where Tot=i this corresponds to a prime put this as p,repea
 ;; 10000000
 
 ;; (/ (- p 1) p) does take some time, if it is done enough times
+
+  (defn make-tots-seq5 [limit]
+    (loop [i (int 0), p (int 2), calc (/ (- p 1) p), 
+	   tots (int-array limit (iterate inc 0))]
+      (if (<= limit p)
+	tots
+	(if (<= limit i) 
+	  (let [p (int (search-for-index-from-i p tots))] 
+	    (recur (int 0) p (/ (- p 1) p) tots))
+	  
+	  (recur (+ i p) p calc 
+		 (do (aset tots i (int (* (aget tots i) calc))) tots))))))
+
+  (defn make-tots-seq6 [limit]
+    (loop [i (int 0), p (int 2), calc (/ (- p 1) p), 
+	   tots (int-array limit (iterate inc 0))]
+      (if (<= limit p)
+	tots
+	(if (<= limit i) 
+	  (let [p (int (search-for-index-from-i p tots))] 
+	    (recur (int (* 2 p)) p (/ (- p 1) p) 
+		   (if (<= limit p) 
+		     tots
+		     (do (aset tots p (int (- p 1))) tots))))
+	  (recur (+ i p) p calc 
+		 (do (aset tots i (int (* (aget tots i) calc))) tots))))))
+)
+
+;; problem214> (time (count (make-tots-seq5 10000000)))
+;; "Elapsed time: 113003.382319 msecs"
+;; problem214> (time (count (make-tots-seq5 20000000)))
+;; "Elapsed time: 237255.083379 msecs"
+;; 20000000
+;; -- for 40.000.000 we expect exectution in about 8 minutes .. 
+;; -- there is a smart shrtct I am sure of it ..
+;; problem214> (time (count (make-tots-seq6 1000000)))
+;; "Elapsed time: 8353.720807 msecs"
+;; 1000000
+;; problem214> (time (count (make-tots-seq6 10000000)))
+;; "Elapsed time: 91050.949322 msecs"
+;; 10000000
+
+;;problem214> (time (-  (reduce + (make-tots-seq6 1000000)) 1))		     
+;;"Elapsed time: 9948.969285 msecs"
+;;303963152391
