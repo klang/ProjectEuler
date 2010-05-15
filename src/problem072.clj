@@ -221,32 +221,32 @@ Now search for entry where Tot=i this corresponds to a prime put this as p,repea
 
 ;; (/ (- p 1) p) does take some time, if it is done enough times
 
-  (defn make-tots-seq5 [limit]
-    (loop [i (int 0), p (int 2), calc (/ (- p 1) p), 
-	   tots (int-array limit (iterate inc 0))]
-      (if (<= limit p)
-	tots
-	(if (<= limit i) 
-	  (let [p (int (search-for-index-from-i p tots))] 
-	    (recur (int 0) p (/ (- p 1) p) tots))
-	  
-	  (recur (+ i p) p calc 
-		 (do (aset tots i (int (* (aget tots i) calc))) tots))))))
+(defn make-tots-seq5 [limit]
+  (loop [i (int 0), p (int 2), calc (/ (- p 1) p), 
+	 tots (int-array limit (iterate inc 0))]
+    (if (<= limit p)
+      tots
+      (if (<= limit i) 
+	(let [p (int (search-for-index-from-i p tots))] 
+	  (recur (int 0) p (/ (- p 1) p) tots))
+	
+	(recur (+ i p) p calc 
+	       (do (aset tots i (int (* (aget tots i) calc))) tots))))))
 
-  (defn make-tots-seq6 [limit]
-    (loop [i (int 0), p (int 2), calc (/ (- p 1) p), 
-	   tots (int-array limit (iterate inc 0))]
-      (if (<= limit p)
-	tots
-	(if (<= limit i) 
-	  (let [p (int (search-for-index-from-i p tots))] 
-	    (recur (int (* 2 p)) p (/ (- p 1) p) 
-		   (if (<= limit p) 
-		     tots
-		     (do (aset tots p (int (- p 1))) tots))))
-	  (recur (+ i p) p calc 
-		 (do (aset tots i (int (* (aget tots i) calc))) tots))))))
-)
+(defn make-tots-seq6 [limit]
+  (loop [i (int 0), p (int 2), calc (/ (- p 1) p), 
+	 tots (int-array limit (iterate inc 0))]
+    (if (<= limit p)
+      tots
+      (if (<= limit i) 
+	(let [p (int (search-for-index-from-i p tots))] 
+	  (recur (int (* 2 p)) p (/ (- p 1) p) 
+		 (if (<= limit p) 
+		   tots
+		   (do (aset tots p (int (- p 1))) tots))))
+	(recur (+ i p) p calc 
+	       (do (aset tots i (int (* (aget tots i) calc))) tots))))))
+
 
 ;; problem214> (time (count (make-tots-seq5 10000000)))
 ;; "Elapsed time: 113003.382319 msecs"
