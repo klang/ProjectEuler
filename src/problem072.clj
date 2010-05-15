@@ -202,3 +202,21 @@ Now search for entry where Tot=i this corresponds to a prime put this as p,repea
 ;; "Elapsed time: 160116.005873 msecs"
 ;; 10000000
 
+;; same as the other algorithms, but transferring the calculation 
+;; in each iteration
+(defn make-tots-seq4 [limit]
+  (let [tots (int-array limit (iterate inc 0))]
+    (loop [i (int 0), p (int 2), calc (/ (- p 1) p)]
+      (if (<= limit p)
+	tots
+	(if (<= limit i) 
+	  (let [pp (int (search-for-index-from-i p tots))] 
+	    (recur (int 0) pp (/ (- pp 1) pp)))
+	  (do (aset tots i (int (* (aget tots i) calc)))
+	      (recur (+ i p) p calc)))))))
+
+;; problem214> (time (count (make-tots-seq3 10000000)))
+;; "Elapsed time: 112597.570856 msecs"
+;; 10000000
+
+;; (/ (- p 1) p) does take some time, if it is done enough times
