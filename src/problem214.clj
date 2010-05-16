@@ -124,8 +124,8 @@ int-arrays not immutable! but they are very fast"
   (loop [p (int p)] 
     (if (< p (count coll)) 
       (if (= p (aget coll p)) p 
-	(do (aset coll p (+ 1 (aget coll (aget coll p)))) ;; v[i] = 1 + v[v[i]] 
-	  (recur (inc p))))
+	  (do (aset coll p (+ 1 (aget coll (int (aget coll p))))) ;; v[i] = 1 + v[v[i]] 
+	      (recur (inc p))))
       (+ (count coll) 1))))
 
 ;; same function as problem072/make-tots-seq6
@@ -156,9 +156,7 @@ int-arrays not immutable! but they are very fast"
   (loop [i (int 0) sum 0]
     (if (<= (count chains) i)
       sum
-      (recur (inc i) (if (= length (aget chains i)) (+ sum i) sum))
-      ))
-  )
+      (recur (inc i) (if (= length (aget chains i)) (+ sum i) sum)))))
 
 ;; but then we have to generate the primes again .. 
 
@@ -167,7 +165,7 @@ int-arrays not immutable! but they are very fast"
 (defn chain-sum [length limit]
   (loop [i (int 0), p (int 2), calc (/ (- p 1) p), 
 	 chains (int-array limit (iterate inc 0))
-	 sum 0 ]
+	 sum (long 0) ]
     (if (<= limit p)
       sum
       (if (<= limit i) 
@@ -177,10 +175,12 @@ int-arrays not immutable! but they are very fast"
 		 (if (<= limit p) 
 		   chains
 		   (do (aset chains p (int (- p 1))) chains))
-		 (if (= (aget chains pp) length) (do (println sum pp) (+ sum pp)) sum)))
+		 (long (if (= (aget chains pp) length) 
+			 ;;(do (println sum pp))
+			 (+ sum pp) sum))))
 	(recur (+ i p) p calc 
 	       (do (aset chains i (int (* (aget chains i) calc))) chains)
-	       sum)))))
+	       (long sum))))))
 ;;problem214> (time (chain-sum 25 40000000))
 ;; started 20:00
 ;; expected: 60 min
@@ -191,3 +191,23 @@ int-arrays not immutable! but they are very fast"
 ;; 51900 primes with chainlenght 25
 ;;"Elapsed time: 3856258.628283 msecs"
 ;;1677366278943
+
+;; optimizing by adding type hints (and removing printout)
+
+;; problem214> (time (chain-sum 25 40000000))
+;; "Elapsed time: 484664.957368 msecs"
+;; 1677366278943
+
+;; which brings us down to the initially expected execution time.
+;; (based on numbers from problem 72)
+
+(defn init-int-array-iterated [n]
+  (let [n (int n) v (int-array n)]
+    (loop [i (int 0)]
+      (if (< i n)
+        (do (aset v i i) (recur (inc i)))
+        v))))
+
+;; chains (init-int-array-iterated limit)
+;; it is faster to initialize the array this way, but somehow does not work
+;; when done inside chain-sum
