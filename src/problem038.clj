@@ -30,4 +30,22 @@
        (pandigital? p)))
 
 (deftest test-task
-  (is (task 192384576 192 3)))
+  (is (task 192384576 192 3))
+  (is (task 918273645 9 5)))
+
+;; 918273645 is obviously not the correct answer so the answer is larger than that.
+;; so (- 987654321 918273645) = 69380676 numbers to check, obviously too much to 
+;; brute force, but not all are pandigital, which reduces the number of checks we 
+;; have to do quite a bit:
+
+;; (count (take-while #(< 918273645 %) perms))
+;; 35899 
+
+;; as the number of splits have to be more than one (n>1) the number of splits has 
+;; to be 3
+;; the number (map #(integer %) (partition 3 (digits 987654321)))
+
+(defn check [[a b c]] (and (= (* 2 (integer a)) (integer b)) (= (* 3 (integer a)) (integer c))))
+;;(filter #(check %) (map #(partition 3 (digits %)) (take-while #(< 918273645 %) perms)))
+;; ()
+;; so much for that train of thought
