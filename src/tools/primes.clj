@@ -116,3 +116,78 @@ Hence n/ln(n) is a first approximation, n/ln(n) + n/[ln(n)]2 is better, and so o
 In fact, for relatively small n, n/(ln(n)-1) turns out to be a better approximation. "
 	 :optimations "return n-1 if n is prime" "return n*phi(n) if n is square."
 	 }))
+
+
+;; http://fupeg.blogspot.com/2009/11/clojures-primes-shootout.html
+(defn sieve [n]
+  (let [n (int n)]
+    "Returns a list of all primes from 2 to n"
+    (let [root (int (Math/round (Math/floor (Math/sqrt n))))]
+      (loop [i (int 3)
+             a (int-array n)
+             result (list 2)]
+        (if (>= i n)
+          (reverse result)
+          (recur (+ i (int 2))
+                 (if (< i root)
+                   (loop [arr a
+                          inc (+ i i)
+                          j (* i i)]
+                     (if (>= j n)
+                       arr
+                       (recur (do (aset arr j (int 1)) arr)
+                              inc
+                              (+ j inc))))
+                   a)
+                 (if (zero? (aget a i))
+                   (conj result i)
+                   result)))))))
+
+(defn primes-up-to [n]
+  (let [n (int n)]
+    "Returns a list of all primes from 2 to n"
+    (let [root (int (Math/round (Math/floor (Math/sqrt n))))]
+      (loop [i (int 3)
+             a (int-array n)
+             result (transient [2])]
+        (if (>= i n)
+          (persistent! result)
+          (recur (+ i (int 2))
+                 (if (< i root)
+                   (loop [arr a
+                          inc (+ i i)
+                          j (* i i)]
+                     (if (>= j n)
+                       arr
+                       (recur (do (aset arr j (int 1)) arr)
+                              inc
+                              (+ j inc))))
+                   a)
+                 (if (zero? (aget a i))
+                   (conj! result i)
+                   result)))))))
+
+(defn lazy-primes []
+  (letfn [(enqueue [sieve n step]
+            (let [m (+ n step)]
+              (if (sieve m)
+                (recur sieve m step)
+                (assoc sieve m step))))
+          (next-sieve [sieve candidate]
+            (if-let [step (sieve candidate)]
+              (-> sieve
+                (dissoc candidate)
+                (enqueue candidate step))
+              (enqueue sieve candidate (+ candidate candidate))))
+          (next-primes [sieve candidate]
+            (if (sieve candidate)
+              (recur (next-sieve sieve candidate) (+ candidate 2))
+              (cons candidate
+                (lazy-seq (next-primes (next-sieve sieve candidate)
+                            (+ candidate 2))))))]
+    (cons 2 (lazy-seq (next-primes {} 3)))))
+
+;; problem214> (time (def p0 (sieve 10000000)))
+;; "Elapsed time: 4428.129716 msecs"
+;; problem214> (time (def p1 (primes-up-to 10000000)))
+;; "Elapsed time: 2632.297053 msecs"
