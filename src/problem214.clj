@@ -14,7 +14,8 @@ What is the sum of all primes less than 40000000 which generate a chain of lengt
   (:use :reload-all tools.primes)
   (:use :reload-all problem072)
   (:use clojure.test)
-  (:use [clojure.contrib.lazy-seqs :only (primes)]))
+  ;(:use [clojure.contrib.lazy-seqs :only (primes)])
+)
 
 (defn chain [n]
   "naïve calculation of the totient chain (does a lot of recalculation)"
@@ -211,3 +212,54 @@ int-arrays not immutable! but they are very fast"
 ;; chains (init-int-array-iterated limit)
 ;; it is faster to initialize the array this way, but somehow does not work
 ;; when done inside chain-sum
+
+;(def target-primes (take-while #(<= % 40000000) (drop-while #(<= % 9548417) primes)))
+
+(set! *warn-on-reflection* true)
+(defonce primes (primes-up-to 40000000))
+
+;; problem214> (time (defonce primes (primes-up-to 40000000)))
+;; "Elapsed time: 11238.36337 msecs"
+;; #'problem214/primes
+
+;; just prime-factors from tools.primes
+(defn factorize [arg]
+  (loop [pfs [], n arg] 
+    (if (= n 1)
+      pfs
+      (let [dps (for [p primes :while (<= (* p p) n) :when (zero? (rem n p))] p)
+            ps  (for [p dps, q (rest (iterate #(/ % p) n)) :while (integer? q)] p)]
+        (if (empty? dps)
+          (recur (conj pfs n), 1)
+          (recur (into pfs ps), (apply / n ps)))))))
+
+(defn phi [n]
+  (let [total (atom n)]
+    (doseq [p (factorize n)]
+      (swap! total #(/ % p))
+      (swap! total #(* % (dec p))))
+    @total))
+
+(defn chain [n]
+ (if (= 1 n) 1 (inc (chain (phi n)))))
+
+(def chain (memoize chain))
+
+(defn p214 []
+ (apply + (for [prime primes :when (= (chain prime) 25)] prime)))
+;; (time (p214))
+;; "Elapsed time: 112505.691825 msecs"
+;;problem214> (/ 112505.691825 100 60)
+;;18.750948637500002 (expected execution time for the full range)
+
+
+;; generate the primes using the int-array sieve method
+;; work from the back of the list, calculate the chains
+;; while memoizing them.
+;; only go down to the lower bound for chains of length 25 (2^23?) = 8388608
+
+(defn p214a []
+ (apply + (for [prime primes :when (and (< 8388608 prime) (= (chain prime) 25))] prime)))
+
+(defn p214b []
+  (apply + (for [prime (reverse primes) :when (and (< 8388608 prime) (= (chain prime) 25))] prime)))
