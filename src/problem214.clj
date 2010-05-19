@@ -124,7 +124,7 @@ What is the sum of all primes less than 40000000 which generate a chain of lengt
 int-arrays not immutable! but they are very fast"
   (loop [p (int p)] 
     (if (< p (count coll)) 
-      (if (= p (aget coll p)) p 
+      (if (== p (aget coll p)) p 
 	  (do (aset coll p (+ 1 (aget coll (int (aget coll p))))) ;; v[i] = 1 + v[v[i]] 
 	      (recur (inc p))))
       (+ (count coll) 1))))
@@ -176,7 +176,7 @@ int-arrays not immutable! but they are very fast"
 		 (if (<= limit p) 
 		   chains
 		   (do (aset chains p (int (- p 1))) chains))
-		 (long (if (= (aget chains pp) length) 
+		 (long (if (== (aget chains pp) length) 
 			 ;;(do (println sum pp))
 			 (+ sum pp) sum))))
 	(recur (+ i p) p calc 
@@ -202,6 +202,12 @@ int-arrays not immutable! but they are very fast"
 ;; which brings us down to the initially expected execution time.
 ;; (based on numbers from problem 72)
 
+;; replacing = with == only hurts
+;; problem214> (time (chain-sum 25 40000000))
+;; "Elapsed time: 752772.292157 msecs"
+;; 1677366278943
+
+
 (defn init-int-array-iterated [n]
   (let [n (int n) v (int-array n)]
     (loop [i (int 0)]
@@ -216,7 +222,8 @@ int-arrays not immutable! but they are very fast"
 ;(def target-primes (take-while #(<= % 40000000) (drop-while #(<= % 9548417) primes)))
 
 (set! *warn-on-reflection* true)
-(defonce primes (primes-up-to 40000000))
+
+(defonce primes (primes-up-to 400))
 
 ;; problem214> (time (defonce primes (primes-up-to 40000000)))
 ;; "Elapsed time: 11238.36337 msecs"
@@ -263,3 +270,4 @@ int-arrays not immutable! but they are very fast"
 
 (defn p214b []
   (apply + (for [prime (reverse primes) :when (and (< 8388608 prime) (= (chain prime) 25))] prime)))
+
