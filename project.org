@@ -25,6 +25,7 @@
 ** 032 - Find the sum of all numbers that can be written as pandigital products.
 ** 038 - What is the largest 1 to 9 pandigital that can be formed by multiplying a fixed number by 1, 2, 3, ... ?<2010-05-10 Mon>
 * done
+<2010-05-20 Thu> #90: 038
 <2010-05-14 Sat> #89: 214 (second commented on)
 <2010-05-12 Wed> #87: 072, #88: 073
 <2010-05-10 Mon> #86: 081
