@@ -66,21 +66,14 @@
 ;; (time (filter check (map #(partition 3 (digits %)) perms)))
 ;; (((3 2 7) (6 5 4) (9 8 1))  ((2 7 3) (5 4 6) (8 1 9))  ((2 1 9) (4 3 8) (6 5 7))  ((1 9 2) (3 8 4) (5 7 6)))
 
-;
-(def divs [100000000 10000000 1000000 100000 10000 1000 100 10 1])
-
-(def perms  (map integer (permutations '(9 8 7 6 5 4 3 2 1))))
-(def perms  (map integer (permutations '(9 8 7 6 5 4 3 2 1))))
-
 ;;(filter pandigital? (map #(+ (* % 1000000) (* 2 % 1000) (* 3 %)) (range 1 1000)))
 ;;(192384576 219438657 267534801 273546819 327654981 384769152 619237854 781562340 915830742 916832745)
 (def divs [100000000 10000000 1000000 100000 10000 1000 100 10 1])
 ;          (10000             1000           100        10     1)
 
-(filter pandigital? (map #(+ (* % 10000) (* 2 % 100) (* 3 %)) (range 1 100000)))
+;(filter pandigital? (map #(+ (* % 10000) (* 2 % 100) (* 3 %)) (range 1 100000)))
 ; 983742651
 
-(filter pandigital? (map #(+ (* % 10000) (* 2 % 100) (* 3 %)) (range 1 100000)))
 
 ;; 2 cifre => 
 (def d2 (distinct (map #(integer (take 2 %)) (permutations '(1 2 3 4 5 6 7 8 9)))))
@@ -97,21 +90,7 @@
 ;; problem038> (check 3)
 ;; ((3 2 7 6 5 4 9 8 1) (2 7 3 5 4 6 8 1 9) (2 1 9 4 3 8 6 5 7) (1 9 2 3 8 4 5 7 6))
   
-(def f
-     (for [p [[3 2 7 6 5 4 9 8 1] [2 7 3 5 4 6 8 1 9]]]
-       (for [n (range 1 9)] (list (integer p) n (integer (take n p))))))
-(def g
-     (for [p [[3 2 7 6 5 4 9 8 1] [2 7 3 5 4 6 8 1 9] [9 8 7 6 5 4 3 2 1]]
-	   n (range 1 9)
-	   :when (let [h (integer (take n p))
-		       d (concat-numbers h (* h 2) (* h 3))] 
-		   (different-digits? d))]
-
-       (let [h (integer (take n p))
-	     d (concat-numbers h (* h 2) (* h 3))] 
-	 (list (integer p) n h d))))
-
-;(reduce-while different-digits? concat-numbers  (map #(* 192 %) (range 1 10)))
+;(reduce-while different-digits? concat-numbers (map #(* 192 %) (range 1 10)))
 ;(reduce-while different-digits? concat-numbers (map #(* 192 %) (iterate inc 1)))
 
 (defn reduce-while 
@@ -144,11 +123,6 @@
 (defn check [number] 
   (reduce-while different-digits? concat-numbers (map (fn [n] (* number n)) (range 1 10))))
 
-;; problem038> (filter #(< 123456789 %) (map #(check %) d3))
-;; (327654981 273546819 267534801 219438657 192384576)
-;; problem038> (filter #(< 123456789 %) (map #(check %) d2))
-;; (1836547290)
-
 ;; take a permutation
 ;;  let each head partition be the current result (implicitly different digits)
 ;;  just take head partition concatenated with (* 2 head partition) 
@@ -165,8 +139,8 @@
 ;;(filter #(< 123456789 %) (map #(check %) d3))
 ;;(327654981 273546819 219438657 192384576)
 
-(filter #(< 123456789 %) (map #(check %) d4))
-(672913458 679213584 692713854 726914538 729314586 732914658 769215384 792315846 793215864 926718534 927318546 932718654)
+(comment
+  (filter #(< 123456789 %) (map #(check %) d4))
+  (672913458 679213584 692713854 726914538 729314586 732914658 769215384 792315846 793215864 926718534 927318546 932718654)
 ;; BINGO 932718654
-
-
+)
