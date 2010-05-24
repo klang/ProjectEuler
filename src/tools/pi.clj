@@ -132,6 +132,8 @@
 
 ;; 4
 (double (first (damping (damping (damping (damping (damping (sums-seq (series pi-formular-slow)))))))))
+
+
 (defn sums [i j]
   (cond (zero? i) (reduce + (map #(pi-formular %) (range i (+ j 1))))
 	:else
