@@ -12,50 +12,20 @@ HINT: Some products can be obtained in more than one way so be sure to only incl
 	problem038
 	clojure.test))
 
-(defn digits-in-product [a b]
-  (range (max a b) (+ 1 (+ a b))))
-
-;; 1 2 3 4 5 6 7 8 9
-;; 3 9 1 8 6 7 2 5 4
-;;    ^     ^
-;;    i     j
-;; <--><----><----->
-;; i      j-i    8-j      
-;; (count (for [i (range 2 8) j (range i 9) ] [i j]))
-;; 27 combinations (some of which are obviously not usable) 
-;; two one digit numbers can not produce a 7 digit number by multiplication
-;; 
-(def product-combinations
-     (for [i (range 1 10) 
-	   j (range i 10)
-	   k (digits-in-product i j)
-	   :when 
-	   (and  (< 0 i)
-		 (< i j)
-		 (= (+ i j k) 9)
-		 )] 
-       {:i i :j j :k k}))
-
-(defn digits-in-product [a b]
-  (range (max a b) (+ 1 (+ a b))))
-
 (defn pandigital1-9? [number]
   (let [d (digits number)]
     (and (every? #(not (zero? %)) d)
 	 (= 9 (count (distinct d)))
 	 (= 9 (count d)))))
-;(defn concat-numbers [& numbers] (integer (reduce concat (map #(digits %) numbers))))
 
+
+;; simple brute force, just to check if it is possible to do within the timelimit
 (defn brute [n]
-  (for [a (range 1 n) 
-	b (range a n) 
+  (for [a (range 1 n) b (range a n) 
 	:when 
 	(and (not (= a b))
 	     (pandigital1-9? (concat-numbers a b (* a b))))]
-    {:a a :b b :prod (* a b)}
-    ;(* a b)
-    )
-  )
+    {:a a :b b :prod (* a b)}))
 
 (comment
   ({:a 12, :b 483, :prod 5796}   ; unique
@@ -74,13 +44,14 @@ HINT: Some products can be obtained in more than one way so be sure to only incl
 ;; "Elapsed time: 14110.260451 msecs"
 ;; 30424 -- wrong
 
+;; something is missing.
+
 ;;  a is one digit, b must be in (range min max)
 ;; (map #(hash-map :a % :min (int (+ (/ 1000 %) 1)) :max (int (/ 10000 %))) (range 2 10))
 ;; for the concatenation of a b and (* a b) to be less than 9 digits
 
 ;; a is two digits, 
 ;;(map #(hash-map :a % :min (int (+ (/ 100 %) 1)) :max (int (/ 1000 %))) (range 10 100))
-
 (defn clever []
   (into #{}
 	(into 
@@ -101,16 +72,26 @@ HINT: Some products can be obtained in more than one way so be sure to only incl
 ;; "Elapsed time: 2155.280704 msecs"
 ;; 30424
 
-;; 2 cifre => 
-(def s2 (distinct (map #(list (integer (take 2 %)) (integer (take 3 (drop 2 %)))) (permutations '(1 2 3 4 5 6 7 8 9)))))
+;; the problem with 'brute and 'clever is, that it takes way too long to find 
+;; the 1,4,4 digit combination.
 
-;; 3 cifre =>
-(def s3 (distinct (map #(integer (take 3 %)) (permutations '(1 2 3 4 5 6 7 8 9)))))
+;; if a an b specifies the number of digits in two numbers
+;; the result is the range of digits in the product of those numbers
+(defn digits-in-product [a b]
+  (range (max a b) (+ 1 (+ a b))))
 
-(def s2 (filter #(= (* (integer (take 2 %)) 
-		    (integer (take 3 (drop 2 %))))
-		 (integer (drop (+ 2 3) %))) 
-	     (permutations '(1 2 3 4 5 6 7 8 9))))
+;; (this has been moved, but was the first idea)
+;; How many different places can a 'cut' be made in a known permutation of numbers
+;; 1 2 3 4 5 6 7 8 9
+;; 3 9 1 8 6 7 2 5 4
+;;    ^     ^
+;;    i     j
+;; <--><----><----->
+;;    i     j      k      
+(def product-combinations
+     (for [i (range 1 10) j (range i 10) k (digits-in-product i j)
+	   :when (and  (< 0 i) (< i j) (= (+ i j k) 9) )] 
+       {:i i :j j :k k}))
 
 (defn s1 [i j]
   (filter #(= (* (integer (take i %)) 
@@ -121,17 +102,16 @@ HINT: Some products can be obtained in more than one way so be sure to only incl
 ;; product-combinations
 ;; ({:i 1, :j 4, :k 4} {:i 2, :j 3, :k 4})
 ;; (s1 1 4)
-
-;; ((4 1738 6952) 
-;;  (4 1963 7852))
+;; ((4 1738 6952) (4 1963 7852))
 ;;  (s 2 3)
-;; ((12 483 5796) 
-;;  (18 297 5346) 
-;;  (27 198 5346) 
-;;  (28 157 4396) 
-;;  (39 186 7254 ) 
-;;  (42 138 5796) 
-;;  (48 159 7632))
+;; ((12 483 5796) (18 297 5346) (27 198 5346) (28 157 4396) 
+;;  (39 186 7254 ) (42 138 5796) (48 159 7632))
 ;; 
 ;;(+ 6952 7852 5796 5346 4396 7254 7632)
+;; 45228
+
+;; problem032> (time (doall (brute 2000)))
+;; "Elapsed time: 272892.293225 msecs"
+;; (6952 7852 5796 5346 5346 4396 7254 5796 7632)
+;; problem032> (reduce + (into #{} '( 6952 7852 5796 5346 5346 4396 7254 5796 7632)))
 ;; 45228
