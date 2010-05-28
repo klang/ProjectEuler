@@ -25,12 +25,10 @@ Find the next triangle number that is also pentagonal and hexagonal.
 (defn pentagonal [n] (quot (* n (- (* 3 n) 1)) 2))
 (defn hexagonal [n] (* n (- (* 2 n) 1)))
 
-
-(def tri (set (take 100000 triangles)))
-(def pen (set (take 100000 pentagonals)))
-(def hex (set (take 100000 hexagonals)))
-;(intersection tri pen hex)
+(comment
+  (intersection (set (take 100000 triangles)) (set (take 100000 pentagonals)) (set (take 100000 hexagonals)))
 ; #{1 1533776805 40755}
+  )
 
 (deftest test-problem045
   (is (= 40755 (triangle 285) (pentagonal 165) (hexagonal 143))
