@@ -62,10 +62,11 @@ Find the lowest sum for a set of five primes for which any two primes concatenat
   (letfn [(p-concat-set  [n] (filter #(prime-concat? n %) limited-primes))]
     (assoc coll prime (p-concat-set  prime))))
 
+
 (defn add-elements [coll & prime-numbers]
   "an element is a prime and the lazily generated set of primes satisfying prime-concat?" 
   (letfn [(p-concat-set  [n] (filter #(prime-concat? n %) limited-primes))]
-    (reduce into queue (map #(sorted-map % (p-concat-set  %)) prime-numbers))))
+    (reduce into coll (map #(sorted-map % (p-concat-set  %)) prime-numbers))))
 
 (defn pop-element-from-prime [coll prime]
   (assoc coll prime (rest (coll prime))))
@@ -256,6 +257,7 @@ Find the lowest sum for a set of five primes for which any two primes concatenat
 
 ;; --- one candidate starting in each seen prime, approach.
 ;; --- 
-(def queue (assoc queue (/ (reduce + #{3 11}) (count #{3 11}))
-		  (struct candidate #{3 11} (reduce + #{3 11}) (p-check 3 11))
-		  ))
+(comment
+  (def queue (assoc queue (/ (reduce + #{3 11}) (count #{3 11}))
+		    (struct candidate #{3 11} (reduce + #{3 11}) (p-check 3 11))
+		    )))
