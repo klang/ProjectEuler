@@ -119,6 +119,14 @@ Find the lowest sum for a set of five primes for which any two primes concatenat
       (if (contains? (second (next-element-index queue))))
       )
   )
+  (defn next-prime [prime candidate] 
+    "starting with a specific candidate, what is the next element?"
+    (first (drop-while #(contains? candidate %) (p-concat prime))))
+
+  (def queue (add-element queue (next-prime (first next-element) candidate)))
+  (def queue (pop-element-from-prime queue 7))
+  (def next-element (next-element-index queue))
+  ;; next element has to select the next element that is not already in the candidate
 
 ;; next-element: (3 7)
 ;; next element is not in queue .. insert it
@@ -245,3 +253,9 @@ Find the lowest sum for a set of five primes for which any two primes concatenat
 
 ;; (smaller-than 673)
 ;; (3 7 109 199 397 457 499 613)
+
+;; --- one candidate starting in each seen prime, approach.
+;; --- 
+(def queue (assoc queue (/ (reduce + #{3 11}) (count #{3 11}))
+		  (struct candidate #{3 11} (reduce + #{3 11}) (p-check 3 11))
+		  ))
