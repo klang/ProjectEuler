@@ -94,7 +94,7 @@ Find the lowest sum for a set of five primes for which any two primes concatenat
 ;;
 (defn next-step [& steps]
   (filter #(= steps (take 2 (sort (p-concat-set  %)))) (sort (p-concat-set  (last steps)))))
-;; .. just a slow way to do a p-check
+;; .. just a slow way to do a p-check .. 
 ;;problem060> (filter #(= '(3 7) (take 2 (sort (p-concat-set  %)))) (sort (p-concat-set  7)))
 ;;(109 229 541 673 823 1237 2503 2707 4159 4729)
 ;;problem060> (sort (p-check 3 7))
@@ -261,3 +261,90 @@ Find the lowest sum for a set of five primes for which any two primes concatenat
   (def queue (assoc queue (/ (reduce + #{3 11}) (count #{3 11}))
 		    (struct candidate #{3 11} (reduce + #{3 11}) (p-check 3 11))
 		    )))
+
+;;-- intersection approach, modified with lazy sequences
+
+(comment
+  (filter #(= '(3 7) (take 2 (sort (p-concat-set  %)))) (sort (p-concat-set  7)))
+
+  (def primes limited-primes)
+  (def queue (sorted-map))
+  (def candidate #{})
+  (def queue (add-element queue (first primes)))
+  (def candidate (conj #{} (first primes)))
+  (def primes (rest primes))
+  (defn first-elements [coll]
+    (map #(list (first %) (first (second %))) coll))
+  (defn find-candidate [coll candidate]
+    ((map #()))
+    )
+  (first-elements queue))
+
+(defn p-search [length]
+  (loop [look-at 0
+	 queue (sorted-map)
+	 primes limited-primes
+	 candidate #{}
+	 limit 200]
+    (do (println {:look-at        (last (sort candidate))
+		  ;;		  :first-elements (map #(list (first %) (first (second %))) queue)
+		  :foo (take-while #(<= % look-at) (queue (first (queue look-at))))
+		  :next (first primes)
+		  :last (first (last queue))
+		  :candidate      candidate
+		  :iteration      limit
+		  
+		  }))
+    (if (or (= length (count candidate)) (zero? limit))
+      candidate
+      (cond (empty? queue)
+	    (recur (first primes) 
+		   (add-element queue (first primes)) 
+		   (rest primes) 
+		   (conj candidate (first primes))
+		   (dec limit))
+	    ;; is the there an element in the queue
+	    ;; that can be added to the candidate?
+	    ;; no, then add the next prime to the queue
+	    (not (contains? queue (first (queue look-at))))
+	    (recur look-at
+		   (add-element queue (first primes))
+		   (rest primes)
+		   candidate
+		   (dec limit))
+	    ;; yes, add that element to the candidate
+	    ;; and start looking at THAT element
+;;	    (and) (contains? queue (first (queue look-at)))
+	    (= candidate 
+	       (into #{} (take-while #(<= % look-at) (second (last queue)))))
+		 
+	    (do
+	      ;; we should only change look-at element if
+	      ;; all elements from the candidate are found
+	      (println candidate 
+		       (first (last queue))
+		       (take-while #(<= % look-at) (second (last queue)))
+		       (= candidate 
+			  (into #{} (take-while #(<= % look-at) (second (last queue)))))
+		       )
+	      (recur (first (last queue))
+		     (pop-element-from-prime queue look-at)
+		     primes
+		     (conj candidate (first (last queue)))
+		     (dec limit)))
+	    (contains? queue (first (queue look-at)))
+	    (do ;(println "adding prime to queue because of first element")
+	      (recur look-at
+		     (add-element queue (first primes))
+		     (rest primes)
+		     candidate
+		     (dec limit)))
+	    :else
+	    nil
+	    
+	    ;; contains? has to check every element in the candidate?
+	    ;; at some point
+
+	)
+      )
+    ))
