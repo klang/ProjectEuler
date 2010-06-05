@@ -1,4 +1,7 @@
-(use 'clojure.test 'tools.numbers)
+(ns problem015
+  (:use clojure.test)
+  (:use tools.numbers)
+  (:use clojure.contrib.math))
 
 ;; next possible steps from a point in a max X max square
 (defn path-transition [[i j] max]
