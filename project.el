@@ -32,7 +32,7 @@
   (interactive)
   (setq default-directory "~/projects/ProjectEuler/")
   (load "~/projects/gists/421306/clojure-font-lock-setup.el")
-  (load "~/projects/gists/407276/colored-clojure-slime-repl.el")
+;;  (load "~/projects/gists/407276/colored-clojure-slime-repl.el")
   (project-euler-current)
   (add-hook 'slime-connected-hook 'slime-redirect-inferior-output)
 ;  (swank-clojure-project default-directory)
