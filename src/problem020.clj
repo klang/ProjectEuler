@@ -1,8 +1,8 @@
-;; n! means n  (n  1)  ...  3  2  1
+(ns problem020
+  (meta {:description "n! means n * (n-1)  ...  3 * 2 * 1
 
-;; Find the sum of the digits in the number 100!
-
-(use '[clojure.contrib.str-utils2 :only (split)])
+Find the sum of the digits in the number 100!"})
+  (:use [clojure.contrib.str-utils2 :only (split)]))
 
 (defn digits [n]
   (map #(. Integer parseInt % 10) 

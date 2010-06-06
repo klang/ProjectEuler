@@ -1,12 +1,15 @@
-; The hyperexponentiation or tetration of a number a by a positive integer b, denoted by a↑↑b, is recursively defined by:
+(ns problem188 
+  (meta {:description "The hyperexponentiation or tetration of a number a by a positive integer b, denoted by a↑↑b, is recursively defined by:
 
-;; a↑↑1 = a,
-;; a↑↑(k+1) = a^(a↑↑k).
+a↑↑1 = a,
+a↑↑(k+1) = a^(a↑↑k).
 
-; Thus we have e.g. 3↑↑2 = 3^3 = 27, hence 3↑↑3 = 3^27 = 7625597484987 and 3↑↑4 is roughly 10^3.6383346400240996*10^12.
+Thus we have e.g. 3↑↑2 = 3^3 = 27, hence 3↑↑3 = 3^27 = 7625597484987 and 3↑↑4 is roughly 10^3.6383346400240996*10^12.
 
-; Find the last 8 digits of 1777↑↑1855.
-;; (mod (↑↑ 1777 1855) (expt 10 8))
+Find the last 8 digits of 1777↑↑1855."})
+  (:use clojure.contrib.math))
+
+; (mod (↑↑ 1777 1855) (expt 10 8))
 
 ; (mod (expt 1777 1855) (expt 10 8))
 ; 47576593
@@ -20,8 +23,7 @@
 ; 1777↑↑1855 = 1777↑(1777↑↑1854) = 1777↑(1777↑(1777↑↑1853)) =  1777↑1777↑ ..↑1777 
 ;                                                               \              /
 ;                                                                 --1855times--
-(ns problem188 
-  (:use clojure.contrib.math))
+
 
 ;; http://en.wikipedia.org/wiki/Modular_exponentiation#Memory-efficient_method
 (defn mod-expt [base exp m]

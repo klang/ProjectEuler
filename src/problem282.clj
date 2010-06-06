@@ -1,17 +1,18 @@
-;; For non-negative integers m, n, the Ackermann function A(m, n) is defined as follows:
+(ns problem282
+  (meta {:description "For non-negative integers m, n, the Ackermann function A(m, n) is defined as follows:
 
-;;
-;;              A(m,n) = 
-;;
+                       n+1             if m=0
+             A(m,n) =  A(m-1,1)        if m>0 and n=0
+                       A(m-1,A(m-1,1)) if m>0 and n>0
 
-;; For example A(1, 0) = 2, A(2, 2) = 7 and A(3, 4) = 125.
+For example A(1, 0) = 2, A(2, 2) = 7 and A(3, 4) = 125.
 
-;; Find 0 <= n <= 6 A(n, n) and give your answer mod 14^8.
-
-(use 'clojure.contrib.test-is
-     'clojure.contrib.math)
-
-(load "tools")
+Find 0 <= n <= 6 A(n, n) and give your answer mod 14^8.
+"})
+  (:use problem188) ;; mod-expt, hyper-mod-bin, mod-expt-bin
+  (:use clojure.test
+	clojure.contrib.math)
+  (:use tools.numbers))
 
 (defn A [m n]
   (cond (= m 0) (+ n 1)
@@ -74,9 +75,6 @@
 ;;----- obviously, the recursive definition of the Ackerman function is a dead end.
 
 ;; Using Knuth's up-arrow notation, it's possible to express the function in a better way:
-
-(load "problem188")
-;; mod-expt, hyper-mod-bin, mod-expt-bin
 
 (deftest test-mod-expt
   (is (= 67108864 (expt 4 13)))
@@ -261,21 +259,22 @@
 ;; user> (Integer/toBinaryString (expt 2 (expt 2 16)))
 ;; "0"
 ;; exptm returns bad results for bit powers.. unfortunately
-(defn exptm [base pow modulus]
-  "Binary exponentation kept down"
-  (loop [result 1 base base
-	 pow (reverse (Integer/toBinaryString pow))]
-    (if (nil? (first pow))
-      result
-      (if (= (first pow) \1)
-	(recur (mod (* result base) modulus) 
-	       (mod (* base base) modulus) (rest pow))
-	(recur result 
-	       (mod (* base base) modulus) (rest pow))))))
-
-(defn exptm [base pow modulus]
-  "Binary exponentation kept down"
-  (.modPow (bigint base) (bigint pow) (bigint modulus)))
+(comment
+  (defn exptm [base pow modulus]
+    "Binary exponentation kept down"
+    (loop [result 1 base base
+	   pow (reverse (Integer/toBinaryString pow))]
+      (if (nil? (first pow))
+	result
+	(if (= (first pow) \1)
+	  (recur (mod (* result base) modulus) 
+		 (mod (* base base) modulus) (rest pow))
+	  (recur result 
+		 (mod (* base base) modulus) (rest pow)))))))
+(comment
+  (defn exptm [base pow modulus]
+    "Binary exponentation kept down"
+    (.modPow (bigint base) (bigint pow) (bigint modulus))))
 
 (defn hyper [a b]
   "returns a↑↑b, grows very very fast."
@@ -294,12 +293,13 @@
   (is (not (= (hyper 2 5) (hyper 3 3))))
   )
 
-(defn hyperm [a b m]
-  "returns a↑↑b mod m, keeps the results low"
-  ;(do (println (list a b m (repeat b a))))
-  (reduce #(exptm %2 %1 m) (repeat b a)))
+(comment
+  (defn hyperm [a b m]
+    "returns a↑↑b mod m, keeps the results low"
+					;(do (println (list a b m (repeat b a))))
+    (reduce #(exptm %2 %1 m) (repeat b a)))
 
-(def hyperm (memoize hyperm))
+  (def hyperm (memoize hyperm)))
 
 (defn hyper3m [a b m]
   ;(do (println (list a b m)))
