@@ -19,12 +19,14 @@
 * stuck
 ** understanding
 *** 282 - The Ackermann function
+*** 060 - prime concatenations
 ** memory/time
 * pipeline
 ** 191 - Prize Strings
 ** 032 - Find the sum of all numbers that can be written as pandigital products.
 ** 038 - What is the largest 1 to 9 pandigital that can be formed by multiplying a fixed number by 1, 2, 3, ... ?<2010-05-10 Mon>
 * done
+<2010-06-07 Mon> #92: 099
 <2010-05-24 Mon> #91: 032 (every problem under 50 has been solved)
 <2010-05-20 Thu> #90: 038
 <2010-05-14 Sat> #89: 214 (second commented on)
