@@ -61,4 +61,3 @@ How many chains, with a starting number below one million, contain exactly sixty
 ;; "Elapsed time: 252445.451798 msecs"
 ;; 120
 ;; (+ 42 0 240 120) : 402
-
