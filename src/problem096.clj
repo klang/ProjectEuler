@@ -368,22 +368,10 @@
 ;;
 ;; ONLY RESOLVE ONE HIDDEN SINGLE AT THE TIME, NOT ALL OF THEM
 ;;
-(defn fix-hidden-singles [sudoku]
-  "insert the unique solutions in the current suduko, producing a new one"
-  (loop [v sudoku u (hidden-singles sudoku)] 
-    (if (empty? u) v 
-	(recur (assoc v (first (first u)) 
-		      (first (second (first u)))) 
-	       (rest u)))))
-
-(defn elliminate-hidden-singles [sudoku]
-  "keep inserting unique solutions in the current suduko, until there are no more singles"
-  (loop [s sudoku p nil]
-    (if (or (empty? (queue s)) (= p s)) 
-      s
-      (recur (fix-hidden-singles s) s))))
-
-
+(defn fix-one-hidden-single [sudoku]
+  (let [v sudoku u (hidden-singles sudoku)]
+    (assoc v (first (first u)) 
+		      (first (second (first u))))))
 
 (comment
   (all-hidden-singles (nth sudoku-vectors 8)))
@@ -416,6 +404,19 @@
 	;; try to guess, and solve
 	(let [suggestion (first (remove false? (map solve (flatten-once (guesses partial)))))]
 	  (if suggestion suggestion false))))))
+(comment
+  (defn solve [sudoku]
+    (loop [s sudoku]
+      (let [partial (elliminate-singles s)]
+	(if (empty? (queue partial))
+	  ;; no elements in queue => nothing else to do
+	  partial
+	  ;; try to guess, and solve
+	  (if (not (empty? (hidden-singles partial)))
+	    (recur (fix-one-hidden-single partial))
+	    (let [suggestion (first (remove false? (map solve (flatten-once (guesses partial)))))]
+	      (if suggestion suggestion false)))))))
+)
 
 
 (defn total-count [sudokus]
@@ -424,6 +425,8 @@
 (comment
   (defn total-count-stats [sudokus]
     (reduce + (map #(integer %) (map #(take 3 %) (map #(time (solve %)) sudokus)))))
+  (defn total-queue [sudokus]
+    (map #(queue %) (map #(time (solve %)) sudokus)))
   (time
    (total-count-stats (map #(nth sudoku-vectors %) 
 			   [0 1 2 3 4 5 6 7 9 10 11 12 13 14 15 16 18 19 20 
@@ -442,6 +445,7 @@
 
   ;; the hard ones that are left:
   ; 8 17 40 41 43 44 45 47 48 49
+  (time (total-count-stats (map #(nth sudoku-vectors %) [8 17 40 41 43 44 45 47 48 49])))
 
   (defn method-solve [sudoku]
     (loop [s sudoku]
@@ -451,6 +455,7 @@
 	  true
 	  ;; could not solve by one of the known methods
 	  false)))))
+
 (count (remove false? (map method-solve sudoku-vectors)))
 
 
@@ -474,11 +479,9 @@
   (def sudoku (fix-singles sudoku (singles sudoku)))
   (missing sudoku)
 
-  (defn hidden-singles []
-    (map #(list % (candidates % sudoku) (count (candidates % sudoku))) (queue sudoku)))
 ;  (defn locked-candidates-1)
 ;  (defn locked-candidates-2)
-;;hidden singles?
+
 
   )
 
