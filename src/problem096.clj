@@ -3,6 +3,7 @@
   (:use tools.numbers
 	tools.primes)
   (:use [clojure.contrib.str-utils2 :only (split)]
+	clojure.contrib.combinatorics
 	clojure.contrib.duck-streams
 	clojure.set
 	clojure.test))
@@ -12,7 +13,16 @@
 
 (def sudoku-data (read-data "sudoku.txt"))
 
-(defn flatten [s] (remove seq? (tree-seq seq? seq s)))
+(comment
+  (defn flatten [s] (remove seq? (tree-seq seq? seq s)))
+  (defn flatten
+    "Takes any nested combination of sequential things (lists, vectors,
+  etc.) and returns their contents as a single, flat sequence.
+  (flatten nil) returns nil."
+    [x]
+    (filter (complement sequential?)
+	    (rest (tree-seq sequential? seq x))))
+  )
 
 (comment
  (drop 1 (split "003020600" #""))
@@ -216,10 +226,12 @@
 
 (defn candidates [index sudoku]
   "returns a map of possible candidates for an index in sudoku"
-  (difference #{1 2 3 4 5 6 7 8 9} 
-	      (into #{} (union (row index sudoku) 
-			       (column index sudoku)
-			       (group index sudoku)))))
+  (if (zero? (sudoku index))
+    (difference #{1 2 3 4 5 6 7 8 9} 
+		(into #{} (union (row index sudoku) 
+				 (column index sudoku)
+				 (group index sudoku))))
+        (hash-set (sudoku index))))
 
 (comment
   (def sudoku (first sudoku-vectors))
@@ -230,15 +242,14 @@
 	       (map #(if (zero? %1) %2) sudoku (range 0 81))))
 )
 
+(defn queue [sudoku] 
+  "return the indexes for unknown numbers in the sudoku"
+  (filter #(not (nil? %)) (map #(if (zero? %1) %2) sudoku (range 0 81))))
+
+;;--------------------find and elliminate singles------------------------------
 ;; given a point in a string, identify which row, column and 3x3 group the point belongs to
 ;; also identify which candidates numbers fit in that point
 ;; if only one number fit, insert that number
-
-(comment
-  (assoc (first sudoku-vectors) 1 8)
-)
-
-(defn queue [sudoku] (filter #(not (nil? %)) (map #(if (zero? %1) %2) sudoku (range 0 81))))
 
 (defn singles [sudoku] 
   "returns a list of pairs of singles in the sudoku. Any cells which have only one candidate can safely be assigned that value"
@@ -246,38 +257,210 @@
 	  (map #(let [p (candidates % sudoku)] 
 		  (if (= 1 (count p)) (list % (first p)))) (queue sudoku))))
 
-(defn mores [sudoku] (filter #(not (nil? %)) 
-			  (map #(let [p (candidates % sudoku)] 
-				  (if (< 1 (count p)) (list % (first p)))) (queue sudoku))))
-
-(defn fix-singles [sudoku singles]
-  (loop [v sudoku u singles] 
+(defn fix-singles [sudoku]
+  "insert the unique solutions in the current suduko, producing a new one"
+  (loop [v sudoku u (singles sudoku)] 
     (if (empty? u) v 
 	(recur (assoc v (first (first u)) 
 		      (second (first u))) 
 	       (rest u)))))
 
-(defn solve [v]
-  (loop [sudoku v limit 10]
-;    (do (println sudoku) (println (map #(candidates % sudoku) (queue sudoku))))
-    (if (or (zero? limit) (empty? (queue sudoku)))
-      sudoku
-      (let [u (singles sudoku)]
-	(if (empty? u)
-	  ;; we have to guess, and solve it in a different way
-	  sudoku
-	  (recur
-	   ;; insert the unique solutions in the current suduko, producing a new one
-	   (loop [v sudoku u u] 
-	     (if (empty? u) v 
-		 (recur (assoc v (first (first u)) 
-			       (second (first u))) 
-			(rest u))))
-	   (dec limit)))))))
+(defn elliminate-singles [sudoku]
+  "keep inserting unique solutions in the current suduko, until there are no more singles"
+  (loop [s sudoku p nil]
+    (if (or (empty? (queue s)) (= p s)) 
+      s
+      (recur (fix-singles s) s))))
+;;-----------------------------------------------------------------------------
+(def g [4 7 0 
+	3 8 0 
+	2 0 0])
 
-;; (map #(solve %) sudoku-vectors)
-;; (count (filter false? (map #(solve %) sudoku-vectors)))
-;; (loop [v v u (singles v)] (if (empty? u) v (recur (assoc v (first (first u)) (second (first u))) (rest u))))
+(def c {2 #{1 5 9} 5 #{1 5 6 9} 7 #{1 9} 8 #{1 5 9}})
+
+(comment
+  ;; select one .. diff it with the union of the rest
+  (difference (c 5) (union (c 2) (c 7) (c 8))) ;; <<-- 6 is a hidden singel for group resolve it and check the group again
+  (difference (c 2) (union (c 5) (c 7) (c 8)))
+  (difference (c 7) (union (c 2) (c 5) (c 8)))
+  (difference (c 8) (union (c 2) (c 7) (c 5)))
+)
+;; groups start at indexes 
+;; 0 3 6 27 30 33 54 57 60
+(def group-start 
+   (flatten (map #(list % (+ % 3) (+ % 6)) (filter #(zero? (mod % 27)) (range 0 81)))))
+
+;; expensive way to calculate a group, but I can't be bothered anymore .. 
+(def group-indices
+     (map #(group % (range 0 81)) group-start))
+
+(defn groups [sudoku]
+  "returns the nine groups in a sudoku"
+  (map #(group % sudoku) group-start))
+
+(defn all-candidates [sudoku]
+  (flatten-once (map #(list % (candidates % sudoku)) (queue sudoku))))
+
+(comment
+  (into {} (map #(hash-map % (candidates % (nth sudoku-vectors 8))) [ 0  1  2  9 10 11 18 19 20] ))
+  (into {} (map #(hash-map % (candidates % (nth sudoku-vectors 8))) (group 0 (range 0 81)))))
+
+
+(defn group-queue [group-index sudoku]
+  "return the elements from a group, that are still not determined"
+  (intersection (set (group group-index (range 0 81))) (set (queue sudoku))))
+
+(comment
+  (flatten-once (map #(list % (candidates % (nth sudoku-vectors 8))) (group-index 0 sudoku)))
+  (into {} (map #(hash-map % (candidates % (nth sudoku-vectors 8))) (group-queue 0 sudoku))))
+
+(defn group-candidates [group-index sudoku]
+  (into {} (map #(hash-map % (candidates % (nth sudoku-vectors 8))) (group-queue group-index sudoku))))
+
+(comment
+  (into {} (map (fn [d] (hash-map d (remove (fn [u] (= d u)) (keys c)))) (keys c)))
+)
+
+(defn one-and-the-rest [gc]
+  (into {} (map (fn [d] (hash-map d (remove (fn [u] (= d u)) (keys gc)))) (keys gc))))
+
+(comment
+  (def gc8 (group-candidates 0 (nth sudoku-vectors 8)))
+  (difference (c 5) (union (c 2) (c 7) (c 8)))
+  (remove empty? (map (fn [[one the-rest]] (difference 
+					    (gc8 one) 
+					    (reduce union (map #(gc8 %) the-rest)))) (one-and-the-rest gc8)))
+  (remove empty? (map (fn [[one the-rest]] (difference 
+					    (c one) 
+					    (reduce union (map #(c %) the-rest)))) (one-and-the-rest c)))
+
+  ;; last one here gives the correct result, but the index is missing
+
+  (into {} (map (fn [[one the-rest]] (hash-map one (difference 
+						    (c one) 
+						    (reduce union (map #(c %) the-rest))))) (one-and-the-rest c)))
+
+  ;; index available .. now we just have to remove the ones with empty sets
+
+  (into {} 
+	(remove #(empty? (val %)) 
+		(into {} 
+		      (map (fn [[one the-rest]] 
+			     (hash-map one (difference 
+					    (c one) 
+					    (reduce union (map #(c %) the-rest))))) 
+			   (one-and-the-rest c)))))
+)
+
+(defn hidden-single [group-index sudoku]
+  (let [c (group-candidates group-index sudoku)]
+    (into {} 
+	  (remove #(empty? (val %)) 
+		  (into {} 
+			(map (fn [[one the-rest]] 
+			       (hash-map one (difference 
+					      (c one) 
+					      (reduce union (map #(c %) the-rest))))) 
+			     (one-and-the-rest c)))))))
+
+(defn hidden-singles [sudoku]
+  (into {} (remove empty? (map #(hidden-single % sudoku) group-start))))
+;;
+;; ONLY RESOLVE ONE HIDDEN SINGLE AT THE TIME, NOT ALL OF THEM
+;;
+(defn fix-hidden-singles [sudoku]
+  "insert the unique solutions in the current suduko, producing a new one"
+  (loop [v sudoku u (hidden-singles sudoku)] 
+    (if (empty? u) v 
+	(recur (assoc v (first (first u)) 
+		      (first (second (first u)))) 
+	       (rest u)))))
+
+(defn elliminate-hidden-singles [sudoku]
+  "keep inserting unique solutions in the current suduko, until there are no more singles"
+  (loop [s sudoku p nil]
+    (if (or (empty? (queue s)) (= p s)) 
+      s
+      (recur (fix-hidden-singles s) s))))
+
+
+
+(comment
+  (all-hidden-singles (nth sudoku-vectors 8)))
+
+;;(group 0 (nth sudoku-vectors 8))
+;   (0 0 0 
+;    0 5 0 
+;    0 3 0)
+
+;;(flatten-once (map #(list % (candidates % (nth sudoku-vectors 8))) [ 0  1  2  9 10 11 18 19 20] ))
+;; candidates should return the locked value for index 10 and 19 in this case
+;{0 #{1 6 7 8} 1 #{1 4 6 8} 2 #{4 6} 9 #{6 7 8} 10 #{6 8} 11 #{6 9} 18 #{2 7 8} 19 #{2 4 8} 20 #{2 4 9}}
+
+
+;;-----------------------------------------------------------------------------
+;; if nothing else works, take a wild guess
+(defn guesses [sudoku]
+  (let [paths (map #(list % (candidates % sudoku)) (queue sudoku))]
+    (map (fn [[index cs]] (map #(assoc sudoku index %) cs)) paths)))
+
+(defn flatten-once [s] (remove seq? (tree-seq seq? seq s)))
+
+
+(defn solve [sudoku]
+  (loop [s sudoku]
+    (let [partial (elliminate-singles s)]
+      (if (empty? (queue partial))
+	;; no elements in queue => nothing else to do
+	partial
+	;; try to guess, and solve
+	(let [suggestion (first (remove false? (map solve (flatten-once (guesses partial)))))]
+	  (if suggestion suggestion false))))))
+
+
+(defn total-count [sudokus]
+  (reduce + (map #(integer %) (map #(take 3 %) (map solve sudokus)))))
+
+(comment
+  (defn total-count-stats [sudokus]
+    (reduce + (map #(integer %) (map #(take 3 %) (map #(time (solve %)) sudokus)))))
+  (time
+   (total-count-stats (map #(nth sudoku-vectors %) 
+			   [0 1 2 3 4 5 6 7 9 10 11 12 13 14 15 16 18 19 20 
+			    21 22 23 25 26 30 31 32 33 34 35 37 38 39 42 44 46 ])))
+
+  (def t1 [82.702993 578.789654 257.70714 449.061673 61.546669 776.079569 205.393495 69.821464 459.322472 755.007885 159.267227 394.162767 1443.685281 140.630214 47.616402 47.616402 54.095997 130.004543 118.481842 189.754349 306.004328 242.261038 237.079345 311.052205 442.426466 442.426466 463.144188 517.4715 341.684297 101.087185 190.925992 75.471339 117.777573 159.035349 99.078541 3056.712249 509.248384 413.33282])
+  ;;"Elapsed time: 14014.579823 msecs"
+  ;;14293
+
+  (time (total-count-stats (map #(nth sudoku-vectors %) [24 27 28 36 49])))
+  (def t2 [1758.692202 2210.227051 6041.850865 16178.975875 15745.116404])
+  ;;"Elapsed time: 41938.368431 msecs"
+  ;;1223
+  ;; (+ (reduce + t1) (reduce + t2))
+  ;; 56381.8297 msecs used .. almost out of time
+
+  ;; the hard ones that are left:
+  ; 8 17 40 41 43 44 45 47 48 49
+
+  (defn method-solve [sudoku]
+    (loop [s sudoku]
+      (let [partial (elliminate-singles s)]
+	(if (empty? (queue partial))
+	  ;; no elements in queue => nothing else to do
+	  true
+	  ;; could not solve by one of the known methods
+	  false)))))
+(count (remove false? (map method-solve sudoku-vectors)))
+
+
+;; with just brute force, there are some sudokus that take quite a while to solve
+;; problem096> (time (sudoku.core/solve (elliminate-singles (nth sudoku-vectors 8))))
+;; "Elapsed time: 123463.773906 msecs"
+
+;; with singles ellimination and brute force .. we do much worse
+;; problem096> (time (solve (nth sudoku-vectors 8)))
+
 
 (comment
   (def sudoku (nth sudoku-vectors 1))
@@ -291,26 +474,11 @@
   (def sudoku (fix-singles sudoku (singles sudoku)))
   (missing sudoku)
 
+  (defn hidden-singles []
+    (map #(list % (candidates % sudoku) (count (candidates % sudoku))) (queue sudoku)))
+;  (defn locked-candidates-1)
+;  (defn locked-candidates-2)
 ;;hidden singles?
-'((1 #{1 4 5 7 9} 5) 
- (2 #{5 7 9} 3) 
- (11 #{5 9} 2) 
- (18 #{1 8} 2) 
- (20 #{7 8} 2) 
-
- (3 #{4 9} 2) 
- (5 #{1 4 9} 3) 
- (7 #{1 5 7} 3) 
- (8 #{1 5 6 7} 4) 
-
- (9 #{1 5 9} 3) 
- (12 #{2 3 9} 3) 
-
- (14 #{1 2 3 9} 4) 
- (15 #{1 5} 2) 
-
-
-(23 #{1 4} 2) (25 #{1 7} 2) (27 #{6 9} 2) (28 #{7 9} 2) (29 #{3 6 7 9} 4) (31 #{2 3 9} 3) (34 #{2 3 7 9} 4) (36 #{1 5 6 8 9} 5) (37 #{1 5 7 8 9} 5) (38 #{3 5 6 7 8 9} 6) (39 #{2 3 4 8 9} 5) (40 #{2 3 9} 3) (41 #{2 3 4 8 9} 5) (42 #{1 5 6 7 9} 5) (43 #{1 2 3 5 7 9} 6) (44 #{1 2 5 6 7} 5) (46 #{1 5 8 9} 4) (49 #{3 9} 2) (51 #{1 5 9} 3) (52 #{1 3 5 9} 4) (53 #{1 5} 2) (55 #{5 8 9} 3) (57 #{2 6 8 9} 4) (58 #{2 5 9} 3) (60 #{5 8 9} 3) (62 #{2 5} 2) (65 #{5 8 9} 3) (66 #{3 8 9} 3) (68 #{3 8 9} 3) (69 #{1 5 8 9} 4) (71 #{1 5} 2) (72 #{5 6 8 9} 4) (73 #{5 8 9} 3) (75 #{2 6 8 9} 4) (77 #{2 8 9} 3) (78 #{5 7 8 9} 4) (79 #{2 5 7 9} 4))
 
   )
 
