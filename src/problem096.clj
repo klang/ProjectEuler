@@ -314,15 +314,6 @@
 (comment
   (into {} (map #(hash-map % (candidates % (nth sudoku-vectors 8))) [ 0  1  2  9 10 11 18 19 20] ))
   (into {} (map #(hash-map % (candidates % (nth sudoku-vectors 8))) (group 0 (range 0 81)))))
-[2 0 0 0 8 0 3 0 0 
- 0 6 0 0 7 0 0 8 4 
- 0 3 0 5 6 0 2 0 9 
- 0 0 0 1 0 5 4 0 8 
- 0 0 0 0 0 0 0 0 0 
- 4 0 2 7 0 6 0 0 0 
- 3 0 1 0 0 7 0 4 0 
- 7 2 0 0 4 0 0 6 0 
- 0 0 4 0 1 0 0 0 3]
 
 (defn group-queue [group-index sudoku]
   "return the elements from a group, that are still not determined"
@@ -369,6 +360,18 @@
 					    (reduce union (map #(c %) the-rest))))) 
 			   (one-and-the-rest c)))))
 )
+;; (nth sudoku-vectors 1) with all singles resolved
+;; [2 0 0 0 8 0 3 0 0  0 6 0 0 7 0 0 8 4  0 3 0 5 6 0 2 0 9  
+;;  0 0 0 1 0 5 4 0 8  0 0 0 0 0 0 0 0 0  4 0 2 7 0 6 0 0 0 
+;;  3 0 1 0 0 7 0 4 0  7 2 0 0 4 0 0 6 0  0 0 4 0 1 0 0 0 3]
+
+;; (hidden-singles s1)
+;; {1 #{4}, 8 #{6}, 72 #{6}, 58 #{5}}
+
+;; solution:
+;; [2 (4) 5 9 8 1 3 7 (6)  1 6 9 2 7 3 5 8 4  8 3 7 5 6 4 2 1 9 
+;;  9 7 6 1 2 5 4 3 8  5 1 3 4 9 8 6 2 7  4 8 2 7 3 6 9 5 1 
+;;  3 9 1 6 (5) 7 8 4 2  7 2 8 3 4 9 1 6 5 (6) 5 4 8 1 2 7 9 3]
 
 (defn hidden-single [group-index sudoku]
   (let [c (group-candidates group-index sudoku)]
@@ -383,26 +386,27 @@
 
 (defn hidden-singles [sudoku]
   (into {} (remove empty? (map #(hidden-single % sudoku) group-start))))
-;;
-;; ONLY RESOLVE ONE HIDDEN SINGLE AT THE TIME, NOT ALL OF THEM
-;;
+
 (defn fix-one-hidden-single [sudoku]
+  "only resolve one hidden single at the time, not all of them"
   (let [v sudoku u (hidden-singles sudoku)]
     (assoc v (first (first u)) 
 		      (first (second (first u))))))
 
-(comment
-  (all-hidden-singles (nth sudoku-vectors 8)))
+(defn fix-hidden-singles [sudoku]
+  "insert the hidden singles in the current suduko, producing a new one"
+  (loop [v sudoku u (hidden-singles sudoku)] 
+    (if (empty? u) v 
+	(recur (assoc v (first (first u)) 
+		      (first (second (first u)))) 
+	       (rest u)))))
 
-;;(group 0 (nth sudoku-vectors 8))
-;   (0 0 0 
-;    0 5 0 
-;    0 3 0)
-
-;;(flatten-once (map #(list % (candidates % (nth sudoku-vectors 8))) [ 0  1  2  9 10 11 18 19 20] ))
-;; candidates should return the locked value for index 10 and 19 in this case
-;{0 #{1 6 7 8} 1 #{1 4 6 8} 2 #{4 6} 9 #{6 7 8} 10 #{6 8} 11 #{6 9} 18 #{2 7 8} 19 #{2 4 8} 20 #{2 4 9}}
-
+(defn elliminate-hidden-singles [sudoku]
+  "keep inserting unique solutions in the current suduko, until there are no more singles"
+  (loop [s sudoku p nil]
+    (if (or (empty? (queue s)) (= p s)) 
+      s
+      (recur (fix-hidden-singles s) s))))
 
 ;;-----------------------------------------------------------------------------
 ;; if nothing else works, take a wild guess
@@ -429,11 +433,18 @@
 	(if (empty? (queue partial))
 	  ;; no elements in queue => nothing else to do
 	  partial
-	  ;; try to guess, and solve
+	  ;; resolve hidden singles
 	  (if (not (empty? (hidden-singles partial)))
-	    (recur (fix-one-hidden-single partial))
-	    (let [suggestion (first (remove false? (map solve (flatten-once (guesses partial)))))]
-	      (if suggestion suggestion false)))))))
+	    ;(do (println "fix-hidden-singles"))
+	    (recur (fix-hidden-singles partial))
+	    ;; try to guess, and solve
+	    (do (println "brutal" partial)
+		;false
+		#_partial
+		(sudoku.core/solve partial)
+		#_(let [suggestion (first (remove false? (map solve (flatten-once (guesses partial)))))]
+		  (if suggestion suggestion false))
+		))))))
 )
 
 
@@ -443,12 +454,16 @@
 (comment
   (defn total-count-stats [sudokus]
     (reduce + (map #(integer %) (map #(take 3 %) (map #(time (solve %)) sudokus)))))
+
+  (defn total-count-stats [sudokus]
+    (reduce + (map #(integer %) (map #(take 3 %) (remove false? (map #(time (solve %)) sudokus))))))
+
   (defn total-queue [sudokus]
     (map #(queue %) (map #(time (solve %)) sudokus)))
   (time
    (total-count-stats (map #(nth sudoku-vectors %) 
 			   [0 1 2 3 4 5 6 7 9 10 11 12 13 14 15 16 18 19 20 
-			    21 22 23 25 26 30 31 32 33 34 35 37 38 39 42 44 46 ])))
+			    21 22 23 25 26 30 31 32 33 34 35 37 38 39 42 46 ])))
 
   (def t1 [82.702993 578.789654 257.70714 449.061673 61.546669 776.079569 205.393495 69.821464 459.322472 755.007885 159.267227 394.162767 1443.685281 140.630214 47.616402 47.616402 54.095997 130.004543 118.481842 189.754349 306.004328 242.261038 237.079345 311.052205 442.426466 442.426466 463.144188 517.4715 341.684297 101.087185 190.925992 75.471339 117.777573 159.035349 99.078541 3056.712249 509.248384 413.33282])
   ;;"Elapsed time: 14014.579823 msecs"
