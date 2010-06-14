@@ -242,14 +242,19 @@
 	       (map #(if (zero? %1) %2) sudoku (range 0 81))))
 )
 
+;;-----------------------------------------------------------------------------
+;;-----------------------------------------------------------------------------
+
 (defn queue [sudoku] 
   "return the indexes for unknown numbers in the sudoku"
   (filter #(not (nil? %)) (map #(if (zero? %1) %2) sudoku (range 0 81))))
 
+;;-----------------------------------------------------------------------------
 ;;--------------------find and elliminate singles------------------------------
 ;; given a point in a string, identify which row, column and 3x3 group the point belongs to
 ;; also identify which candidates numbers fit in that point
 ;; if only one number fit, insert that number
+;;-----------------------------------------------------------------------------
 
 (defn singles [sudoku] 
   "returns a list of pairs of singles in the sudoku. Any cells which have only one candidate can safely be assigned that value"
@@ -271,7 +276,12 @@
     (if (or (empty? (queue s)) (= p s)) 
       s
       (recur (fix-singles s) s))))
+
 ;;-----------------------------------------------------------------------------
+;;--------------------find and elliminate hidden singles-----------------------
+;;-----------------------------------------------------------------------------
+;;-----------------------------------------------------------------------------
+
 (def g [4 7 0 
 	3 8 0 
 	2 0 0])
@@ -304,7 +314,15 @@
 (comment
   (into {} (map #(hash-map % (candidates % (nth sudoku-vectors 8))) [ 0  1  2  9 10 11 18 19 20] ))
   (into {} (map #(hash-map % (candidates % (nth sudoku-vectors 8))) (group 0 (range 0 81)))))
-
+[2 0 0 0 8 0 3 0 0 
+ 0 6 0 0 7 0 0 8 4 
+ 0 3 0 5 6 0 2 0 9 
+ 0 0 0 1 0 5 4 0 8 
+ 0 0 0 0 0 0 0 0 0 
+ 4 0 2 7 0 6 0 0 0 
+ 3 0 1 0 0 7 0 4 0 
+ 7 2 0 0 4 0 0 6 0 
+ 0 0 4 0 1 0 0 0 3]
 
 (defn group-queue [group-index sudoku]
   "return the elements from a group, that are still not determined"
@@ -315,7 +333,7 @@
   (into {} (map #(hash-map % (candidates % (nth sudoku-vectors 8))) (group-queue 0 sudoku))))
 
 (defn group-candidates [group-index sudoku]
-  (into {} (map #(hash-map % (candidates % (nth sudoku-vectors 8))) (group-queue group-index sudoku))))
+  (into {} (map #(hash-map % (candidates % sudoku)) (group-queue group-index sudoku))))
 
 (comment
   (into {} (map (fn [d] (hash-map d (remove (fn [u] (= d u)) (keys c)))) (keys c)))
@@ -454,9 +472,24 @@
 	  ;; no elements in queue => nothing else to do
 	  true
 	  ;; could not solve by one of the known methods
-	  false)))))
+	  false))))
+
+(defn verify [num] (= (solve  (nth sudoku-vectors num)) (vec (sudoku.core/solve  (nth sudoku-vectors num)))))
+
+(def elliminated (map #(elliminate-singles %) sudoku-vectors))
+
+(defn verifye [num] (= (time (sudoku.core/solve  (nth sudoku-vectors num)))
+		       (time (sudoku.core/solve  (nth elliminated num)))))
+(deftest test-solve
+  (is (= (solve (nth sudoku-vectors 0)) 
+	 (vec (sudoku.core/solve  (nth sudoku-vectors 0)))))
+  (is (= (solve (nth sudoku-vectors 1)) 
+	 (vec (sudoku.core/solve  (nth sudoku-vectors 1))))))
 
 (count (remove false? (map method-solve sudoku-vectors)))
+
+)
+
 
 
 ;; with just brute force, there are some sudokus that take quite a while to solve
