@@ -124,17 +124,6 @@
 
 ;; find out which i coordinate an index is located in
 (defn i [index] (mod (quot index 3) 3))
-(comment
-  (defn i [index] (mod (quot index 3) 9))
-  (defn i [index] (mod (quot index 9) 3))
-
-  (defn group 
-    ([i j sudoku]
-       (flatten (take 3 (drop j (partition 3 9 (drop i sudoku))))))
-    ([index sudoku]
-       (group (i index) (j index))))
-)
-
 (deftest test-i
   (is (every? #(= 0 %) (map #(i %) [ 0  1  2  9 10 11 18 19 20])))
   (is (every? #(= 1 %) (map #(i %) [ 3  4  5 12 13 14 21 22 23])))
@@ -162,7 +151,6 @@
   (is (every? #(= 2 %) (map #(j %) [54 55 56 63 64 65 72 73 74])))
   (is (every? #(= 2 %) (map #(j %) [57 58 59 66 67 68 75 76 77])))
   (is (every? #(= 2 %) (map #(j %) [60 61 62 69 70 71 78 79 80]))))
-
 
 (defn group 
   "returns a vector of the group that contains the index or coordinate i,j in sudoku"
@@ -215,15 +203,6 @@
     (is (every? #(= % '(6 0 9 2 0 3 0 1 0)) (map #(group % sudoku) [57 58 59 66 67 68 75 76 77])))
     (is (every? #(= % '(5 0 0 0 0 9 3 0 0)) (map #(group % sudoku) [60 61 62 69 70 71 78 79 80])))))
 
-;; we might as well only use the index part of 'group
-(comment
-;; not tested and produces a wrong result
-  (defn group [index sudoku]
-    "returns a vector of the group that contains the index in sudoku"
-    (let [i (mod (quot index 3) 3) j (quot index 27)] 
-      (flatten (take 3 (drop j (partition 3 9 (drop i sudoku)))))))
-  )
-
 (defn candidates [index sudoku]
   "returns a map of possible candidates for an index in sudoku"
   (if (zero? (sudoku index))
@@ -232,15 +211,6 @@
 				 (column index sudoku)
 				 (group index sudoku))))
         (hash-set (sudoku index))))
-
-(comment
-  (def sudoku (first sudoku-vectors))
-  (map #(candidates % sudoku) (range 0 81))
-  (filter #(not (nil? %)) (map #(if (zero? %1) %2) sudoku (range 0 81)))
-  (map #(candidates % sudoku) 
-       (filter #(not (nil? %)) 
-	       (map #(if (zero? %1) %2) sudoku (range 0 81))))
-)
 
 ;;-----------------------------------------------------------------------------
 ;;-----------------------------------------------------------------------------
@@ -326,40 +296,10 @@
 (defn group-candidates [group-index sudoku]
   (into {} (map #(hash-map % (candidates % sudoku)) (group-queue group-index sudoku))))
 
-(comment
-  (into {} (map (fn [d] (hash-map d (remove (fn [u] (= d u)) (keys c)))) (keys c)))
-)
-
 (defn one-and-the-rest [gc]
   (into {} (map (fn [d] (hash-map d (remove (fn [u] (= d u)) (keys gc)))) (keys gc))))
 
-(comment
-  (def gc8 (group-candidates 0 (nth sudoku-vectors 8)))
-  (difference (c 5) (union (c 2) (c 7) (c 8)))
-  (remove empty? (map (fn [[one the-rest]] (difference 
-					    (gc8 one) 
-					    (reduce union (map #(gc8 %) the-rest)))) (one-and-the-rest gc8)))
-  (remove empty? (map (fn [[one the-rest]] (difference 
-					    (c one) 
-					    (reduce union (map #(c %) the-rest)))) (one-and-the-rest c)))
 
-  ;; last one here gives the correct result, but the index is missing
-
-  (into {} (map (fn [[one the-rest]] (hash-map one (difference 
-						    (c one) 
-						    (reduce union (map #(c %) the-rest))))) (one-and-the-rest c)))
-
-  ;; index available .. now we just have to remove the ones with empty sets
-
-  (into {} 
-	(remove #(empty? (val %)) 
-		(into {} 
-		      (map (fn [[one the-rest]] 
-			     (hash-map one (difference 
-					    (c one) 
-					    (reduce union (map #(c %) the-rest))))) 
-			   (one-and-the-rest c)))))
-)
 ;; (nth sudoku-vectors 1) with all singles resolved
 ;; [2 0 0 0 8 0 3 0 0  0 6 0 0 7 0 0 8 4  0 3 0 5 6 0 2 0 9  
 ;;  0 0 0 1 0 5 4 0 8  0 0 0 0 0 0 0 0 0  4 0 2 7 0 6 0 0 0 
@@ -387,12 +327,6 @@
 (defn hidden-singles [sudoku]
   (into {} (remove empty? (map #(hidden-single % sudoku) group-start))))
 
-(defn fix-one-hidden-single [sudoku]
-  "only resolve one hidden single at the time, not all of them"
-  (let [v sudoku u (hidden-singles sudoku)]
-    (assoc v (first (first u)) 
-		      (first (second (first u))))))
-
 (defn fix-hidden-singles [sudoku]
   "insert the hidden singles in the current suduko, producing a new one"
   (loop [v sudoku u (hidden-singles sudoku)] 
@@ -416,7 +350,6 @@
 
 (defn flatten-once [s] (remove seq? (tree-seq seq? seq s)))
 
-
 (defn solve [sudoku]
   (loop [s sudoku]
     (let [partial (elliminate-singles s)]
@@ -426,6 +359,7 @@
 	;; try to guess, and solve
 	(let [suggestion (first (remove false? (map solve (flatten-once (guesses partial)))))]
 	  (if suggestion suggestion false))))))
+
 (comment
   (defn solve [sudoku]
     (loop [s sudoku]
@@ -465,43 +399,19 @@
 			   [0 1 2 3 4 5 6 7 9 10 11 12 13 14 15 16 18 19 20 
 			    21 22 23 25 26 30 31 32 33 34 35 37 38 39 42 46 ])))
 
-  (def t1 [82.702993 578.789654 257.70714 449.061673 61.546669 776.079569 205.393495 69.821464 459.322472 755.007885 159.267227 394.162767 1443.685281 140.630214 47.616402 47.616402 54.095997 130.004543 118.481842 189.754349 306.004328 242.261038 237.079345 311.052205 442.426466 442.426466 463.144188 517.4715 341.684297 101.087185 190.925992 75.471339 117.777573 159.035349 99.078541 3056.712249 509.248384 413.33282])
-  ;;"Elapsed time: 14014.579823 msecs"
-  ;;14293
+  (defn verify [num] (= (solve  (nth sudoku-vectors num)) (vec (sudoku.core/solve  (nth sudoku-vectors num)))))
 
-  (time (total-count-stats (map #(nth sudoku-vectors %) [24 27 28 36 49])))
-  (def t2 [1758.692202 2210.227051 6041.850865 16178.975875 15745.116404])
-  ;;"Elapsed time: 41938.368431 msecs"
-  ;;1223
-  ;; (+ (reduce + t1) (reduce + t2))
-  ;; 56381.8297 msecs used .. almost out of time
+  (def elliminated (map #(elliminate-singles %) sudoku-vectors))
 
-  ;; the hard ones that are left:
-  ; 8 17 40 41 43 44 45 47 48 49
-  (time (total-count-stats (map #(nth sudoku-vectors %) [8 17 40 41 43 44 45 47 48 49])))
-
-  (defn method-solve [sudoku]
-    (loop [s sudoku]
-      (let [partial (elliminate-singles s)]
-	(if (empty? (queue partial))
-	  ;; no elements in queue => nothing else to do
-	  true
-	  ;; could not solve by one of the known methods
-	  false))))
-
-(defn verify [num] (= (solve  (nth sudoku-vectors num)) (vec (sudoku.core/solve  (nth sudoku-vectors num)))))
-
-(def elliminated (map #(elliminate-singles %) sudoku-vectors))
-
-(defn verifye [num] (= (time (sudoku.core/solve  (nth sudoku-vectors num)))
-		       (time (sudoku.core/solve  (nth elliminated num)))))
-(deftest test-solve
-  (is (= (solve (nth sudoku-vectors 0)) 
-	 (vec (sudoku.core/solve  (nth sudoku-vectors 0)))))
-  (is (= (solve (nth sudoku-vectors 1)) 
-	 (vec (sudoku.core/solve  (nth sudoku-vectors 1))))))
-
-(count (remove false? (map method-solve sudoku-vectors)))
+  (defn verifye [num] (= (time (sudoku.core/solve  (nth sudoku-vectors num)))
+			 (time (sudoku.core/solve  (nth elliminated num)))))
+  (deftest test-solve
+    (is (= (solve (nth sudoku-vectors 0)) 
+	   (vec (sudoku.core/solve  (nth sudoku-vectors 0)))))
+    (is (= (solve (nth sudoku-vectors 1)) 
+	   (vec (sudoku.core/solve  (nth sudoku-vectors 1))))))
+  
+  (count (remove false? (map method-solve sudoku-vectors)))
 
 )
 
