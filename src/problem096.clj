@@ -212,6 +212,7 @@
 				 (group index sudoku))))
         (hash-set (sudoku index))))
 
+
 ;;-----------------------------------------------------------------------------
 ;;-----------------------------------------------------------------------------
 
@@ -345,10 +346,24 @@
 ;;-----------------------------------------------------------------------------
 ;; if nothing else works, take a wild guess
 (defn guesses [sudoku]
+  "return the different guesses that are possible"
   (let [paths (map #(list % (candidates % sudoku)) (queue sudoku))]
     (map (fn [[index cs]] (map #(assoc sudoku index %) cs)) paths)))
 
+(defn least-degrees-of-freedom [sudoku]
+  "sort the queue and candidates according to the number of elements in the candidate"
+  (map #(second %) 
+       (sort (into {} (map #(let [cip (candidates % sudoku)] 
+			      (hash-map (str (count cip) "_" %) (list % cip)))
+			   (queue sudoku))))))
+
 (defn flatten-once [s] (remove seq? (tree-seq seq? seq s)))
+
+(defn guesses [sudoku]
+  "return the different guesses, but start with the cells with less candidates"
+  (let [paths (least-degrees-of-freedom sudoku)]
+    #_(remove false? (flatten-once (map (fn [[index cs]] (map #(assoc sudoku index %) cs)) paths)))
+    (first (map (fn [[index cs]] (map #(assoc sudoku index %) cs)) paths))))
 
 (defn solve [sudoku]
   (loop [s sudoku]
@@ -360,27 +375,15 @@
 	(let [suggestion (first (remove false? (map solve (flatten-once (guesses partial)))))]
 	  (if suggestion suggestion false))))))
 
-(comment
-  (defn solve [sudoku]
-    (loop [s sudoku]
-      (let [partial (elliminate-singles s)]
-	(if (empty? (queue partial))
-	  ;; no elements in queue => nothing else to do
-	  partial
-	  ;; resolve hidden singles
-	  (if (not (empty? (hidden-singles partial)))
-	    ;(do (println "fix-hidden-singles"))
-	    (recur (fix-hidden-singles partial))
-	    ;; try to guess, and solve
-	    (do (println "brutal" partial)
-		;false
-		#_partial
-		(sudoku.core/solve partial)
-		#_(let [suggestion (first (remove false? (map solve (flatten-once (guesses partial)))))]
-		  (if suggestion suggestion false))
-		))))))
-)
+(defn logic [sudoku]
+  (loop [s sudoku p nil] (if (= s p) s (recur (elliminate-hidden-singles (elliminate-singles s)) s))))
 
+(defn solve [sudoku]
+  (let [partial (logic sudoku)]
+    (if (empty? (queue partial)) 
+      partial
+      (first (remove empty? (map solve (guesses partial))))
+      #_(sudoku.core/solve partial))))
 
 (defn total-count [sudokus]
   (reduce + (map #(integer %) (map #(take 3 %) (map solve sudokus)))))
@@ -399,7 +402,15 @@
 			   [0 1 2 3 4 5 6 7 9 10 11 12 13 14 15 16 18 19 20 
 			    21 22 23 25 26 30 31 32 33 34 35 37 38 39 42 46 ])))
 
-  (defn verify [num] (= (solve  (nth sudoku-vectors num)) (vec (sudoku.core/solve  (nth sudoku-vectors num)))))
+  (defn verify [num] (= (solve  (nth sudoku-vectors num)) (vec (sudoku.core/solve  (logic (nth sudoku-vectors num))))))
+
+;#5 has two solutions?
+
+  (defn verify [sudoku]
+    (and (= (map #(apply str %) (map #(sort (row % sudoku)) (range 0 9))))
+	 (= (map #(apply str %) (map #(sort (column % sudoku)) (range 0 9))))
+	 (= (map #(apply str %) (map #(sort (group % sudoku)) group-start))))
+    )
 
   (def elliminated (map #(elliminate-singles %) sudoku-vectors))
 
@@ -411,8 +422,6 @@
     (is (= (solve (nth sudoku-vectors 1)) 
 	   (vec (sudoku.core/solve  (nth sudoku-vectors 1))))))
   
-  (count (remove false? (map method-solve sudoku-vectors)))
-
 )
 
 
