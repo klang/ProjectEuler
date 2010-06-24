@@ -97,21 +97,15 @@ Note: This problem has been changed recently, please check that you are using th
 
 (defn inc-item [coll limit item]
   (loop [coll coll mark item]
-    (if (<= mark limit)
+    (if (< mark limit)
       (recur (assoc coll mark (inc (get coll mark))) (+ mark item))
       coll)))
 
 (defn inc-items [coll limit & items]
-  (loop [coll coll items items mark (inc limit)]
-    (if (empty? items)
-      coll
-      (if (<= mark limit)
-	(recur (assoc coll mark (inc (get coll mark))) 
-	       items 
-	       (+ mark (first items)))
-	(do (println (first items)) (recur coll
-		   (rest items)
-		   (first items)))))))
+  (loop [v coll f items] 
+    (if (empty? f) v 
+	(recur (inc-item v (count v) (first f)) (rest f)))))
+
 
 ;; problem075> (time (def v2 (inc-item v (count v) 12)))
 ;; "Elapsed time: 553.110698 msecs"
