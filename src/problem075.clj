@@ -82,9 +82,53 @@ Note: This problem has been changed recently, please check that you are using th
     (vector a (+ a 1) (+ mm nn)))) 
 ;;  (= (+ a 1) (* 2 m n))
 
+;; int-array starts at 0
+;;(def pyth (int-array 1500001 0)) 
+;;(time (reduce + (filter #(= 1 %) pyth)))
+;;"Elapsed time: 1294.859363 msecs"
+;;0
 
+;; problem075> (time (def v (vec (take 1500001 (cycle [0])))))
+;; "Elapsed time: 7570.119881 msecs"
+;; #'problem075/v
+;; problem075> (time (def v (into [] (take 1500001 (cycle [0])))))
+;; "Elapsed time: 3549.343479 msecs"
+;; #'problem075/v
 
+(defn inc-item [coll limit item]
+  (loop [coll coll mark item]
+    (if (<= mark limit)
+      (recur (assoc coll mark (inc (get coll mark))) (+ mark item))
+      coll)))
 
+(defn inc-items [coll limit & items]
+  (loop [coll coll items items mark (inc limit)]
+    (if (empty? items)
+      coll
+      (if (<= mark limit)
+	(recur (assoc coll mark (inc (get coll mark))) 
+	       items 
+	       (+ mark (first items)))
+	(do (println (first items)) (recur coll
+		   (rest items)
+		   (first items)))))))
+
+;; problem075> (time (def v2 (inc-item v (count v) 12)))
+;; "Elapsed time: 553.110698 msecs"
+;; #'problem075/v2
+;; problem075> (time (reduce + (filter #(= 1 %) v2)))
+;; "Elapsed time: 484.535483 msecs"
+;; 125000
+
+;; it takes a bit longer to allocate the vector, but each update is much faster .. 
+;; each update can be done in parallel, with agents 
+;; .. that might be a good exercise
+
+(defn work []
+  (let [uad (uad-tree [3 4 5])]
+    (inc-item )
+    )
+  )
 
 
 
@@ -178,9 +222,10 @@ Note: This problem has been changed recently, please check that you are using th
   "add one to each multipa of a given integer"
   (let [limit (int (count coll)) i (int grp)]
     (loop [g i]
-      (if (<= g limit) 
+      (if (< g limit) 
 	(do (aset coll g (inc (aget coll g)))
-	    (recur (+ g i)))))))
+	    (recur (+ g i)))
+	coll))))
 
 
 
