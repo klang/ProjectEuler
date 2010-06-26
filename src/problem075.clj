@@ -45,7 +45,6 @@ Note: This problem has been changed recently, please check that you are using th
 
 (defn uad-tree [[a b h]]
   (let [aa (* 2 a) bb (* 2 b) hh (* 2 h) hhh (+ hh h)]
-    #_[aa (+ a a) bb (+ b b) hh (+ h h) hhh (+ hh h)]
     {:up    (vector (+ (- a bb) hh) (+ (- aa b) hh) (+ (- aa bb) hhh))
      :along (vector (+ (+ a bb) hh) (+ (+ aa b) hh) (+ (+ aa bb) hhh))
      :down  (vector (+ (- bb a) hh) (+ (- b aa) hh) (+ (- bb aa) hhh))}))
