@@ -16,8 +16,13 @@ Given that L is the length of the wire, for how many values of L <= 1,500,000 ca
 
 Note: This problem has been changed recently, please check that you are using the right parameters.
 "})
-  (:use clojure.contrib.math)
-  (:use clojure.test))
+  (:use clojure.contrib.math
+	clojure.contrib.repl-utils
+	clojure.set
+	clojure.contrib.combinatorics
+	[clojure.contrib.seq-utils :only (indexed)]
+	clojure.contrib.duck-streams
+	clojure.test))
 
 (set! *warn-on-reflection* true)
 
@@ -79,7 +84,7 @@ Note: This problem has been changed recently, please check that you are using th
 
 (defn mn2abh [[m n]]
   (let [mm (* m m) nn (* n n) a (- mm nn)]
-    (vector a (+ a 1) (+ mm nn)))) 
+    (vector a (+ a 1) (+ mm nn))))
 ;;  (= (+ a 1) (* 2 m n))
 
 ;; int-array starts at 0
@@ -118,13 +123,101 @@ Note: This problem has been changed recently, please check that you are using th
 ;; each update can be done in parallel, with agents 
 ;; .. that might be a good exercise
 
-(defn work []
-  (let [uad (uad-tree [3 4 5])]
-    (inc-item )
-    )
+(comment
+  ;; playing around with the uad-tree. 
+  ;; trying to decide how to go through all the target elements
+
+  ;; attach a length to each uad
+  (map #(hash-map :length (reduce + (second %)) :uad (second %)) (uad-tree [3 4 5]))
+
+  ;; that gives a priority to the elements, or at least an indication of 'target'
+
+  ;; sort uad's by length
+  (sort-by :length < (map #(hash-map :length (reduce + (second %)) :uad (second %)) (uad-tree [3 4 5])))
+  
+  ;; only uad's with length less than 50
+  (filter #(< (:length %) 50) (map #(hash-map :length (reduce + (second %)) :uad (second %)) (uad-tree [3 4 5])))
+  (def q [{:length 12 :uad [3 4 5]}])
+ 
+  ;; add next members to a sorted vector
+  (def q
+       (into [] 
+	     (sort-by :length > 
+		      (into (pop q) 
+			    (filter #(< (:length %) 200) 
+				    (map #(hash-map :length (reduce + (second %)) :uad (second %)) (uad-tree (:uad (last q)))))))))
+  ;; add the next members to a list (this )
+  (def q (list {:length 12 :uad [3 4 5]}))
+
+  (def q
+       (into (pop q)
+	     (filter #(< (:length %) 200) 
+		     (map #(hash-map :length (reduce + (second %)) :uad (second %)) (uad-tree (:uad (first q)))))))
+)
+
+(defn sorted-uad-queue [queue limit]
+     (into [] 
+	   (sort-by :length > 
+		    (into (pop queue) 
+			  (filter #(< (:length %) limit) 
+				  (map #(hash-map :length (reduce + (second %)) :uad (second %)) (uad-tree (:uad (last queue)))))))))
+(deftest test-sorted-uad-queue
+  (is (= (sorted-uad-queue [{:length 12 :uad [3 4 5]}] 200)
+	 [{:length 70, :uad [21 20 29]} {:length 40, :uad [15 8 17]} {:length 30, :uad [5 12 13]}])))
+
+(defn uad-queue [queue limit]
+  "based on the first element, add new uad elemnts under the limit, and remove the element from queue"
+     (into (pop queue)
+	    (filter #(< (:length %) limit) 
+			 (map #(hash-map :length (reduce + (second %)) :uad (second %)) (uad-tree (:uad (last queue)))))))
+
+(deftest test-uad-queue
+  (is (= (uad-queue [{:length 12 :uad [3 4 5]}] 200)
+	 [{:length 30, :uad [5 12 13]} {:length 70, :uad [21 20 29]} {:length 40, :uad [15 8 17]}]))
+  (let [queue (uad-queue [{:length 12 :uad [3 4 5]}] 200)]
+    (is (= (uad-queue queue 200))
+	[{:length 30, :uad [5 12 13]} {:length 70, :uad [21 20 29]}
+	 {:length 154, :uad [33 56 65]} {:length 234, :uad [65 72 97]} {:length 84, :uad [35 12 37]}
+	 ]))
   )
 
+(deftest test-uad-queues
+  (is (= (sorted-uad-queue [{:length 12 :uad [3 4 5]}] 200)
+	 (sort-by :length > (uad-queue [ {:length 12 :uad [3 4 5]}] 200))
+	 '({:length 70, :uad [21 20 29]} {:length 40, :uad [15 8 17]} {:length 30, :uad [5 12 13]}))))
 
+(comment
+  (def limit 444)
+  (def queue (uad-queue [{:length 12 :uad [3 4 5]}] limit))
+  (def catch (vec (take (inc limit) (cycle [0]))))
+)
+
+(defn work [limit]
+  (loop [queue (uad-queue [{:length 12 :uad [3 4 5]}] limit)
+	 catch (vec (take (inc limit) (cycle [0])))]
+    (if (empty? queue)
+      (vec (map first (filter #(= 1 (second %)) (indexed (inc-items catch limit 12)))))
+      ;; it's not nice to plug the first length in at the last moment like this.. 
+      ;; not elegant at all
+      #_catch
+      #_(do
+	(println {:count (count queue) :first (last queue)}))
+      (recur (uad-queue queue limit) (inc-items catch limit (:length (last queue))) ))))
+
+;; problem075> (time (def total (work 1500000)))
+;; "Elapsed time: 33736.665645 msecs"
+;; problem075> 161667
+;; (time (count total))
+;; "Elapsed time: 0.059785 msecs"
+;; #'problem075/total
+
+(deftest test-work
+  ;; (def v (vec (take (inc 444) (cycle [0]))))
+  (let [v (vec (take (inc 444) (cycle [0])))]
+    ;; this does not hold as only the first element is marked off
+    #_(is (not (= known (vec (map first (filter #(= 1 (second %)) (indexed (inc-items v (count v) 12))))))))
+    (is (= known (work 444)))
+    ))
 
 ;Pell numbers: a(0) = 0, a(1) = 1; for n > 1, a(n) = 2*a(n-1) + a(n-2). 
 (defn pell-numbers []
@@ -198,6 +291,14 @@ Note: This problem has been changed recently, please check that you are using th
 
 ;; (map #(hash-map :i %2 :v %1) (x 60) (iterate inc 0))
 ;; (filter #(not (nil? %)) (map #(if (= 1 %1) %2 nil) (x 121) (iterate inc 0)))
+(defn mark-off-group [coll grp]
+  "add one to each multipa of a given integer"
+  (let [limit (int (count coll)) i (int grp)]
+    (loop [g i]
+      (if (< g limit) 
+	(do (aset coll g (inc (aget coll g)))
+	    (recur (+ g i)))
+	coll))))
 
 (defn x [limit]
   (let [limit (int limit) 
@@ -212,14 +313,7 @@ Note: This problem has been changed recently, please check that you are using th
 	  (recur (inc i)))))))
 
 
-(defn mark-off-group [coll grp]
-  "add one to each multipa of a given integer"
-  (let [limit (int (count coll)) i (int grp)]
-    (loop [g i]
-      (if (< g limit) 
-	(do (aset coll g (inc (aget coll g)))
-	    (recur (+ g i)))
-	coll))))
+
 
 
 
