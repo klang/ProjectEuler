@@ -193,31 +193,28 @@ Note: This problem has been changed recently, please check that you are using th
 )
 
 (defn work [limit]
+  "add the first element to the queue, initialize the catch vector with the first element marked off"
   (loop [queue (uad-queue [{:length 12 :uad [3 4 5]}] limit)
-	 catch (vec (take (inc limit) (cycle [0])))]
+	 catch (inc-items (vec (take (inc limit) (cycle [0]))) limit 12)]
     (if (empty? queue)
-      (vec (map first (filter #(= 1 (second %)) (indexed (inc-items catch limit 12)))))
-      ;; it's not nice to plug the first length in at the last moment like this.. 
-      ;; not elegant at all
-      #_catch
-      #_(do
-	(println {:count (count queue) :first (last queue)}))
+      (time (vec (map first (filter #(= 1 (second %)) (indexed catch)))))
       (recur (uad-queue queue limit) (inc-items catch limit (:length (last queue))) ))))
 
 ;; problem075> (time (def total (work 1500000)))
-;; "Elapsed time: 33736.665645 msecs"
-;; problem075> 161667
+;; "Elapsed time: 6313.866505 msecs"  <-------- time to filter the catch befor returning
+;; "Elapsed time: 26881.448618 msecs" <-------- 20ish seconds to do the work
+;; #'problem075/total
 ;; (time (count total))
 ;; "Elapsed time: 0.059785 msecs"
-;; #'problem075/total
+;; problem075> 161667
+
 
 (deftest test-work
   ;; (def v (vec (take (inc 444) (cycle [0]))))
   (let [v (vec (take (inc 444) (cycle [0])))]
     ;; this does not hold as only the first element is marked off
     #_(is (not (= known (vec (map first (filter #(= 1 (second %)) (indexed (inc-items v (count v) 12))))))))
-    (is (= known (work 444)))
-    ))
+    (is (= known (work 444)))))
 
 ;Pell numbers: a(0) = 0, a(1) = 1; for n > 1, a(n) = 2*a(n-1) + a(n-2). 
 (defn pell-numbers []
@@ -231,10 +228,9 @@ Note: This problem has been changed recently, please check that you are using th
 	  38613965 93222358 225058681 543339720  1311738121 
 	  3166815962 7645370045 18457556052 44560482149])))
 
-
 ;;;;------------------------ where the hell did I find the calculation below?
 ;;;;-------------------------It's wrong.
-;(for [a (range 2, (+ (/ p 4) 1)) :when (zero? (mod (- (* p p) (* 2 p a)) (- (* 2 p) (* 2 a))))] 1) 
+;;(for [a (range 2, (+ (/ p 4) 1)) :when (zero? (mod (- (* p p) (* 2 p a)) (- (* 2 p) (* 2 a))))] 1) 
 
 (def p 36)
 
@@ -248,18 +244,9 @@ Note: This problem has been changed recently, please check that you are using th
 	  (recur c (inc p)))))))
 
 
-;; problem075> (time (p75 100))
-;; "Elapsed time: 12.619484 msecs"
-;; 10
-;; problem075> (time (p75 1000))
-;; "Elapsed time: 515.504529 msecs"
-;; 104
 ;; problem075> (time (p75 10000))
 ;; "Elapsed time: 45606.770662 msecs"
 ;; 1069
-
-(defn side [a b]
-  (sqrt (+ (* a a) (* b b))))
 
 (defn group [a b c]
   (map #(+ (* a %) (* b %) (* c %)) (iterate inc 1)))
