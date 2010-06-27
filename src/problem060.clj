@@ -8,7 +8,7 @@ Find the lowest sum for a set of five primes for which any two primes concatenat
   (:use tools.numbers)
   (:use tools.primes)
   (:use problem038)
-  ;(:use [clojure.contrib.lazy-seqs :only (primes)])
+  (:use [clojure.contrib.lazy-seqs :only (primes)])
   (:use clojure.contrib.combinatorics)
   (:use clojure.contrib.repl-utils)
   (:use clojure.set)
@@ -32,7 +32,7 @@ Find the lowest sum for a set of five primes for which any two primes concatenat
   (is (working-set [3 7 109 673])))
 
 ;; let's just work with limited primes and not 2 or 5
-(def limited-primes (filter #(not (or (= 2 %) (= 5 %))) (primes-up-to 5000)))
+(def limited-primes (filter #(not (or (= 2 %) (= 5 %))) (primes-up-to 10000)))
 
 (defn p-concat-set  [p] (into #{} (filter #(prime-concat? p %) limited-primes)))
 (defn p-concat [p] (filter #(prime-concat? p %) limited-primes))
@@ -170,15 +170,13 @@ Find the lowest sum for a set of five primes for which any two primes concatenat
 	                                    ;; i.e. 109 can be a deadend, even if 11 hasn't been examined yet
 	 primes (rest limited-primes)       ;; it should be possible to use lazy sequence primes instead
 	 candidate #{3}                     ;; 3,7,109,683 should be the first candidate of length 4
-	 limit 10                           ;;
-	 ]
+	 limit 10]
     (do (println {:first-elements (map #(list (first %) (first (second %))) queue)
 		  :next-element   (next-element-index queue)
 		  :first-dead     (first dead)
 		  :next-prime     (first primes)
 		  :candidate      candidate
-		  :iteration      limit
-		  }))
+		  :iteration      limit}))
     (if (or (= length (count candidate)) (zero? limit))
       queue
       (let [next-element (next-element-index queue)
@@ -187,16 +185,12 @@ Find the lowest sum for a set of five primes for which any two primes concatenat
 	;; if index is in candidate, don't add the element to the queue, add the prime to the queue, drop the index and recur
 	(cond (contains? candidate index)
 	      (list next-element element index)
-
 	      (not (contains? candidate index))
 	      (recur (if (nil? (queue index)) (add-element queue index) queue) 
 		     dead 
 		     (if (= index (first primes)) (rest primes) primes)
 		     (conj candidate index)
-		     (dec limit))
-
-	      ))
-      )))
+		     (dec limit)))))))
 
 (comment
 (recur (pop-element-from-prime queue prime)
@@ -204,9 +198,6 @@ Find the lowest sum for a set of five primes for which any two primes concatenat
 		    primes
 		    candidate
 		    (dec limit))
-
-
-
 )
 
 ;; -------------- intersection approach (time critical)
@@ -271,10 +262,30 @@ Find the lowest sum for a set of five primes for which any two primes concatenat
   (def queue (sorted-map))
   (def candidate #{})
   (def queue (add-element queue (first primes)))
-  (def candidate (conj #{} (first primes)))
+  (def candidate (conj candidate (first primes)))
   (def primes (rest primes))
+  (smallest-sum-index queue)
+  (def queue (add-element queue (first (queue 3))))
+  (def queue (pop-element-from-prime queue (first (smallest-sum-index queue))))
+  (def candidate (conj candidate (first (smallest-sum-index queue))))
+
+  (smallest-sum-index queue)
+  (def queue (add-element queue (first (queue (first (smallest-sum-index queue))))))
+  (def queue (pop-element-from-prime queue (first (smallest-sum-index queue))))
+  ;;11 is in the queue .. but starts with 3 .. 3->11 is a fair possibility
+
+  (smallest-sum-index queue)
+
   (defn first-elements [coll]
-    (map #(list (first %) (first (second %))) coll))
+    (map #(list (first %) (f irst (second %))) coll))
+
+  (defn next-element-index [coll]
+    "return the smallest element, that has the smallest first element. 7->3,.. 11->3,... returns (7,3)"
+    (reduce second-element-min (first-elements coll)))
+
+  (defn smallest-sum-index [coll]
+    (reduce second-element-min (map (fn [[a b]] (list a (+ a b))) (first-elements queue))))
+
   (defn find-candidate [coll candidate]
     ((map #()))
     )
@@ -341,10 +352,59 @@ Find the lowest sum for a set of five primes for which any two primes concatenat
 		     (dec limit)))
 	    :else
 	    nil
-	    
 	    ;; contains? has to check every element in the candidate?
 	    ;; at some point
+	))))
 
-	)
-      )
-    ))
+;; how about just using a lazy sequence?
+
+(defn p2 []
+  "take a limited-prime .. then check if there are any values below the selected number that produce a working set"
+  (for [a limited-primes
+	b (drop-while #(< % a) (p-concat a))
+	:when (working-set [a b])]
+    [a b]))
+;; --- and only take the first element ..
+
+;;(first (p2))
+;;[3 7]
+
+(defn p3 []
+  (for [a limited-primes
+	b (drop-while #(< % a) (p-concat a))
+	c (drop-while #(< % b) (p-concat b))
+	:when (working-set [a b c ])]
+    [a b c]))
+
+;;(first (p3))
+;;[3 7 109]
+
+(defn p4 []
+  (for [a limited-primes
+	b (drop-while #(< % a) (p-concat a))
+	c (drop-while #(< % b) (p-concat b))
+	d (drop-while #(< % c) (p-concat c))
+	:when (working-set [a b c d])]
+    [a b c d]))
+
+;;problem060> (time (first (p4)))
+;;"Elapsed time: 933.828194 msecs"
+;;[3 7 109 673]
+
+;; technically, this does work, but it takes way more than a minute.
+
+;; to make sure, that we are not just cycling through all the cominations 
+;; in limited primes, we use a version of prime-concat that uses the full
+;; sequence of primes
+
+(defn p-concat-f [p] (filter #(prime-concat? p %) primes))
+
+(defn p5 []
+  (for [a limited-primes
+	b (drop-while #(< % a) (p-concat-f a))
+	c (drop-while #(< % b) (p-concat-f b))
+	d (drop-while #(< % c) (p-concat-f c))
+	e (drop-while #(< % d) (p-concat-f d))
+	:when (working-set [a b c d e])]
+    [a b c d e]))
+
