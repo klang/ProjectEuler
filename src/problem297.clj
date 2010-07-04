@@ -16,17 +16,19 @@ Find ∑ z(n) for 0<n<10^17."
 	clojure.contrib.math
 	clojure.test))
 
+(defn flatten-once [s] (remove seq? (tree-seq seq? seq s)))
 (def hard-fibs (into [] (take-while #(< %(expt 10 17)) (drop 2 (fibs)))))
 (def hard-fibs-reverse (into [] (reverse (take-while #(< %(expt 10 17)) (drop 2 (fibs))))))
 
-
 (defn zeckendorf-hard [number]
+  "returns the zeckendorf representation of a number, based on a hardcoded list"
   (loop [number number catch (transient [])]
     (if (zero? number) (persistent! catch)
       (let [n (first (drop-while #(< number %) hard-fibs-reverse))]
 	(recur (- number n) (conj! catch n))))))
 
 (defn zeckendorf-terms-hard [number]
+  "returns the number of terms in the zeckendorf representation of a number, based on a hardcoded list"
   (loop [number number terms 0]
     (if (zero? number) terms
       (let [n (first (drop-while #(< number %) hard-fibs-reverse))]
@@ -37,12 +39,14 @@ Find ∑ z(n) for 0<n<10^17."
   (is (= 3 (zeckendorf-terms-hard 100))))
 
 (defn zeckendorf [number]
+  "returns the zeckendorf representation of a number"
   (loop [number number catch (transient [])]
     (if (zero? number) (persistent! catch)
       (let [n (last (take-while #(<= % number) (fibs)))]
 	(recur (- number n) (conj! catch n))))))
 
 (defn zeckendorf-terms [number]
+  "returns the number of terms in the zeckendorf representation of a number"
   (loop [number number terms 0]
     (if (zero? number) terms
       (let [n (last (take-while #(<= % number) (fibs)))]
@@ -62,13 +66,13 @@ Find ∑ z(n) for 0<n<10^17."
 (defn F [n]
   "Stack consuming fibo, Programming Clojure, p.133"
   (cond 
-    (< n 0) 0
-    (= n 0) 0
+    (<= n 0) 0
     (= n 1) 1
     :else
     (+ (F (- n 1)) (F (- n 2)))))
 
 (defn Zr [n]
+  "Stack consuming Sum of Zeckendorf-terms" 
   (cond
     (= n 0) 1
     (= n 1) 1
@@ -80,7 +84,7 @@ Find ∑ z(n) for 0<n<10^17."
   (map first (iterate (fn [[a b]] [b (+ a b)]) [0 1])))
 
 (defn Z []
-  "Christophe Grand's lazy fibonacci sequence again .. "
+  "returns the sum of the number of terms in fibonacci points"
   (map first (iterate (fn [[z2 z1 f2 f1 ]] [z1 (+ z2 z1 f1) f1 (+ f2 f1)]) [1 1 0 1])))
 
 (deftest test-Zzz
@@ -93,6 +97,23 @@ Find ∑ z(n) for 0<n<10^17."
   (first (first (filter #(= (second %) fib-num) (indexed hard-fibs)))))
 
 (deftest test-zeckendorf-sums
+  (is (= (reduce + (take 987 (map #(zeckendorf-terms-hard %) (iterate inc 1))))
+	 3971))
+  ;; 1-1000  = 4005
+  ;; 1-10000 = 52816
+  ;; 1-20000 = 113037
+  ;; 1-100000= 658212
+  (comment
+    ;;(zeckendorf-hard (expt 10 6))  
+    ;;[832040 121393 46368 144 55]
+    (is (= 7894453
+	   (+ (reduce + (take (find-index 832040) (Z)))
+	      (nth (Z) (inc (find-index 121393)))
+	      ;; 46368
+	      ;; 144
+	      ;; 55
+	      )
+	   )))
   ;; when the target is a fibonacci number 
   (is (= (reduce + (take (dec 987) (map #(zeckendorf-terms-hard %) (iterate inc 1))))
 	 (reduce + [1 1 3 5 10 18 33 59 105 185 324 564 977 1685])
@@ -112,24 +133,79 @@ Find ∑ z(n) for 0<n<10^17."
 	    (nth (Z) (inc (find-index 13))))
 	 ))
   ;;
-  (is (= (reduce + (take (dec 10000) (map #(zeckendorf-terms-hard %) (iterate inc 1))))
-	 52810
-	 ;; (zeckendorf-hard 10000) => [6765 2584 610 34 5 2]
-	 (+ (reduce + (take (find-index 6765) (Z)))
-	    ;; 18120 --> 3235 terms (+ 2584 610 34 5 2) from the next group
-	    ;;                      (+ 14406 3505 173 25 11)
-	    ;; (reduce + (take 3235 (group (inc (inc (inc (find-index 2584)))))))
-	    ;; 18123
-	    (nth (Z) (inc (find-index 2584) )) 
-	    (nth (Z) (inc (find-index 610) ))
-	    (nth (Z) (inc (find-index 34) ))
-	    (nth (Z) (inc (find-index 5) ))
-	    (nth (Z) (inc (find-index 2) ))
+  (is (= (reduce + (take (dec 1025) (map #(zeckendorf-terms-hard %) (iterate inc 1))))
+	 4086
+	 (+ 3970 105 11)
+	 ;; (zeckendorf-hard 1025) => [987 34 3 1]
+	 (+ (reduce + (take (find-index 987) (Z)))
+	    (nth (Z) (inc (find-index 34)))
+	    11 
+	    ;; some calculation based on 3
+	    ;; some calculation based on 1
+	    )))
+  (is (= (reduce + (take 100 (map #(zeckendorf-terms-hard %) (iterate inc 1))))
+	 (+ (+ 1                                                                      ;1
+	       1                                                                      ;2  
+	       1 2                                                                    ;3 
+	       1 2 2                                                                  ;5
+	       1 2 2 2 3                                                              ;8
+	       1 2 2 2 3 2 3 3                                                        ;13 
+	       1 2 2 2 3 2 3 3 2 3 3 3 4                                              ;21
+	       1 2 2 2 3 2 3 3 2 3 3 3 4 2 3 3 3 4 3 4 4                              ;34 
+	       1 2 2 2 3 2 3 3 2 3 3 3 4 2 3 3 3 4 3 4 4 2 3 3 3 4 3 4 4 3 4 4 4 5)   ;55
+	    (+ 1 2 2 2 3 2 3 3                                                        
+	       2 3 3 3))                                                              ;89
+	 (+ 235 18 11)
+	 264
+	 ;; (zeckendorf-hard 100) => [89 8 3]
+	 (+ (reduce + (take (find-index 89) (Z)))
+	    (nth (Z) (inc (find-index 8)))
+	    ;; ---> the group that starts from the 9th fibo
+	    11
+	    ;; some calculation based on 3
 	    )
-	 ))
+	 ) 
+        (let [z100    '(1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 
+			26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 
+			51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 
+			76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 100)
+	    z88     '(1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 
+			26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 
+			51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 
+			76 77 78 79 80 81 82 83 84 85 86 87 88)
+	    z89_8   '(89 90 91 92 93 94 95 96)
+	    z89_8_3 '(97 98 99 100)
+	    ]
+	(= (reduce + (map #(zeckendorf-terms-hard %) z100))
+	   (+ (reduce + (map #(zeckendorf-terms-hard %) z88))
+	      (reduce + (map #(zeckendorf-terms-hard %) z89_8))
+	      (reduce + (map #(zeckendorf-terms-hard %) z89_8_3)))
+	   (+ (reduce + (take (find-index 89) (Z)))
+	      (nth (Z) (inc (find-index 8)))
+	      (reduce + (map #(zeckendorf-terms-hard %) z89_8_3)))
+	   (+ 235 18 11))))
+  
+
+  ;;
+  (comment
+    (is (= (reduce + (take (dec 10000) (map #(zeckendorf-terms-hard %) (iterate inc 1))))
+	   52810
+	   ;; (zeckendorf-hard 10000) => [6765 2584 610 34 5 2]
+	   (+ (reduce + (take (find-index 6765) (Z)))
+	      ;; 18120 --> 3235 terms (+ 2584 610 34 5 2) from the next group
+	      ;;                      (+ 14406 3505 173 25 11)
+	      ;; (reduce + (take 3235 (group (inc (inc (inc (find-index 2584)))))))
+	      ;; 18123
+	      (nth (Z) (inc (find-index 2584) )) 
+	      (nth (Z) (inc (find-index 610) ))
+	      (nth (Z) (inc (find-index 34) ))
+	      (nth (Z) (inc (find-index 5) ))
+	      (nth (Z) (inc (find-index 2) ))
+	      )
+	   (- 52810 (reduce + (flatten-once (map #(take (find-index %) (Z)) [6765 2584 610 34 5 2]))))
+	   (reduce + [ 2584 610 34 5 2])
+	   )))
   )
-
-
 
 (comment
   (defn F [n] (nth hard-fibs (dec n)))
@@ -150,6 +226,7 @@ Counting from zero in [1 2 3 5 8 13 21 34 55 89 144 233 377 610 987 1597 2584 41
 	   (dec (nth hard-fibs (dec nth-fib))))
 	(drop (dec (nth hard-fibs (dec nth-fib)))
 	      (map #(zeckendorf-terms-hard %) (iterate inc 1)))))
+
 ;; do we have to iterate from 1?
 (defn group [nth-fib]
   "returns the length of the zeckendorf terms for the group leading up to the nth fibonacci number.
@@ -158,7 +235,6 @@ Counting from zero in [1 2 3 5 8 13 21 34 55 89 144 233 377 610 987 1597 2584 41
 	   (dec (nth hard-fibs (dec nth-fib))))
 	(map #(zeckendorf-terms-hard %) (iterate inc (dec (nth hard-fibs (dec nth-fib)))))))
 
-(defn flatten-once [s] (remove seq? (tree-seq seq? seq s)))
 
 (comment
   (def g14 (group 14))
@@ -180,25 +256,5 @@ Counting from zero in [1 2 3 5 8 13 21 34 55 89 144 233 377 610 987 1597 2584 41
   ;; taking a group of almost a million number takes too long
 )
 
-(comment
-[ 1 2 2 (+ 2 3) (+ 2 3 3) (+ 2 3 3 3 4) (+ 2 3 3 3 4 3 4 4) (+ 2 3 3 3 4 3 4 4 3 4 4 4 5) (+ 2 3 3 3 4 3 4 4 3 4 4 4 5 3 4 4 4 5 4 5 5)]
-[(+ 1)
- (+ 1)
- (+ 1 2) 
- (+ 1 2 2) 
- (+ 1 2 2 2 3) 
- (+ 1 2 2 2 3 2 3 3 )
- (+ 1 2 2 2 3 2 3 3 2 3 3 3 4 )
- (+ 1 2 2 2 3 2 3 3 2 3 3 3 4 2 3 3 3 4 3 4 4 )
- (+ 1 2 2 2 3 2 3 3 2 3 3 3 4 2 3 3 3 4 3 4 4 2 3 3 3 4 3 4 4 3 4 4 4 5)
- (+ 1 2 2 2 3 2 3 3 2 3 3 3 4 2 3 3 3 4 3 4 4 2 3 3 3 4 3 4 4 3 4 4 4 5 2 3 3 3 4 3 4 4 3 4 4 4 5 3 4 4 4 5 4 5 5)
- (+ 1 2 2 2 3 2 3 3 2 3 3 3 4 2 3 3 3 4 3 4 4 2 3 3 3 4 3 4 4 3 4 4 4 5 2 3 3 3 4 3 4 4 3 4 4 4 5 3 4 4 4 5 4 5 5 2 3 3 3 4 3 4 4 3 4 4 4 5 3 4 4 4 5 4 5 5 3 4 4 4 5 4 5 5 4 5 5 5 6)
- (+ 1 2 2 2 3 2 3 3 2 3 3 3 4 2 3 3 3 4 3 4 4 2 3 3 3 4 3 4 4 3 4 4 4 5 2 3 3 3 4 3 4 4 3 4 4 4 5 3 4 4 4 5 4 5 5 2 3 3 3 4 3 4 4 3 4 4 4 5 3 4 4 4 5 4 5 5 3 4 4 4 5 4 5 5 4 5 5 5 6 2 3 3 3 4 3 4 4 3 4 4 4 5 3 4 4 4 5 4 5 5 3 4 4 4 5 4 5 5 4 5 5 5 6 3 4 4 4 5 4 5 5 4 5 5 5 6 4 5 5 5 6 5 6 6)
- (+ 1 2 2 2 3 2 3 3 2 3 3 3 4 2 3 3 3 4 3 4 4 2 3 3 3 4 3 4 4 3 4 4 4 5 2 3 3 3 4 3 4 4 3 4 4 4 5 3 4 4 4 5 4 5 5 2 3 3 3 4 3 4 4 3 4 4 4 5 3 4 4 4 5 4 5 5 3 4 4 4 5 4 5 5 4 5 5 5 6 2 3 3 3 4 3 4 4 3 4 4 4 5 3 4 4 4 5 4 5 5 3 4 4 4 5 4 5 5 4 5 5 5 6 3 4 4 4 5 4 5 5 4 5 5 5 6 4 5 5 5 6 5 6 6 2 3 3 3 4 3 4 4 3 4 4 4 5 3 4 4 4 5 4 5 5 3 4 4 4 5 4 5 5 4 5 5 5 6 3 4 4 4 5 4 5 5 4 5 5 5 6 4 5 5 5 6 5 6 6 3 4 4 4 5 4 5 5 4 5 5 5 6 4 5 5 5 6 5 6 6 4 5 5 5 6 5 6 6 5 6 6 6 7)
- (+ 1 2 2 2 3 2 3 3 2 3 3 3 4 2 3 3 3 4 3 4 4 2 3 3 3 4 3 4 4 3 4 4 4 5 2 3 3 3 4 3 4 4 3 4 4 4 5 3 4 4 4 5 4 5 5 2 3 3 3 4 3 4 4 3 4 4 4 5 3 4 4 4 5 4 5 5 3 4 4 4 5 4 5 5 4 5 5 5 6 2 3 3 3 4 3 4 4 3 4 4 4 5 3 4 4 4 5 4 5 5 3 4 4 4 5 4 5 5 4 5 5 5 6 3 4 4 4 5 4 5 5 4 5 5 5 6 4 5 5 5 6 5 6 6 2 3 3 3 4 3 4 4 3 4 4 4 5 3 4 4 4 5 4 5 5 3 4 4 4 5 4 5 5 4 5 5 5 6 3 4 4 4 5 4 5 5 4 5 5 5 6 4 5 5 5 6 5 6 6 3 4 4 4 5 4 5 5 4 5 5 5 6 4 5 5 5 6 5 6 6 4 5 5 5 6 5 6 6 5 6 6 6 7 2 3 3 3 4 3 4 4 3 4 4 4 5 3 4 4 4 5 4 5 5 3 4 4 4 5 4 5 5 4 5 5 5 6 3 4 4 4 5 4 5 5 4 5 5 5 6 4 5 5 5 6 5 6 6 3 4 4 4 5 4 5 5 4 5 5 5 6 4 5 5 5 6 5 6 6 4 5 5 5 6 5 6 6 5 6 6 6 7 3 4 4 4 5 4 5 5 4 5 5 5 6 4 5 5 5 6 5 6 6 4 5 5 5 6 5 6 6 5 6 6 6 7 4 5 5 5 6 5 6 6 5 6 6 6 7 5 6 6 6 7 6 7 7)]
-
-[1 1 3 5 10 18 33 59 105 185 324 564 977 1685]
-)
-
-(run-tests)
+(time (run-tests))
 
