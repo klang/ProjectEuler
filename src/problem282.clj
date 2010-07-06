@@ -326,3 +326,26 @@ Find 0 <= n <= 6 A(n, n) and give your answer mod 14^8.
     :else (str a (print-arrows (- n 1)) "" (knuth-arrow a n (- b 1)) ""))
   )
 
+;; ----------------------------------------------------------------------------
+
+;; The Ackermann function can be expressed in terms of Knuth's up-arrow notation
+;; as follows:
+
+;; A(m,n)=[2 ↑m-2 (n+3)] - 3
+
+;; A(4,4)=   2↑↑7 - 3 = 2↑2↑2↑2↑2↑2↑2 - 3
+;; A(5,5)=  2↑↑↑8 - 3 
+;; A(6,6)= 2↑↑↑↑9 - 3
+
+; 2^^5
+;(mod (expt 2 (expt 2 (expt 2 (expt 2 2)))) (expt 14 8))
+;804023040
+;(mod-expt 2 65536 (expt 14 8))
+;;804023040
+;(mod-expt 2 65536 (expt 14 8))
+
+(meta {:url "http://mathforum.org/library/drmath/view/51625.html"})
+
+
+(def L [n]
+     )
