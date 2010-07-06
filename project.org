@@ -13,7 +13,7 @@
 ** function that creates all the partitions of 'something'
 * primes
 ** efficient representation of memoized primes
-** found efficient prime checker .. use it for 23, 216 and one or two more
+** found efficient prime checker .. use it for 216 and one or two more
 ** do not use subsets for anything big! (think proper-divisors)
 * working
 * stuck
@@ -24,8 +24,10 @@
 * pipeline
 ** 191 - Prize Strings
 * done
+<2010-07-06 Mon> #98: 297 (first giving 'performance', third commented on)
+<2010-06-26 Fri> #97: 075
 <2010-06-18 Fri> #95: 085, #096: 204
-<2010-06-14 Mon> #94: 096 (should be done by Dancing Links)
+<2010-06-14 Mon> #94: 096 (should be done with Dancing Links)
 <2010-06-07 Mon> #92: 099, #093: 074
 <2010-05-24 Mon> #91: 032 (every problem under 50 has been solved)
 <2010-05-20 Thu> #90: 038
