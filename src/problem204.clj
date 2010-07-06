@@ -61,5 +61,3 @@ How many generalised Hamming numbers of type 100 are there which don't exceed 10
 ;; "Elapsed time: 305696.680426 msecs"
 ;; 2944730
 
-
-
