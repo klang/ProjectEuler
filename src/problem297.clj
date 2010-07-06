@@ -109,10 +109,6 @@ Counting from zero in [1 2 3 5 8 13 21 34 55 89 144 233 377 610 987 1597 2584 41
 (deftest test-zeckendorf-sums
   (is (= (reduce + (take 987 (map #(zeckendorf-terms-hard %) (iterate inc 1))))
 	 3971)))
-  ;; 1-1000  = 4005
-  ;; 1-10000 = 52816
-  ;; 1-20000 = 113037
-  ;; 1-100000= 658212
 
   ;; when the target is a fibonacci number 
   (is (= (reduce + (take (dec 987) (map #(zeckendorf-terms-hard %) (iterate inc 1))))
@@ -195,8 +191,7 @@ Counting from zero in [1 2 3 5 8 13 21 34 55 89 144 233 377 610 987 1597 2584 41
 		 (+ (nth (Z) (inc (find-index 2))) (* 4 2)))
 	      6 ;; <---- (zeckendorf-terms 10000)
 	      ;;(- 3720 2909) 811
-	      #_(reduce + (take (+ 610 34 5 2 1) (partial-group (inc (find-index 6765)))))
-	      )))
+	      #_(reduce + (take (+ 610 34 5 2 1) (partial-group (inc (find-index 6765))))))))
 
     ;; --- something is wrong with the way we calulate the initial terms
     ;; (reduce + (take (find-index 6765) (Z))) only contains the sum of 6764 terms
@@ -230,7 +225,6 @@ Counting from zero in [1 2 3 5 8 13 21 34 55 89 144 233 377 610 987 1597 2584 41
 (deftest test-zef
   (is (= 7894453 (Zef 1000000))))
 
-
 (defn Zef2 [number]
   (let [z (zeckendorf-hard number)]
     (+ (reduce + (take (find-index (first z)) (Z)))
@@ -241,6 +235,7 @@ Counting from zero in [1 2 3 5 8 13 21 34 55 89 144 233 377 610 987 1597 2584 41
   (- (first (first (filter #(= (second %) fib-num) (indexed (fibs))))) 2))
 
 (defn Zef2 [number]
+  "returns ∑ z(n) < number"
   (let [z (zeckendorf number)]
     (+ (reduce + (take (find-index (first z)) (Z)))
        (loop [c (rest z) i 0 sum 0]
@@ -248,9 +243,7 @@ Counting from zero in [1 2 3 5 8 13 21 34 55 89 144 233 377 610 987 1597 2584 41
 	   sum
 	   (recur (rest c) 
 		  (inc i) 
-		  (+ sum 
-		     (+ (nth (Z) (inc (find-index (first c)))) 
-			(* i (first c))))))))))
+		  (+ sum (nth (Z) (inc (find-index (first c)))) (* i (first c)) )))))))
 
 
 (deftest test-zef2  
