@@ -57,11 +57,7 @@ Find ∑ z(n) for 0<n<10^17."
   (is (= 2 (zeckendorf-terms 14)))
   (is (= 3 (zeckendorf-terms 100)))
   (is (= [89 8 3] (zeckendorf 100)))
-  (is (= 3 (zeckendorf-terms 100)))
-  #_(is (= 7894453
-	   (reduce + (take (expt 10 6) 
-			   (map #(zeckendorf-terms-hard %) 
-				(iterate inc 1)))))))
+  (is (= 3 (zeckendorf-terms 100))))
 
 (defn F [n]
   "Stack consuming fibo, Programming Clojure, p.133"
@@ -96,12 +92,19 @@ Find ∑ z(n) for 0<n<10^17."
   "find the index of a given fibonacci number" 
   (first (first (filter #(= (second %) fib-num) (indexed hard-fibs)))))
 
-;; what is the correct index?
+(defn group [nth-fib]
+  "returns the length of the zeckendorf terms for the group leading up to the nth fibonacci number.
+Counting from zero in [1 2 3 5 8 13 21 34 55 89 144 233 377 610 987 1597 2584 4181 6765 10946 .. ]"
+  (take (- (dec (nth hard-fibs nth-fib)) 
+	   (dec (nth hard-fibs (dec nth-fib))))
+	(map #(zeckendorf-terms-hard %) (iterate inc (nth hard-fibs (dec nth-fib))))))
 
-(comment
-  (defn find-index [fib-num]
-    "find the index of a given fibonacci number" 
-    (first (first (filter #(= (second %) fib-num) (indexed (fibs)))))))
+(defn partial-group [nth-fib]
+  (take (- (nth (fibos) nth-fib) (nth (fibos) (dec nth-fib)))
+	(map #(zeckendorf-terms-hard %) (iterate inc (+ (nth (fibos) (inc nth-fib))
+							(nth (fibos) (dec nth-fib)))))))
+
+
 
 (deftest test-zeckendorf-sums
   (is (= (reduce + (take 987 (map #(zeckendorf-terms-hard %) (iterate inc 1))))
@@ -110,17 +113,18 @@ Find ∑ z(n) for 0<n<10^17."
   ;; 1-10000 = 52816
   ;; 1-20000 = 113037
   ;; 1-100000= 658212
-  (comment
-)
+
   ;; when the target is a fibonacci number 
   (is (= (reduce + (take (dec 987) (map #(zeckendorf-terms-hard %) (iterate inc 1))))
 	 (reduce + [1 1 3 5 10 18 33 59 105 185 324 564 977 1685])
 	 3970
 	 (reduce + (take 14 (Z)))
 	 (reduce + (take (find-index 987) (Z)))))
+
   ;; when the target is not a fibonacci number
   (is (= (nth (Z) (inc (find-index  (- 1000 (last (take-while #(<= % 1000) (fibs)))))))
 	 33
+	 ;; (zeckendorf-hard 33) => [21 8 3 1]
 	 (+ 1 2 2 2 3 2 3 3 2 3 3 3 4)))
   ;; 
   (is (= (reduce + (take (dec 1000) (map #(zeckendorf-terms-hard %) (iterate inc 1))))
@@ -128,8 +132,7 @@ Find ∑ z(n) for 0<n<10^17."
 	 (+ 3970 33)
 	 ;; (zeckendorf-hard 1000) => [987 13]
 	 (+ (reduce + (take (find-index 987) (Z)))
-	    (nth (Z) (inc (find-index 13))))
-	 ))
+	    (nth (Z) (inc (find-index 13))))))
   ;;
   (is (= (reduce + (take (dec 1025) (map #(zeckendorf-terms-hard %) (iterate inc 1))))
 	 4086
@@ -164,31 +167,10 @@ Find ∑ z(n) for 0<n<10^17."
 	 (+ (reduce + (take (find-index 89) (Z)))
 	    (nth (Z) (inc (find-index 8)))
 	    ;; ---> the group that starts from the 9th fibo
-	    (reduce + (take (+ 3 1) (partial-group (inc (find-index 89)))))
 	    ;; some calculation based on 3 that adds up to 11
 	    ;; ok, why add one?
-	    )
-	 ) 
-        (let [z100    '(1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 
-			26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 
-			51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 
-			76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 100)
-	    z88     '(1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 
-			26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 
-			51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 
-			76 77 78 79 80 81 82 83 84 85 86 87 88)
-	    z89_8   '(89 90 91 92 93 94 95 96)
-	    z89_8_3 '(97 98 99 100)
-	    ]
-	(= (reduce + (map #(zeckendorf-terms-hard %) z100))
-	   (+ (reduce + (map #(zeckendorf-terms-hard %) z88))
-	      (reduce + (map #(zeckendorf-terms-hard %) z89_8))
-	      (reduce + (map #(zeckendorf-terms-hard %) z89_8_3)))
-	   (+ (reduce + (take (find-index 89) (Z)))
-	      (nth (Z) (inc (find-index 8)))
-	      (reduce + (map #(zeckendorf-terms-hard %) z89_8_3)))
-	   (+ 235 18 11))))
-  
+	    (reduce + (take (+ 3 1) (partial-group (inc (find-index 89))))))))
+
 
   ;;
   (comment
@@ -232,21 +214,9 @@ Find ∑ z(n) for 0<n<10^17."
 	      ;;382970
 	   ))))
 
-(defn partial-group [nth-fib]
-      (take (- (nth (fibos) nth-fib) (nth (fibos) (dec nth-fib)))
-	    (map #(zeckendorf-terms-hard %) (iterate inc (+ (nth (fibos) (inc nth-fib))
-							    (nth (fibos) (dec nth-fib)))))))
-
-(defn Ze [number]
-  (let [z (zeckendorf-hard number)
-	r (reduce + (subvec (zeckendorf-hard number) 2))]
-    (+ (reduce + (take (find-index (first z)) (Z)))
-       (nth (Z) (inc (find-index (second z))))
-       (reduce + (take (+ r 1) (partial-group (inc (find-index (first z)))))))))
-
 (defn zelastpart [coll]
   (loop [c coll i 1 sum 0]
-    (if (empty? c )
+    (if (empty? c)
       sum
       (recur (rest c) (inc i) (+ sum (+ (nth (Z) (inc (find-index (first c)))) (* i (first c))))))))
 
@@ -257,70 +227,34 @@ Find ∑ z(n) for 0<n<10^17."
        (nth (Z) (inc (find-index (second z))))
        (zelastpart r))))
 
-(deftest test-Ze
-  (is (= 4005 (Ze 1000)))
-  (is (= 52816 (Ze 10000)))
-  (is (= 113037 (Ze 20000)))
-  (is (= 658212 (Ze 100000))))
-
 (deftest test-zef
   (is (= 7894453 (Zef 1000000))))
 
 
-(comment
-  (defn F [n] (nth hard-fibs (dec n)))
-  (take (- 987 609) (drop 610 (map #(zeckendorf-terms-hard %) (iterate inc 1))))
-  ;; the 377 terms in the group from 610 to 987
-  (count (take (- 986 609) (drop 609 (map #(zeckendorf-terms-hard %) (iterate inc 1)))))
-  (nth hard-fibs 5))
+(defn Zef2 [number]
+  (let [z (zeckendorf-hard number)]
+    (+ (reduce + (take (find-index (first z)) (Z)))
+       (zelastpart2 (rest z)))))
 
-(comment
-  (defn find-index [fib-num]
-    "find the index of a given fibonacci number" 
-    (inc (first (first (filter #(= (second %) fib-num) (indexed hard-fibs)))))))
+(defn find-index [fib-num]
+  "find the index of a given fibonacci number" 
+  (- (first (first (filter #(= (second %) fib-num) (indexed (fibs))))) 2))
 
-(defn group [nth-fib]
-  "returns the length of the zeckendorf terms for the group leading up to the nth fibonacci number.
-Counting from zero in [1 2 3 5 8 13 21 34 55 89 144 233 377 610 987 1597 2584 4181 6765 10946 .. ]"
-  (take (- (dec (nth hard-fibs nth-fib)) 
-	   (dec (nth hard-fibs (dec nth-fib))))
-	(drop (dec (nth hard-fibs (dec nth-fib)))
-	      (map #(zeckendorf-terms-hard %) (iterate inc 1)))))
-
-;; do we have to iterate from 1?
-(defn group [nth-fib]
-  "returns the length of the zeckendorf terms for the group leading up to the nth fibonacci number.
-Counting from zero in [1 2 3 5 8 13 21 34 55 89 144 233 377 610 987 1597 2584 4181 6765 10946 .. ]"
-  (take (- (dec (nth hard-fibs nth-fib)) 
-	   (dec (nth hard-fibs (dec nth-fib))))
-	(map #(zeckendorf-terms-hard %) (iterate inc (dec (nth hard-fibs (dec nth-fib)))))))
-
-(defn group [nth-fib]
-  "returns the length of the zeckendorf terms for the group leading up to the nth fibonacci number.
-Counting from zero in [1 2 3 5 8 13 21 34 55 89 144 233 377 610 987 1597 2584 4181 6765 10946 .. ]"
-  (take (- (dec (nth hard-fibs nth-fib)) 
-	   (dec (nth hard-fibs (dec nth-fib))))
-	(map #(zeckendorf-terms-hard %) (iterate inc (nth hard-fibs (dec nth-fib))))))
-
-(comment
-  (def g14 (group 14))
-  (reduce + (flatten-once (map #(take % g14) [1 1 2 3 5 8 13 21 34 55 89 144 233 377])))
-  ;; 3970
-  (reduce + (take 986 (map #(zeckendorf-terms-hard %) (iterate inc 1))))
-  ;; 3970
-  (first (reverse (take-while #(< %(expt 10 6)) (drop 2 (fibs)))))
-  ;;832040
-)
+(defn Zef2 [number]
+  (let [z (zeckendorf number)]
+    (+ (reduce + (take (find-index (first z)) (Z)))
+       (loop [c (rest z) i 0 sum 0]
+	 (if (empty? c)
+	   sum
+	   (recur (rest c) 
+		  (inc i) 
+		  (+ sum 
+		     (+ (nth (Z) (inc (find-index (first c)))) 
+			(* i (first c))))))))))
 
 
-(comment
-  ;; the first fibonacci number under (expt 10 6)
-  (def g29 (group (find-index 832040)))
-  (reduce + (flatten-once (map #(take % g29) [1 1 2 3 5 8 13 21 34 55 89 144 233 377])))
-  ;; 3970
-  (reduce + (flatten-once (map #(take % g29) (lazy-cat '(1) (take (- (find-index 832040) 2) hard-fibs)))))
-  ;; taking a group of almost a million number takes too long
-)
+(deftest test-zef2  
+  (is (= 7894453 (Zef2 1000000))))
 
 (time (run-tests))
 
