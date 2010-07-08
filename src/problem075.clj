@@ -200,7 +200,7 @@ Note: This problem has been changed recently, please check that you are using th
       (recur (uad-queue queue limit) (inc-items catch limit (:length (last queue))) ))))
 
 ;; problem075> (time (def total (work 1500000)))
-;; "Elapsed time: 6313.866505 msecs"  <-------- time to filter the catch befor returning
+;; "Elapsed time: 6313.866505 msecs"  <-------- time to filter the catch before returning
 ;; "Elapsed time: 26881.448618 msecs" <-------- 20ish seconds to do the work
 ;; #'problem075/total
 ;; (time (count total))
