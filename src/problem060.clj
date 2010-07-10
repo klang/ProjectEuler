@@ -448,7 +448,7 @@ Find the lowest sum for a set of five primes for which any two primes concatenat
      ;; we might have to just jump 2 and 5 and be over with it
      ;; (lazy-cat [3] (take 10 (drop 3 primes)))
   (loop [queue #{(struct-map element :length 3 :group [3] :count 1 :checked 3 :weight 1 :selection 6)}
-	    limit 400]
+	    limit 50]
        ;; if there is an element with the right length, return it and terminate
     ;; (filter #(not (nil? %))) contains nil
         (if (or (zero? limit) (= length (:count (first (sort-by :count > queue)))))
@@ -458,8 +458,9 @@ Find the lowest sum for a set of five primes for which any two primes concatenat
 	       (filter #(<= 4 (:count %)) queue))
 	 ;queue
 	 (let [;e (first (sort-by :count > queue))
-	       ;e (first (sort-by :selection < queue))
-	       e (first (sort-by :checked < queue))
+	       e (first (sort-by :selection < queue))
+	       ;e (first (sort-by :checked < queue))
+	       ;e (first (sort-by :checked < queue))
 	       p (next-prime (:checked e))
 	       l (+ (:length e) p)
 	       g (conj (:group e) p)
@@ -468,17 +469,81 @@ Find the lowest sum for a set of five primes for which any two primes concatenat
 				    :count (:count e)
 				    :checked p
 				    :weight (inc (:weight e))
-				    ;:selection (quot (+ l (:weight e)) (:count e))
-				    :selection (+ (inc (:weight e)) (quot l  (:count e)))
+				    :selection (quot (+ l (:weight e)) (:count e))
+				    ;:selection (+ (inc (:weight e)) (quot l  (:count e)))
 				    )
 			(struct-map element :length p :group [p] :count 1 :checked p :weight 1 
 				    :selection (+ p p)))] 
 	   ;; q now contains the new elements that have to go into the queue in the next recursion
-	   ;; but, if g is a woriking-set, an extra element have to be part of queue as well
-	   ;;(println (list limit (count queue) e))
+	   ;; but, if g is a working-set, an extra element have to be part of queue as well
+	   (println (list limit (count queue) e))
 	   (if (working-set g)
 	     (recur (conj q (struct-map element :length l :group g 
 				      :count (inc (:count e)) :checked p :weight 1
 				      :selection l))
 		    (dec limit))
 	     (recur q (dec limit)))))))
+
+(defn next-prime [prime]
+  (first (drop-while #(< % prime) (p-concat-f prime))))
+
+(defn p-concat-set  [p] (into #{} (filter #(prime-concat? p %) limited-primes)))
+(defn p-concat [p] (filter #(prime-concat? p %) limited-primes))
+
+(defn p-check [& primes]
+  "retuns the set of primes that can be concatenated with each prime in the primes given. The best effect is reached, if the primes given are members of each others p-maps. (p-check 3 7 109) will return the last member of the group, 673"
+  (reduce intersection (map #(p-concat-set  %) primes)))
+
+(comment
+  (defn p-concat-f [p] (filter #(prime-concat? p %) (drop-while #(<= % p) primes)))
+)
+
+;; ------------------------------------ stab number.., I fucking lost count..
+
+(defstruct element :length :group)
+(def queue [(struct-map element :length 3 :group [3]) 
+	    (struct-map element :length 10 :group [3 7])
+	    (struct-map element :length 7 :group [7])])
+;; .. :length is not really needed
+
+(defn prime-concat? [a b]
+  (and (prime? (concat-numbers a b)) 
+       (prime? (concat-numbers b a))))
+
+(defn working-set [coll]
+  (every? (fn [[a b]] (prime-concat? a b)) (combinations coll 2)))
+
+(def prime-concat? (memoize prime-concat?))
+
+;;(set! *warn-on-reflection* true)
+;;an efficient version of working-set has to be made .. 
+
+(defstruct element :count :group)
+
+(defn new-elements [queue p]
+  (for [q queue :when (working-set (conj (:group q) p))] 
+    (struct-map element :count (inc (:count q)) :group (conj (:group q) p))))
+
+(defn p60 [length]
+  (loop [p (drop 3 primes)                                 ;; let's ignore 2 and 5 right away and initialize queue with 3 
+	 queue [(struct-map element :count 1 :group [3])]  ;; a simple vector to keep the elements seen
+	 m 1                                               ;; keep track of the longest group	
+;	 limit 130                                         ;; limit the number of recursions (testing)  
+	 ]
+    (if #_(or (zero? limit)) (= m length) 
+      (list #_limit (count queue) (first (sort-by :count > queue))) ;; just return the longest element.
+      (let [extras (new-elements queue (first p))
+	    this-element (struct-map element :count 1 :group [(first p)])]
+	#_(do (println (list limit m (first p) this-element extras)))
+	(if (= '() extras)
+	  (recur (rest p) (conj queue this-element) m #_(dec limit))
+	  (recur (rest p) 
+		 (into (conj queue this-element) extras)
+		 (max m (:count (first (sort-by :count > extras))))
+		 #_(dec limit)))))))
+
+;;problem060> (time (p60 5))
+;;"Elapsed time: 796469.559427 msecs"
+;;(21741 {:count 5, :group [13 5197 5701 6733 8389]})
+;;problem060> (reduce + [13 5197 5701 6733 8389])
+;;26033
