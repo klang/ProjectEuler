@@ -32,7 +32,7 @@ Find the lowest sum for a set of five primes for which any two primes concatenat
   (is (working-set [3 7 109 673])))
 
 ;; let's just work with limited primes and not 2 or 5
-(def limited-primes (filter #(not (or (= 2 %) (= 5 %))) (primes-up-to 10000)))
+(def limited-primes (filter #(not (or (= 2 %) (= 5 %))) (primes-up-to 5000)))
 
 (defn p-concat-set  [p] (into #{} (filter #(prime-concat? p %) limited-primes)))
 (defn p-concat [p] (filter #(prime-concat? p %) limited-primes))
@@ -380,7 +380,8 @@ Find the lowest sum for a set of five primes for which any two primes concatenat
 ;;[3 7 109]
 
 (defn p4 []
-  (for [a limited-primes
+  (for [;a (drop 1 limited-primes)
+	a  limited-primes
 	b (drop-while #(< % a) (p-concat a))
 	c (drop-while #(< % b) (p-concat b))
 	d (drop-while #(< % c) (p-concat c))
@@ -408,3 +409,76 @@ Find the lowest sum for a set of five primes for which any two primes concatenat
 	:when (working-set [a b c d e])]
     [a b c d e]))
 
+;; ------------------------ another stab at this problem ----------------------
+
+(defn producer [prime-concat-vector]
+  "returns a sequence of primes starting after the largest element of a vector"
+  (drop-while #(<= % (reduce max prime-concat-vector)) primes))
+
+(defn next-prime [prime]
+  "returns a sequence of primes starting after the largest element of a vector"
+  (first (drop-while #(<= % prime) (lazy-cat [3] (drop 3 primes)))))
+
+(def queue #{{:length 3 :group [3] :count 1 :checked 3 :weight 1}})
+;; take out element of the queue: {:length 3 :group [3] :checked 3}
+;; find the next prime, starting from :checked (next-prime 3)
+;; if members of :group and the next prime form a working-set (working-set (conj [3] 5))
+;; --> then a new element is inserted in the queue
+;; either way, an element with {:length prime :group [prime] :checked prime} is inserted
+(def queue #{{:length 3 :group [3] :count 1 :checked 5 :weight 2} 
+	     {:length 5 :group [5] :count 1 :checked 5 :weight 1}})
+;; take out the element with the lowest length: {:length 3 :group [3] :checked 7}
+;; (how do we avoid 5 after a while?)
+;; find the next prime, starting from :checked (next-prime 5)
+;; (working-set (conj [3] 7)) is true {:length 10 :group [3 7] :checked 7} is inserted
+;; {:length 7 :group [7] :checked 7} is inserted
+(def queue #{{:length 3 :group [3] :count 1 :checked 7 :weight 3}
+	     {:length 5 :group [5] :count 1 :checked 5 :weight 1}
+	     {:length 10 :group [3 7] :count 2 :checked 7 :weight 1}
+	     {:length 7 :group [7] :count 1 :checked 7 :weight 1}})
+
+;; simply add a weight, telling how many times the element has been processed
+
+(defstruct element :length :group :count :checked :weight :selection)
+(def queue #{(struct-map element :length 3 :group [3] :count 1 :checked 3 :weight 1)})
+(def queue #{(struct-map element :length 3 :group [3] :count 1 :checked 5 :weight 2)
+	     (struct-map element :length 5 :group [5] :count 1 :checked 5 :weight 1)})
+(defn f [length]
+     ;; seed the loop with the first logical element
+     ;; we might have to just jump 2 and 5 and be over with it
+     ;; (lazy-cat [3] (take 10 (drop 3 primes)))
+  (loop [queue #{(struct-map element :length 3 :group [3] :count 1 :checked 3 :weight 1 :selection 6)}
+	    limit 400]
+       ;; if there is an element with the right length, return it and terminate
+    ;; (filter #(not (nil? %))) contains nil
+        (if (or (zero? limit) (= length (:count (first (sort-by :count > queue)))))
+	 (list limit (count queue) 
+	       (:checked (first (sort-by :checked > queue)))
+	       (first (sort-by :count > queue))
+	       (filter #(<= 4 (:count %)) queue))
+	 ;queue
+	 (let [;e (first (sort-by :count > queue))
+	       ;e (first (sort-by :selection < queue))
+	       e (first (sort-by :checked < queue))
+	       p (next-prime (:checked e))
+	       l (+ (:length e) p)
+	       g (conj (:group e) p)
+	       q (conj (disj queue e) 
+			(struct-map element :length (:length e) :group (:group e) 
+				    :count (:count e)
+				    :checked p
+				    :weight (inc (:weight e))
+				    ;:selection (quot (+ l (:weight e)) (:count e))
+				    :selection (+ (inc (:weight e)) (quot l  (:count e)))
+				    )
+			(struct-map element :length p :group [p] :count 1 :checked p :weight 1 
+				    :selection (+ p p)))] 
+	   ;; q now contains the new elements that have to go into the queue in the next recursion
+	   ;; but, if g is a woriking-set, an extra element have to be part of queue as well
+	   ;;(println (list limit (count queue) e))
+	   (if (working-set g)
+	     (recur (conj q (struct-map element :length l :group g 
+				      :count (inc (:count e)) :checked p :weight 1
+				      :selection l))
+		    (dec limit))
+	     (recur q (dec limit)))))))
