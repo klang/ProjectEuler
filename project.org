@@ -19,7 +19,6 @@
 * stuck
 ** understanding
 *** 282 - The Ackermann function
-*** 060 - prime concatenations
 ** memory/time
 * pipeline
 ** 191 - Prize Strings
