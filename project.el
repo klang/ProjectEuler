@@ -4,26 +4,19 @@
   "~/projects/ProjectEuler/src/tools/parts.clj"
   "~/projects/ProjectEuler/src/problem196.clj"
   "~/projects/ProjectEuler/src/problem178.clj"
-  "~/projects/ProjectEuler/src/problem060.clj"
   "~/projects/ProjectEuler/src/problem211.clj"
+  "~/projects/ProjectEuler/src/problem086.clj"
 )
 
 (defwrk project-euler-stuck "stuck problems"
   "~/projects/ProjectEuler/src/tools.clj"
+  ;"~/projects/ProjectEuler/src/problem282.clj"
   "~/projects/ProjectEuler/src/problem216.clj"
   "~/projects/ProjectEuler/src/problem191.clj"
-  ;"~/projects/ProjectEuler/src/problem282.clj"
   "~/projects/ProjectEuler/src/problem145.clj"
-  "~/projects/ProjectEuler/src/problem051.clj"
-  "~/projects/ProjectEuler/src/problem054.clj"
-  "~/projects/ProjectEuler/src/problem060.clj"
   "~/projects/ProjectEuler/src/problem061.clj"
   "~/projects/ProjectEuler/src/problem066.clj"
   "~/projects/ProjectEuler/src/problem068.clj"
-  "~/projects/ProjectEuler/src/problem072.clj"
-  "~/projects/ProjectEuler/src/problem073.clj"
-  "~/projects/ProjectEuler/src/problem074.clj"
-  "~/projects/ProjectEuler/src/problem075.clj"
   "~/projects/ProjectEuler/src/problem077.clj"
 )
 
