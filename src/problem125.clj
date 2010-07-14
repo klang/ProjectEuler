@@ -84,3 +84,17 @@ Find the sum of all the numbers less than 10⁸ that are both palindromic and ca
 ;; problem125> (time (p125))
 ;; "Elapsed time: 7602.500803 msecs"
 ;; 2906969179
+
+(defn p125b [limit]
+  (loop [x 1 catch #{}]
+    (let [ss (take-while #(< % limit) (squared-sums x))]
+      (if (empty? ss)
+	(reduce + catch)
+	(recur (inc x) (into catch (filter palindrome? ss)))))))
+
+;; problem125> (time (p125b (expt 10 3)))
+;; "Elapsed time: 1.512762 msecs"
+;; 4164
+;; problem125> (time (p125b (expt 10 8)))
+;; "Elapsed time: 4049.981541 msecs"
+;; 2906969179
