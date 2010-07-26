@@ -6,6 +6,9 @@
   "~/projects/ProjectEuler/src/problem178.clj"
   "~/projects/ProjectEuler/src/problem211.clj"
   "~/projects/ProjectEuler/src/problem086.clj"
+  "~/projects/ProjectEuler/src/problem275.clj"
+  "~/projects/ProjectEuler/src/problem277.clj"
+  "~/projects/ProjectEuler/src/problem284.clj"
 )
 
 (defwrk project-euler-stuck "stuck problems"
