@@ -1,4 +1,8 @@
-;; What is the smallest number divisible by each of the numbers 1 to 20?
+(ns problem005
+  (meta {:description "What is the smallest number divisible by each of the numbers 1 to 20?"})
+)
+
+
 
 ;; every number in the range is checked: very inefficient
 (defn divides-all? [n m]
@@ -36,11 +40,11 @@
 ; 12252240
 ; 
 
-(defn divides-all? [n m]
+(defn- divides-all? [n m]
   (= (- m 1) (count (take-while #(true? %) (map #(zero? (mod n %)) (range 1 m))))))
 
 
-(defn problem005 [m]
+(defn- problem005 [m]
   (loop [m m
 	 s 1]
     (if (divides-all? s m)
@@ -55,21 +59,15 @@
 
 ; (run-tests)
 
+(comment
+  (reduce max (for [x1 (range 1 (+ 10 1))
+		    x2 (range 2 (+ 10 2))
+		    x3 (range 3 (+ 10 3))]
+		(if (= x1 x2 x3) x1 0)
+		)))
 
 
-(reduce max (for [x1 (range 1 (+ 10 1))
-	x2 (range 2 (+ 10 2))
-	x3 (range 3 (+ 10 3))]
-    (if (= x1 x2 x3) x1 0)
-    ))
-
-(n-range )
-
-
-
-
-
-(defn re10 []
+(defn- re10 []
   (loop [n 2]
     (if (and  (zero? (rem n 1)) (zero? (rem n 2)) (zero? (rem n 3))
 	      (zero? (rem n 4)) (zero? (rem n 5)) (zero? (rem n 6))
@@ -89,7 +87,7 @@
 ;;2520
 
 ;; checking every number (also the odd ones, that will not be possible results)
-(defn re20all []
+(defn- re20all []
   (loop [n 1]
     (if (and  (zero? (rem n 2)) (zero? (rem n 3)) (zero? (rem n 4)) 
 	      (zero? (rem n 5)) (zero? (rem n 6)) (zero? (rem n 7)) 
@@ -107,7 +105,7 @@
 ;; "Elapsed time: 149766.979853 msecs"
 ;; 232792560
 
-(defn re20even []
+(defn- re20even []
   (loop [n 2]
     (if (and  (zero? (rem n 2)) (zero? (rem n 3)) (zero? (rem n 4)) 
 	      (zero? (rem n 5)) (zero? (rem n 6)) (zero? (rem n 7)) 
@@ -125,7 +123,7 @@
 ;; "Elapsed time: 105269.64332 msecs"
 ;; 232792560
 
-(defn re20even2 []
+(defn- re20even2 []
   (loop [n 2]
     (if (and  (= 0 (rem n 3)) (= 0 (rem n 4)) 
 	      (= 0 (rem n 5)) (= 0 (rem n 6)) (= 0 (rem n 7)) 
@@ -143,7 +141,7 @@
 ;; "Elapsed time: 77198.058512 msecs"
 ;; 232792560
 
-(defn re20even2mod []
+(defn- re20even2mod []
   (loop [n 2]
     (if (and  (= 0 (mod n 3)) (= 0 (mod n 4)) 
 	      (= 0 (mod n 5)) (= 0 (mod n 6)) (= 0 (mod n 7)) 
@@ -160,7 +158,7 @@
 ;; "Elapsed time: 126468.241237 msecs"
 ;; 232792560
 
-(defn re20even2flip []
+(defn- re20even2flip []
   (loop [n 2]
     (if (and  (= 0 (rem n 19)) (= 0 (rem n 17)) (= 0 (rem n 13))
 	      (= 0 (rem n 11)) (= 0 (rem n 7)) (= 0 (rem n 5))
@@ -180,7 +178,7 @@
 ;; "Elapsed time: 62725.00717 msecs"
 ;; 232792560
 
-(defn re20even2flip2 []
+(defn- re20even2flip2 []
   (loop [n 2]
     (if (and  (= 0 (rem n 19)) (= 0 (rem n 17)) (= 0 (rem n 13))
 	      (= 0 (rem n 11)) (= 0 (rem n 7)) (= 0 (rem n 5)) (= 0 (rem n 3))
@@ -196,3 +194,4 @@
 ;; user> (time (re20even2flip2))
 ;; "Elapsed time: 62720.427546 msecs"
 ;; 232792560
+(def problem005 re20even2flip2)

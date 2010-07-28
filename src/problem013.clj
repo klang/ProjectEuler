@@ -107,5 +107,8 @@ multiplying_ these 100 numbers together is not even a problem.
 	  53503534226472524250874054075591789781264330331690))
 
 ;; s = 5537376230390876637302048746832985971773659831892672
-(.substring (str s) 0 10)
+(defn solve013 [s]
+  (. Long parseLong (.substring (str s) 0 10)))
 ;; 5537376230
+
+(defn problem013 [] (solve013 s))

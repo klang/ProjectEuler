@@ -28,12 +28,12 @@
     (count (set (map #(reduce * %) (subsets (factors n))))))
 )
 
-(defn problem012 [n]
+(defn solve012 [n]
   "returns first triangle number that has more than n divisors"
-  (first (filter #(> (divisors %) n) (triangles))))
+  (first (filter #(> (count (divisors %)) n) (triangles))))
 
 (deftest test-problem012
-  (is (= 28 (problem012 5))))
+  (is (= 28 (solve012 5))))
 
 ;(run-tests)
 
@@ -42,6 +42,8 @@
 ;; 76576500
 ;; user> (divisors 76576500)
 ;; 576
+
+(defn problem012 [] (solve012 500))
 
 ;; idea for a more efficient implementation of divisors?
 (comment

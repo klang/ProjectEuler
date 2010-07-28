@@ -1,8 +1,7 @@
-; The prime factors of 13195 are 5, 7, 13 and 29.
-
-; What is the largest prime factor of the number 600851475143 ?
-
 (ns problem003
+  (meta {:description "The prime factors of 13195 are 5, 7, 13 and 29.
+
+What is the largest prime factor of the number 600851475143 ?"})
   (:use clojure.test)
   (:use [clojure.contrib.lazy-seqs :only (primes)]))
 
@@ -28,12 +27,14 @@
   (is (= [] (factors 1)))
   (is (= [5 7 13 29] (factors 13195))))
 
-(defn problem003 [n]
+(defn- solve003 [n]
   (peek (factors n)))
 
 (deftest test-problem003
-  (is (= 29 (problem003 13195))))
+  (is (= 29 (solve003 13195))))
 
-;; user> (time (problem003 600851475143))
+;; user> (time (solve003 600851475143))
 ;; "Elapsed time: 85.231813 msecs"
 ;; 6857
+
+(defn problem003 [] (solve003 600851475143))

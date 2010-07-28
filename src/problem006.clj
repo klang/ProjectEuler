@@ -3,13 +3,15 @@
     (:use clojure.contrib.math)
     (:use clojure.contrib.test-is))
 
-(defn problem006 [n]
+(defn solve006 [n]
   (- (expt (reduce + (range (+ 1 n))) 2) 
      (reduce + (map #(expt % 2) (range (+ 1 n))))))
 
 (deftest test-problem006
-  (is (= 2640 (problem006 10))))
+  (is (= 2640 (solve006 10))))
 
 ;; problem006> (time (problem006 100))
 ;; "Elapsed time: 3.953298 msecs"
 ;; 25164150
+
+(defn problem006 [] (solve006 100))

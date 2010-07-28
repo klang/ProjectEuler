@@ -80,6 +80,8 @@ Which starting number, under one million, produces the longest chain?
 ;; "Elapsed time: 149366.547031 msecs"
 ;; {:start 837799, :terms 525}
 
+(defn problem014 [] (:start (max-collatz 1000000)))
+
 ;; user> (collatz 1)
 ;; [1]
 ;; user> (collatz 2)

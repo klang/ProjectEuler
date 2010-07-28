@@ -46,6 +46,8 @@
 ;; "Elapsed time: 0.763784 msecs"
 ;; 137846528820
 
+(defn problem015 [] (C 20))
+
 ;;It can indeed be solved in one equation, and curiously enough, the solution to it is in one of the other problems. The solution lies in the N choose R formula. For any number of rows R, you take (2R!)/(R! ^ 2). This comes from the equation n choose r = n!/r!(n-r)!, and you replace n with 2r, for the number of rows problem. :) 
 
 ;;P.S. I liked the hint "rth element in the nth row"! ;)

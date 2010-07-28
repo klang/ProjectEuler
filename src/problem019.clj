@@ -45,9 +45,10 @@ How many Sundays fell on the first of the month during the twentieth century (1 
 	 (.. (GregorianCalendar. 1900 0 1) (get Calendar/DAY_OF_WEEK) ))))
 
 ;; this creates a lot of Calendar objects, but it gets the job done fast
-(count (filter (fn [[year month]] 
+(defn problem019 []
+  (count (filter (fn [[year month]] 
 		  (= (Calendar/SUNDAY) 
 		     (.. (GregorianCalendar. year month 1) (get Calendar/DAY_OF_WEEK)))) 
-		(for [year (range 1901 2001) month (range 12)] [year month])))
+		(for [year (range 1901 2001) month (range 12)] [year month]))))
 ;; 171
 

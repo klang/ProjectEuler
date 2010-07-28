@@ -30,39 +30,39 @@
 ; What is the greatest product of four adjacent numbers in any direction 
 ; (up, down, left, right, or diagonally) in the 20x20 grid?
 
-(defn point [i j] ((grid i) j))
+(defn- point [i j] ((grid i) j))
 
 ;; going east == going west a bit further to the east
-(defn east [[i j]] 
+(defn- east [[i j]] 
   (if (> j 2) 
     (reduce * (map #(point i %) (range j (- j 4) -1))) 0))
 
-(defn west [[i j]] 
+(defn- west [[i j]] 
   (if (< j 17) 
     (reduce * (map #(point i %) (range j (+ j 4)))) 0))
 
 ;; going north == going south a bit further to the north
-(defn north [[i j]] 
+(defn- north [[i j]] 
   (if (> i 2) 
     (reduce * (map #(point % j) (range i (- i 4) -1))) 0))
 
-(defn south [[i j]] 
+(defn- south [[i j]] 
   (if (< i 17) 
     (reduce * (map #(point % j) (range i (+ i 4)))) 0))
 
 ;; north-west == south-west
-(defn south-west [[i j]] 
+(defn- south-west [[i j]] 
   (if (and (< i 17) (> j 2))
     (reduce * (map #(point %1 %2) (range i (+ i 4)) (range j (- j 4) -1))) 0))
 
 ;; north-east == south-east
-(defn south-east [[i j]] 
+(defn- south-east [[i j]] 
   (if (and (< i 17) (< j 17)) 
     (reduce * (map #(point %1 %2) (range i (+ i 4)) (range j (+ j 4)))) 0))
 
 ; (is (= 1788696 (south-east [6 8])))
 
-(defn max-in-point [p] (max (south-east p) (south-west p) (east p) (south p)))
+(defn- max-in-point [p] (max (south-east p) (south-west p) (east p) (south p)))
 
 ;(for [i (range 0 20) j (range 0 20)] [i j])
 
@@ -71,4 +71,7 @@
 ;; (reduce max (map #(max-in-point %) (for [i (range 0 2) j (range 0 2)] [i j])))
 ;; (reduce max (map #(max-in-point %) (for [i (range 18 20) j (range 18 20)] [i j])))
 ;;problem011> (reduce max (map #(max-in-point %) (for [i (range 0 20) j (range 0 20)] [i j]))) 
+
 ;;70600674
+(defn problem011 []
+  (reduce max (map #(max-in-point %) (for [i (range 0 20) j (range 0 20)] [i j]))))

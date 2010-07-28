@@ -7,17 +7,18 @@
 ;;
 ;; That is, 3 + 7 + 4 + 9 = 23.
 (ns problem067
-  (:use problem018)
-  )
+  (:use problem018 
+	clojure.test))
 
 (def t-mega (read-data "triangle.txt"))
 
 ;; p018> (time (squeeze-max-triangle t-mega))
 ;; "Elapsed time: 32.40385 msecs"
 ;; 7273
+(defn problem067 [] (squeeze-max-triangle t-mega))
 
 ;; ----- a bit of playing around with graph representations .. might be usefull later
-
+(comment
 (deftest test-t
   "small t test to make sure that the ranges make sense" 
   ; The edges on level 0 of the vertex map
@@ -78,4 +79,4 @@
 	 (value t [0 0 0])))
   (is (= '([3 7] [3 4] [7 2] [7 4] [4 4] [4 6] [2 8] [2 5] [4 5] [4 9] [6 9] [6 3])
 	 (map #(value t %) (edges t)))))
-
+)

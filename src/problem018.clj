@@ -90,3 +90,4 @@ NOTE: As there are only 16384 routes, it is possible to solve this problem by tr
 ;; 1074
 
 ;; directly usable for problem067
+(defn problem018 [] (squeeze-max-triangle t-full))

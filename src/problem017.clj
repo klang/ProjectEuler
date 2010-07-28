@@ -50,6 +50,7 @@ NOTE: Do not count spaces or hyphens. For example, 342 (three hundred and forty-
 (is (= 23 (count (british-english-number 342)))
     (= 20 (count (british-english-number 115)))))
 ;(run-tests)
-(count (apply str (map #(british-english-number %) (range 1 1001))))
+(defn problem017 []
+  (count (apply str (map #(british-english-number %) (range 1 1001)))))
 ;;21224 .. wrong .. spelling error
 ;;21124
