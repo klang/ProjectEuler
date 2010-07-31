@@ -1,4 +1,8 @@
-(load "tools")
+(ns problem035
+  (:use tools.numbers
+	tools.primes
+	[clojure.contrib.str-utils2 :only (split)]
+	clojure.contrib.lazy-seqs))
 
 (defn number-shift-right [number]
   (let [ds (digits number)
@@ -6,10 +10,10 @@
 	s (rest ds)]
 ;;  (BigInteger. (str (apply str s) d))
     (Integer. (str (apply str s) d))))
-
-(defn digits [n]
-  (map #(. Integer parseInt % 10) 
-	     (filter #(not (= % "")) (split (str n) #""))))
+(comment
+  (defn _digits [n]
+    (map #(. Integer parseInt % 10) 
+	 (filter #(not (= % "")) (split (str n) #"")))))
 
 (defn rotations [number]
   (let [ds (digits number)]
@@ -20,8 +24,7 @@
 (defn circular [number]
   (let [rot (map #(Integer. %) (rotations number))
 	limit (reduce max rot)]
-    (reduce #(and %1 %2) (map #(contains? (set (take limit primes)) %) rot) ))
-  )
+    (reduce #(and %1 %2) (map #(contains? (set (take limit primes)) %) rot))))
 
 ;; very fast to pre calculate and will reduce the number of possible circular primes significantly
 (defn circular-odd? [number]
@@ -52,7 +55,6 @@
 ;; 55
 
 ;; -- trying to make things a bit more efficient (goal: less than a minute)
-
 (defn prime-digits [n]
   (let [raw (filter #(not (= % "")) (split (str n) #""))
 	raw-set (set raw)]
@@ -60,8 +62,7 @@
 	    (contains? raw-set "5") 
 	    (contains? raw-set "0"))
       ()
-      (map #(. Integer parseInt % 10) raw)))
-  )
+      (map #(. Integer parseInt % 10) raw))))
 
 ;; if we always rotate prime numbers we do not need them in the rotation set
 ;; rotations of number, but not number itself. 
@@ -84,7 +85,11 @@
 
 (defn fast-circular-prime? [number]
   (let [rot (map #(Integer. %) (possible-prime-rotations number))]
-    (reduce #(and %1 %2) (map #(prime? %) rot) )))
+    (if (empty? rot) false
+      (reduce #(and %1 %2) (map #(prime? %) rot) ))))
 
 
-(time (filter #(< 0 %) (map #(if (fast-circular-prime? %) % 0) (take-while #(<  % 10000) primes))))
+;;(time (filter #(< 0 %) (map #(if (fast-circular-prime? %) % 0) (take-while #(<  % 10000) primes))))
+
+(defn problem035 []
+  (count (lazy-cat [2 3 5 7 11] (filter fast-circular-prime? (take-while #(<  % 1000000) (drop 5 primes))))))

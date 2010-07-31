@@ -1,5 +1,6 @@
-(load "tools")
-(use 'clojure.contrib.combinatorics)
+(ns problem041  
+  (:use tools.primes
+	clojure.contrib.combinatorics))
 
 (def pandigital (permutations '(1 2 3 4 5 6 7 8 9)))
 ;; (time (count pandigital))
@@ -67,3 +68,6 @@
 ; (time (first (filter #(prime? %) pandigital7)))
 ;; "Elapsed time: 640.775216 msecs"
 ;; 7652413
+
+(defn problem041 []
+  (first (filter #(prime? %) pandigital7)))

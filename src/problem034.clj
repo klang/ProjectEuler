@@ -1,6 +1,9 @@
-(load "tools")
+(ns problem034
+  (:use tools.numbers
+	clojure.test))
 
-(reduce + (map #(factorial %) (digits 145)))
+(deftest test-problem034
+  (is (= 145 (reduce + (map #(factorial %) (digits 145))))))
 
 (defn matches-sum-of-facforials? [n]
   (= n (reduce + (map #(factorial %) (digits n)))))
@@ -10,6 +13,9 @@
 ;; let us just try
 ;; user> (+ 145 40585)
 ;; 40730
+
+(defn problem034 []
+  (reduce + (filter #(matches-sum-of-facforials? %) (range 3 1000000))))
 
 ;; it works, but a limiting function should be possible to make
 ;; (expt 10 (count (digits 145)))

@@ -1,14 +1,15 @@
-;Starting with the number 1 and moving to the right in a clockwise direction a 5 by 5 spiral is formed as follows:
+(ns problem028
+  (meta {:description "Starting with the number 1 and moving to the right in a clockwise direction a 5 by 5 spiral is formed as follows:
 
-;21 22 23 24 25
-;20  7  8  9 10
-;19  6  1  2 11
-;18  5  4  3 12
-;17 16 15 14 13
+21 22 23 24 25
+20  7  8  9 10
+19  6  1  2 11
+18  5  4  3 12
+17 16 15 14 13
 
-;It can be verified that the sum of the numbers on the diagonals is 101.
+It can be verified that the sum of the numbers on the diagonals is 101.
 
-;What is the sum of the numbers on the diagonals in a 1001 by 1001 spiral formed in the same way?
+What is the sum of the numbers on the diagonals in a 1001 by 1001 spiral formed in the same way?"}))
 
 ;73 74 75 76 77 78 79 80 81
 ;72 43 44 45 46 47 48 49 50
@@ -29,19 +30,19 @@
 ;(range 8 100 8) --> (8 16 24 32 40 48 56 64 72 80 88 96)
 ;                  1  9 25 49  
 ;; good old fibo .. 
-(defn ne []
+(defn- ne []
   (map first (iterate (fn [[a b]] [(+ a b) (+ 8 b)]) [1 8])))
-(defn nw []
+(defn- nw []
   (map first (iterate (fn [[a b]] [(+ a b) (+ 8 b)]) [1 6])))
-(defn sw []
+(defn- sw []
   (map first (iterate (fn [[a b]] [(+ a b) (+ 8 b)]) [1 4])))
-(defn se []
+(defn- se []
   (map first (iterate (fn [[a b]] [(+ a b) (+ 8 b)]) [1 2])))
 
-(defn nxn [n]
+(defn- nxn [n]
   (count (filter odd? (range 1 (+ 1 n)))))
 
-(defn diagonal-sum [n]
+(defn- diagonal-sum [n]
   (- 
    (reduce + (take (nxn n) (map + (ne) (nw) (sw) (se)))) 
    3)) ; the first item is counted 4 times
@@ -53,4 +54,4 @@
 ;; faster to simply calculate all four sequences in one go..
 ;; looking at the time to calculate 1001x1001, we will wait
 ;; with this improvement
-
+(defn problem028 [] (diagonal-sum 1001))

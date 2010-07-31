@@ -35,3 +35,5 @@ Find the next triangle number that is also pentagonal and hexagonal.
       (= 1533776805 (triangle 55385) (pentagonal 31977) (hexagonals 27693))))
 
 ;; (run-tests)
+(defn problem045 []
+  (last (sort (intersection (set (take 100000 triangles)) (set (take 100000 pentagonals)) (set (take 100000 hexagonals))))))

@@ -1,22 +1,22 @@
 (ns problem026
-;; A unit fraction contains 1 in the numerator. The decimal representation of the unit fractions with denominators 2 to 10 are given:
+  (meta {:description "A unit fraction contains 1 in the numerator. The decimal representation of the unit fractions with denominators 2 to 10 are given:
 
-;; 1/2	= 	0.5
-;; 1/3	= 	0.(3)
-;; 1/4	= 	0.25
-;; 1/5	= 	0.2
-;; 1/6	= 	0.1(6)
-;; 1/7	= 	0.(142857)
-;; 1/8	= 	0.125
-;; 1/9	= 	0.(1)
-;; 1/10	= 	0.1
-;; Where 0.1(6) means 0.166666..., and has a 1-digit recurring cycle. It can be seen that 1/7 has a 6-digit recurring cycle.
-;; 
-;; Find the value of d <  1000 for which 1/d contains the longest recurring cycle in its decimal fraction part.
+1/2	= 	0.5
+1/3	= 	0.(3)
+1/4	= 	0.25
+1/5	= 	0.2
+1/6	= 	0.1(6)
+1/7	= 	0.(142857)
+1/8	= 	0.125
+1/9	= 	0.(1)
+1/10	= 	0.1
+Where 0.1(6) means 0.166666..., and has a 1-digit recurring cycle. It can be seen that 1/7 has a 6-digit recurring cycle.
 
-;; http://en.wikipedia.org/wiki/Repeating_decimal
+Find the value of d <  1000 for which 1/d contains the longest recurring cycle in its decimal fraction part.
 
-;;On the one hand, the decimal representation of a rational number is ultimately periodic because it can be determined by a long division process, which must ultimately become periodic as there are only finitely many different remainders and so eventually it will find a remainder that has occurred before.
+http://en.wikipedia.org/wiki/Repeating_decimal
+
+On the one hand, the decimal representation of a rational number is ultimately periodic because it can be determined by a long division process, which must ultimately become periodic as there are only finitely many different remainders and so eventually it will find a remainder that has occurred before."})
   (:use tools.numbers)
   (:use tools.primes)
   (:use clojure.test)
@@ -46,6 +46,8 @@
 ;; 982
 ;; incorrect (that is the length fo the cycle)
 ;; the 1/d with that length is d=983
+
+(defn problem026 [] (inc (reduce max (map #(long-divide-cycle-length 1 %) (range 1 1000)))))
 
 (deftest test-long-divide-cycle-length
   (is (= 1 (long-divide-cycle-length 1 3)))
@@ -84,8 +86,7 @@
 		return-value
 		(subvec res 0 2)        
 		(subvec res 2 (+ 1 (seenm remainder)))
-		(subvec res (+ 1 (seenm remainder)))
-		))
+		(subvec res (+ 1 (seenm remainder)))))
 	 return-value)
        (recur 
 	(quot (* 10 remainder) div)
@@ -93,8 +94,7 @@
 	(conj seen remainder)	     
 	(assoc seenm remainder i)    
 	(conj res (quot (* 10 remainder) div))
-	(inc i)
-	)))))
+	(inc i))))))
 
 (deftest test-long-divide
   (is (= "0.(3)" (long-divide 1 3)))

@@ -1,4 +1,5 @@
-(use 'clojure.contrib.math)
+(ns problem039
+  (:use clojure.contrib.math))
 
 (defn solutions [p]
   ;; partition p in 3 groups where a + b + c = p
@@ -96,3 +97,5 @@
 ;; "Elapsed time: 555.710465 msecs"
 ;; 840
 ;; much much better
+(defn problem039 []
+  (p39 1000))

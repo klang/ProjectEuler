@@ -55,6 +55,8 @@ How many different ways can £2 be made using any number of coins?
 ;; "Elapsed time: 16083.125168 msecs"
 ;; 73682
 
+(defn problem031 [] (count (change)))
+
 ;; scheme function found on the forums
 ;;(define (num-ways amount coins) 
 ;;  (cond ((= amount 0) 1) 

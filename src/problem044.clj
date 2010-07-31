@@ -77,7 +77,7 @@ Find the pair of pentagonal numbers, Pj and Pk, for which their sum and differen
 ;;(take 10 (map #(pdiff %) pentagonals))
 ;;(map println (take 10 (map #(pdiff %) pentagonals)))
 
-(apply str (map println (take 10 (map #(pdiff %) pentagonals))))
+(comment (apply str (map println (take 10 (map #(pdiff %) pentagonals)))))
 ;; (1 5 12 22 35 51 70 92 117 145)
 ;; ()
 ;; (4)
@@ -96,7 +96,7 @@ Find the pair of pentagonal numbers, Pj and Pk, for which their sum and differen
 (defn pdiff [n] (take-while #(not (zero? %)) (map #(- n %) pentagonals)))
 (defn pdiff [n] (take-while #(< 0 %) (map #(- n %) pentagonals)))
 ;(defn pdiff [j] (take (- j 1) (map #(- (pentagonal j) %) pentagonals)))
-(apply str (map println (take 10 (map #(pdiff %) pentagonals))))
+(comment (apply str (map println (take 10 (map #(pdiff %) pentagonals)))))
 
 (def indexed-pentagonals 
      (map (fn [n] [n (quot (- (* 3 n n) n) 2)]) (iterate inc 1)))
@@ -169,11 +169,13 @@ Find the pair of pentagonal numbers, Pj and Pk, for which their sum and differen
 	  ]
     (loop [candidates (flatten (filter not-empty (map #(pentagonal-sum %) pentagonals)))
 	   i 0]
-      (do  (println i (first candidates))
+      (do  #_(println i (first candidates))
 	   (if (pentagonal? (:diff (first candidates)))
 	     (first candidates)
 	     (recur (rest candidates) (inc i))))
       )))
 ;; not the minimum .. simply the first
 ;; {:pk 1560090, :pj 7042750, :diff 5482660, :sum 8602840}
-
+(defn problem044 []
+  (let [bar (foo)]
+    (bar :diff)))

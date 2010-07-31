@@ -1,9 +1,18 @@
-(load "tools")
-; The number 3797 has an interesting property. Being prime itself, it is possible to continuously remove digits from left to right, and remain prime at each stage: 3797, 797, 97, and 7. Similarly we can work from right to left: 3797, 379, 37, and 3.
+(ns problem037
+  (meta {:description "
+The number 3797 has an interesting property. Being prime itself, it is possible to continuously remove digits from left to right, and remain prime at each stage: 3797, 797, 97, and 7. Similarly we can work from right to left: 3797, 379, 37, and 3.
 
-; Find the sum of the only eleven primes that are both truncatable from left to right and right to left.
+Find the sum of the only eleven primes that are both truncatable from left to right and right to left.
 
-; NOTE: 2, 3, 5, and 7 are not considered to be truncatable primes.
+NOTE: 2, 3, 5, and 7 are not considered to be truncatable primes."})
+  (:use [tools.primes :only (prime-factors)]
+	tools.numbers
+	[clojure.contrib.lazy-seqs :only (primes)]))
+
+(defn prime? [n]
+  (if (>= 1 n)
+    false
+    (= 1 (count (prime-factors n)))))
 
 (def prime? (memoize prime?))
 
@@ -29,3 +38,5 @@
 ;; user> (time (reduce + (truncable-primes 11)))
 ;; "Elapsed time: 23647.350365 msecs"
 ;; 748317
+(defn problem037 []
+  (reduce + (truncable-primes 11)))

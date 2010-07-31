@@ -1,14 +1,17 @@
-;An irrational decimal fraction is created by concatenating the positive integers:
+(ns problem040
+  (meta {:description "An irrational decimal fraction is created by concatenating the positive integers:
 
-;0.123456789101112131415161718192021...
-;             ^
-;             12th
-;It can be seen that the 12th digit of the fractional part is 1.
+0.123456789101112131415161718192021...
+             ^
+             12th
+It can be seen that the 12th digit of the fractional part is 1.
 
-;If d(n) represents the nth digit of the fractional part, find the value of the following expression.
+If d(n) represents the nth digit of the fractional part, find the value of the following expression."})
+  (:use tools.numbers
+	clojure.contrib.math))
 
 ; d(1) x d(10) x d(100) x d(1000) x d(10000) x d(100000) x d(1000000) 
-(load "tools")
+
 
 ; 9     x 1 char  -      9 -     d(1) -> d(9)
 ; 90    x 2 chars -    180 -    d(10) -> d(189)
@@ -39,6 +42,7 @@
   (if (= 1 n) 1
       (. Integer parseInt (str (nth (irrational-decimal n) (- n 1))) 10)))
 
-(reduce * (map #(d %) [1 10 100 1000 10000 100000 1000000]))
+(defn problem040 []
+  (reduce * (map #(d %) [1 10 100 1000 10000 100000 1000000])))
 
 ;; instead of allocating space for the string each time, we could have allocated the largest string of interest and just found the other terms that way.. 

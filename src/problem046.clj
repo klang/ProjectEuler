@@ -43,3 +43,5 @@ What is the smallest odd composite that cannot be written as the sum of a prime 
 
 ;; another idea:
 ;; mark off all primes, and for each prime, mark off the prime + twice-a-square
+(defn problem046 []
+  (first (take 1 (filter not-a-prime-and-twice-a-square? (take 2000 (drop 2000 odd-composite-numbers))))))

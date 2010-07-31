@@ -127,9 +127,11 @@
       sums
       (recur (rest a) (into sums (take-while #(<= % limit) (map #(+ (first a) %) a))) ))))
 
-(deftest test-sums-of-abundant-numbers
+(comment
+  (deftest test-sums-of-abundant-numbers
     (is (= 24 (first (sort s))))
     (is (= 28123 (last (sort s)))))
+)
 
 ;; problem023> (time (def s (sums-of-abundant-numbers limit)))
 ;; "Elapsed time: 80674.246856 msecs"
@@ -156,3 +158,4 @@
 ;; problem023> (time (sums-of-abundant-numbers limit))
 ;; "Elapsed time: 61931.67402 msecs"
 ;; 4179871
+(defn problem023 [] (sums-of-abundant-numbers limit))

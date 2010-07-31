@@ -16,9 +16,10 @@
 ;(defn integer [l] 
 ;  ;; alternatively use BigInteger 
 ;  (Integer. (apply str l)))
+(comment
+  (partition 3 1 (rest '(1 2 3 4 5 6 7 8 9 0)))
+  (take 5 (map #(partition 3 1 (rest %)) pandigital)))
 
-(partition 3 1 (rest '(1 2 3 4 5 6 7 8 9 0)))
-(take 5 (map #(partition 3 1 (rest %)) pandigital))
 (def test-number-t1 (partition 3 1 (rest (digits 1406357289))))
 (def test-number-t2 (partition 3 1 (rest (digits 1460357289))))
 (def test-number-f1 (partition 3 1 (rest (digits 1460537289))))
@@ -205,6 +206,9 @@
 ;; problem043> (time (reduce + (map integer (filter #(special-property? %) pandigital))))
 ;; "Elapsed time: 13275.54887 msecs"
 ;; 16695334890
+
+(defn problem043 []
+  (reduce + (map integer (filter #(special-property? %) pandigital))))
 
 ;; the time can probably be squeezed further by using the following ideas
 

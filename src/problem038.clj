@@ -144,3 +144,18 @@
   (672913458 679213584 692713854 726914538 729314586 732914658 769215384 792315846 793215864 926718534 927318546 932718654)
 ;; BINGO 932718654
 )
+(defn problem038 []
+  (let [d4 (distinct (map #(integer (take 4 %)) (permutations '(1 2 3 4 5 6 7 8 9))))]
+    (last (filter #(< 123456789 %) (map #(check %) d4)))))
+
+;; problem038> (time (problem038))
+;; "Elapsed time: 15633.849246 msecs"
+;; 932718654
+
+(defn problem038 []
+  (let [d4 (distinct (map #(integer (take 4 %)) (permutations '(9 8 7 6 5 4 3 2 1))))]
+    (first (take 1 (filter #(< 123456789 %) (map #(check %) d4))))))
+
+;; problem038> (time (problem038))
+;; "Elapsed time: 1206.163197 msecs"
+;; 932718654
