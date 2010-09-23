@@ -196,8 +196,8 @@
 ;; 232792560
 (def problem005 re20even2flip2)
 
-;; user> (time (reduce lcm (range 1 20)))
+;; user> (time (reduce lcm (range 1 21)))
 ;; "Elapsed time: 0.900674 msecs"
 ;; 232792560
 
-(defn problem005 [] (reduce lcm (range 1 20)))
+(defn problem005 [] (reduce lcm (range 1 21)))
