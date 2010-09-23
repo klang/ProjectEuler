@@ -195,3 +195,9 @@
 ;; "Elapsed time: 62720.427546 msecs"
 ;; 232792560
 (def problem005 re20even2flip2)
+
+;; user> (time (reduce lcm (range 1 20)))
+;; "Elapsed time: 0.900674 msecs"
+;; 232792560
+
+(def problem005 (reduce lcm (range 1 20)))
