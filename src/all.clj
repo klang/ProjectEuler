@@ -28,12 +28,12 @@
   (is (= (time (problem002)) 4613732))             ;;     0.733054 msecs
   (is (= (time (problem003)) 6857))                ;;     1.016889 msecs
 #_(is (= (time (problem004)) 906609))              ;;  3439.641507 msecs
-#_(is (= (time (problem005)) 232792560))           ;; 65721.427405 msecs
+  (is (= (time (problem005)) 232792560))           ;;     0.900674 msecs
   (is (= (time (problem006)) 25164150))            ;;     2.360636 msecs
 #_(is (= (time (problem007)) 104743))              ;;  1145.297856 msecs
   (is (= (time (problem008)) 40824))               ;;  2418.579888 msecs
   (is (= (time (problem009)) 31875000))            ;;   809.798128 msecs
-  (is (= (time (problem010)) 142913828922))        ;; 53465.519664 msecs
+#_(is (= (time (problem010)) 142913828922))        ;; 53465.519664 msecs
   (is (= (time (problem011)) 70600674))            ;;    55.231624 msecs
 #_(is (= (time (problem012)) 76576500))            ;; 39017.057782 msecs
   (is (= (time (problem013)) 5537376230))          ;;     0.165384 msecs
