@@ -200,4 +200,4 @@
 ;; "Elapsed time: 0.900674 msecs"
 ;; 232792560
 
-(def problem005 (reduce lcm (range 1 20)))
+(defn problem005 [] (reduce lcm (range 1 20)))
