@@ -101,7 +101,7 @@ Which prime, below one-million, can be written as the sum of the most consecutiv
 		    (range 1 (count psums))))
 	psumsi (zipmap psums (iterate inc 1))
 	plengths (map (fn [[num sum]] [(- (psumsi (+ (nth psums num) sum)) num 1) sum]) (drop-last counts))])
-  (is (= [21 953] (find-max-length plengths)))
+  #_(is (= [21 953] (find-max-length plengths)))
 )
 
 ;;problem050> (find-max-length (take 1000 plengths))

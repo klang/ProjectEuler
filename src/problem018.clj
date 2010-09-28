@@ -24,8 +24,8 @@ NOTE: As there are only 16384 routes, it is possible to solve this problem by tr
 		(map #(split % #" ") (split (slurp filename) #"\n")))))
 
 (def t-hard [[3] [7 4] [2 4 6] [8 5 9 3]])
-(def t-read (read-data "triangle-018-test.txt"))
-(def t-full (read-data "triangle-018.txt"))
+(def t-read (read-data "src/triangle-018-test.txt"))
+(def t-full (read-data "src/triangle-018.txt"))
 
 (deftest test-read-data (is (= t-read t-hard)))
 

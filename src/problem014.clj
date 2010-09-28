@@ -128,4 +128,21 @@ Which starting number, under one million, produces the longest chain?
 ;; all numbers in the sequence has length less than 10
 
    
-;; 
+;; Suppose N=240000, "a" is initially set at 240000, but what value does "a" take next? Haven't you already calculated the length of that starting value before? In which case, if L(n) is an array containing the length of the chain for a starting value of "n", and "a" has eventually reduced to a value below its initial value, then having already completed "b" iterations, you know immediately how much further to go. ;) 
+
+;;    Dim ms, mv, s As Decimal
+;;    Dim L(1000000) As Integer
+;;    L(1) = 1
+;;    mv = 1
+;;    ms = 1
+;;    For n = 2 To 1000000
+;;       c = 0
+;;       s = n
+;;       Do
+;;          c += 1
+;;          If s Mod 2 = 0 Then s /= 2 Else s = 3 * s + 1
+;;       Loop Until s < n
+;;       L(n) = L(s) + c
+;;       If L(n) > mv Then mv = L(n) : ms = n
+;;    Next n
+;;    MsgBox(ms)

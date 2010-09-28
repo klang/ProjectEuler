@@ -10,7 +10,7 @@
   (:use problem018 
 	clojure.test))
 
-(def t-mega (read-data "triangle.txt"))
+(def t-mega (read-data "src/triangle.txt"))
 
 ;; p018> (time (squeeze-max-triangle t-mega))
 ;; "Elapsed time: 32.40385 msecs"
