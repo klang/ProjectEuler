@@ -7,21 +7,27 @@
   ;;  triangle, pentagonal, hexagonal
   (:use clojure.contrib.combinatorics clojure.set clojure.test)  )
 
-(comment
-  (def triangles 
-       (map (fn [n] (quot (* n (+ n 1)) 2)) (iterate inc 1)))
-  (def pentagonals 
-       (map (fn [n] (quot (* n (- (* 3 n) 1)) 2)) (iterate inc 1)))
-  (def hexagonals 
-       (map (fn [n] (* n (- (* 2 n) 1))) (iterate inc 1))))
-
 ;; lazy sequences
 (def squares 
   (map (fn [n] (* n n)) (iterate inc 1)))
+;; with this wrong version of heptagonals, one unique 6 element
+;; cycle is ALSO produced .. by blind luck/chance (of course it's wrong)
 (def heptagonals 
-  (map (fn [n] (quot (* n (- (* 5 n) 1)) 3)) (iterate inc 1)))
+     (map (fn [n] (quot (* n (- (* 5 n) 1)) 3)) (iterate inc 1)))
+(def heptagonals 
+  (map (fn [n] (quot (* n (- (* 5 n) 3)) 2)) (iterate inc 1)))
 (def octagonals 
   (map (fn [n] (* n (- (* 3 n) 2))) (iterate inc 1)))
+
+(deftest test-sequences
+  (is (= (take 5 triangles) [1, 3, 6, 10, 15]))
+  (is (= (take 5 squares) [1, 4, 9, 16, 25]))
+  (is (= (take 5 pentagonals) [1, 5, 12, 22, 35]))
+  (is (= (take 5 hexagonals) [1, 6, 15, 28, 45]))
+  (is (= (take 5 heptagonals) [1, 7, 18, 34, 55]))
+  (is (= (take 5 octagonals) [1, 8, 21, 40, 65])))
+
+
 
 ;; as functions
 (defn square [n] (* n n))
@@ -268,24 +274,23 @@
   (let [target  (first (filter #(contains? all-elements (missing-element %)) all-5-chains))
 	element (missing-element target)
 	complete (union target (list element))]
-    (reduce + (map #(+ (* 100 (:front %)) (:back %)) complete))))
+    #_(reduce +)
+    (map #(+ (* 100 (:front %)) (:back %)) complete)))
 ;; (5329 2926 2628 2821 2147 4753)
-;; 20604 <<-- wrong
-;;problem061> (map #(hash-map (:type %) (+ (* 100 (:front %)) (:back %))) complete)
-;;({:squa 5329} {:hept 2926} {:tria 2628} {:octa 2821} {:pent 2147} {:hexa 4753})
+;; 20604 <<-- wrong .. produced with the wrong definition of heptagonals
+
+;; with the correct definition of heptagonals, we get another answer
+;; (8256 5625 2512 1281 8128 2882)
+;; 28684
+
 (deftest test-problem
-     (is (= 5329 (last (take-while #(<= % 5329 ) squares))))
-     (is (= 2926 (last (take-while #(<= % 2926 ) heptagonals))))
-     (is (= 2628 (last (take-while #(<= % 2628 ) triangles))))
-     (is (= 2821 (last (take-while #(<= % 2821 ) octagonals))))
-     (is (= 2147 (last (take-while #(<= % 2147 ) pentagonals))))
-     (is (= 4753 (last (take-while #(<= % 4753 ) hexagonals))))
-
-     (is (= 4753 (last (take-while #(<= % 4753 ) triangles))))
-     (is (not (= 2628 (last (take-while #(<= % 2628 ) hexagonals)))))
-     )
+     (is (= 8256 (last (take-while #(<= % 8256) squares))))
+     (is (= 5625 (last (take-while #(<= % 5625) heptagonals))))
+     (is (= 2512 (last (take-while #(<= % 2512) triangles))))
+     (is (= 1281 (last (take-while #(<= % 1281) octagonals))))
+     (is (= 8128 (last (take-while #(<= % 8128) pentagonals))))
+     (is (= 2882 (last (take-while #(<= % 2882) hexagonals)))))
 
 
 
 
-)
