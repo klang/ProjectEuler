@@ -1,5 +1,8 @@
 (ns tools.scratch)
 
+(defn thrush [& args] 
+  (reduce #(%2 %1) args))
+
 (def prime-gen
      (let [primes (atom [])]
        (for [n (iterate inc 2)

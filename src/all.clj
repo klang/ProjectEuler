@@ -20,8 +20,9 @@
 	[problem043 :only (problem043)] [problem044 :only (problem044)] [problem045 :only (problem045)]
 	[problem046 :only (problem046)] [problem047 :only (problem047)] [problem048 :only (problem048)]
 	[problem049 :only (problem049)] [problem050 :only (problem050)]
-
-	[problem067 :only (problem067)]))
+	[problem061 :only (problem061)]
+	[problem067 :only (problem067)]
+	[problem087 :only (problem087)]))
 
 (deftest test-solve-all
   (is (= (time (problem001)) 233168))	           ;;    15.848107 msecs
@@ -74,7 +75,11 @@
   (is (= (time (problem048)) 9110846700))          ;;   397.577470 msecs
   (is (= (time (problem049)) 296962999629))        ;;   102.765612 msecs
 #_(is (= (time (problem050)) 997651))              ;; 95012.780427 msecs
-
+  (is (= (time (problem061)) 20604))
+  (is (= (time (problem087)) 743))                 ;;     0.103365 msecs
   (is (= (time (problem067)) 7273))                ;;    24.278234 msecs
 )
 
+;; all> (time (run-tests))
+;; "Elapsed time: 498687.448741 msecs"
+;; {:type :summary, :test 1, :pass 36, :fail 0, :error 0}
