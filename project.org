@@ -29,8 +29,9 @@
 ** 265 - Binary Circles
 ** 191 - Prize Strings
 * done
+<2010-10-16 Sat> #105: 108
 <2010-10-12 Thu> #104: 158
-<2010-10-07 Thu> #103: 087
+<2010-10-07 Thu> #103: 089
 <2010-10-03 Sun> #102: 061
 <2010-07-14 Wed> #101: 125
 <2010-07-11 Sun> #100: 197 10 minutes form start to finish?!? (fourth commented on)
