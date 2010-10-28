@@ -40,6 +40,14 @@
 	  ;; try with the next prime
 	  (recur pfs (rest p) number))))))
 
+(defn factors-faster [num]
+  (loop [f (transient  []) n num cur 2]
+    (if (= n 1)
+      (persistent! f)
+      (if (zero? (rem n cur))
+	(recur (conj! f cur) (quot n cur) cur)
+	(recur f n (inc cur))))))
+
 
 ;; prime-factors has an assert that I keep falling in when using prime? in a functional way
 (defn prime? [n]

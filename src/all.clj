@@ -22,7 +22,8 @@
 	[problem049 :only (problem049)] [problem050 :only (problem050)]
 	[problem061 :only (problem061)]
 	[problem067 :only (problem067)]
-	[problem087 :only (problem087)] [problem087 :only (problem158)]))
+	[problem087 :only (problem087)] [problem087 :only (problem158)]
+	[problem108 :only (problem108)] [problem110 :only (problem110)]))
 
 (deftest test-solve-all
   (is (= (time (problem001)) 233168))	           ;;    15.848107 msecs
@@ -79,6 +80,8 @@
   (is (= (time (problem087)) 743))                 ;;     0.103365 msecs
   (is (= (time (problem067)) 7273))                ;;    24.278234 msecs
   (is (= (time (problem158)) 409511334375))        ;;    17.227335 msecs
+  (is (= (time (problem108)) 180180))              ;;  4707.300194 msecs
+  (is (= (time (problem110)) 9350130049860600))    ;; 13919.281935 msecs
 )
 
 ;; all> (time (run-tests))

@@ -29,6 +29,7 @@
 ** 265 - Binary Circles
 ** 191 - Prize Strings
 * done
+<2010-10-28 Thu> #106: 110 a LOT of noise
 <2010-10-16 Sat> #105: 108
 <2010-10-12 Thu> #104: 158
 <2010-10-07 Thu> #103: 089

@@ -277,3 +277,50 @@ NOTE: This problem is an easier version of problem 110; it is strongly advised t
 ;;problem108> (naive-solusion-count (reduce * [2 2 3 3 5 7 11 13]))
 ;;1013
 ;, --> 180180
+
+;; --- forum update
+;; http://www.research.att.com/~njas/sequences/A018892
+
+;; (2a1+1)(2a2+2)..(2an+1)+1>2000
+
+;; k distinct primes in the factorisation of n, multiplying by any prime in that list
+;; increases the number of solutions of the equation by 3^k.
+;; (actually, 3^(k-1))
+
+(deftest test-strage-observation
+  (is (= 27 (- (naive-solusion-count (* 2 2 3 5 7)) (naive-solusion-count (* 2 3 5 7)))
+	    (- (naive-solusion-count (* 2 3 3 5 7)) (naive-solusion-count (* 2 3 5 7)))
+	    (- (naive-solusion-count (* 2 3 5 5 7)) (naive-solusion-count (* 2 3 5 7)))
+	    (- (naive-solusion-count (* 2 3 5 7 7)) (naive-solusion-count (* 2 3 5 7)))))
+  (is (= 81 (- (naive-solusion-count (* 2 2 3 5 7 11)) (naive-solusion-count (* 2 3 5 7 11)))
+	    (- (naive-solusion-count (* 2 3 3 5 7 11)) (naive-solusion-count (* 2 3 5 7 11)))
+	    (- (naive-solusion-count (* 2 3 5 5 7 11)) (naive-solusion-count (* 2 3 5 7 11)))
+	    (- (naive-solusion-count (* 2 3 5 7 7 11)) (naive-solusion-count (* 2 3 5 7 11)))
+	    (- (naive-solusion-count (* 2 3 5 7 11 11)) (naive-solusion-count (* 2 3 5 7 11)))))
+  )
+;; multiplying by two distinct primes from the list, increases the number of solusions of
+;; the equation by 2^3 ? .. .. third by 7^2
+
+;; python
+;; def nsols(n):
+;;     return sum(1 for x in range(n+1, n*2+1) 
+;;                if ((n*x) % (x-n)==0))
+;;  
+;; f = 2*3*5*7*11*13
+;; for i in xrange(f,f*17,f):
+;;     if nsols(i)>=1000:
+;;         print i
+;;         break
+
+(defn nsols [n]
+  (count (filter #(zero? (rem (* n % ) (- % n))) (range (inc n) (inc (* 2 n))))))
+
+(defn problem108 []
+  (let [r (* 2 3 5 7 11 13)]
+    (first (filter #(>= (nsols %) 1000) (range r (* r 17) r)))))
+
+;; problem108> (time (problem108))
+;; "Elapsed time: 4707.300194 msecs"
+;; 180180
+
+;; NOTICE: there is a sloane sequence that delivers filter-smaller-than-seen .. wow

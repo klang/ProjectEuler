@@ -2,7 +2,6 @@
   "~/projects/ProjectEuler/project.org"
   "~/projects/ProjectEuler/src/all.clj"
   "~/projects/ProjectEuler/user.clj"
-  "~/projects/ProjectEuler/src/problem110.clj"
 )
 
 (defwrk project-euler-stuck "stuck problems"

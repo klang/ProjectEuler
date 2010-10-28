@@ -38,3 +38,26 @@ What is the largest prime factor of the number 600851475143 ?"})
 ;; 6857
 
 (defn problem003 [] (solve003 600851475143))
+
+(defn factor [num]
+  (loop [n num cur 2]
+    (if (= n cur)
+      n
+      (if (zero? (rem n cur))
+	(recur (quot n cur) cur)
+	(recur n (inc cur))))))
+
+(defn factors-faster [num]
+  (loop [f (transient  []) n num cur 2]
+    (if (= n 1)
+      (persistent! f)
+      (if (zero? (rem n cur))
+	(recur (conj! f cur) (quot n cur) cur)
+	(recur f n (inc cur))))))
+
+;; version that uses primes is slower, when very big primes are used
+;; problem003> (time (factors-faster 600851475141))
+;; "Elapsed time: 10021.280163 msecs"
+;; [3 11981 16716787]
+;; problem003> (time (factors 600851475141))
+;; Evaluation aborted. (after quite some time)
