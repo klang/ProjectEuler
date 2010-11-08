@@ -23,7 +23,8 @@
 	[problem061 :only (problem061)]
 	[problem067 :only (problem067)]
 	[problem087 :only (problem087)] [problem087 :only (problem158)]
-	[problem108 :only (problem108)] [problem110 :only (problem110)]))
+	[problem108 :only (problem108)] [problem110 :only (problem110)]
+	[problem231 :only (problem231)]))
 
 (deftest test-solve-all
   (is (= (time (problem001)) 233168))	           ;;    15.848107 msecs
@@ -82,6 +83,7 @@
   (is (= (time (problem158)) 409511334375))        ;;    17.227335 msecs
   (is (= (time (problem108)) 180180))              ;;  4707.300194 msecs
   (is (= (time (problem110)) 9350130049860600))    ;; 13919.281935 msecs
+  (is (= (time (problem231)) 7526965179680))       ;;  5021.874612 msecs + 6 seconds to generate primes up to 20 million
 )
 
 ;; all> (time (run-tests))
