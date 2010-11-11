@@ -4,20 +4,13 @@
 201 96 342 234 103 18 = 994
 
 Find the minimal path sum, in matrix.txt, a text file containing a 80 by 80 matrix, from the left column to the right column"})
-  (:use tools.numbers)
-  (:use tools.primes)
+  (:use [problem081 :only (str2int read-data)])
+  (:use [problem083 :only (children distance marker pos problem node up down right)])
   (:use [clojure.contrib.str-utils2 :only (split)])
-  (:use clojure.contrib.duck-streams)
-  (:use clojure.test))
+  (:use clojure.test)
+  (:use [tools.dijkstra :only (shortest-path)]))
 
-(defn str2int [v]
-  (map #(. Integer parseInt % 10) v))
-
-(defn read-data [filename]
-  (into [] (map #(into [] (str2int %)) 
-		(map #(split % #",") (split (slurp filename) #"\r\n")))))
-
-(def s-full (read-data "matrix.txt"))
+(def matrix (read-data "src/matrix.txt"))
 
 (def example [[131 673 234 103  18]
 	      [201  96 342 965 150]
@@ -25,11 +18,32 @@ Find the minimal path sum, in matrix.txt, a text file containing a 80 by 80 matr
 	      [537 699 497 121 956]
 	      [805 732 524  37 331]])
 
-(def path [201 96 342 234 103 18])
+(defn add-source-and-sink-flipped [matrix]
+  (let [m (count matrix)]
+    (merge
+     {:source (into {} (map #(hash-map (marker [% 0]) (pos matrix [% 0])) (range 0 m)))}
+     (into {}
+	   (map #(hash-map (marker [% (dec m)])
+			   {:sink 0}) (range 0 m))))))
 
-;(map #(reduce + %) example)
-;(1159 1754 2712 2810 2429)
-;(reduce min  (map #(reduce + %) example))
-;1159
-;(reduce min  (map #(reduce + %) s-full))
-;349326
+(defn nodes82 [matrix]
+  (let [maxij (count matrix)]
+    (merge-with merge
+		(add-source-and-sink-flipped matrix)
+		(into {} (for [i (range 0 maxij) j (range 0 maxij)]
+			   {(marker [i j]) (node matrix [i j] up down right)})))))
+
+(deftest test-nodes
+  (is (= 994
+	 (second (shortest-path (merge-with
+				 merge
+				 (nodes82 example)
+				 (add-source-and-sink-flipped example))
+				:source :sink children distance)))))
+
+(defn problem082 []
+  (second (problem matrix nodes82)))
+
+;;(time (problem082))
+;;"Elapsed time: 691.370197 msecs"
+;;260324

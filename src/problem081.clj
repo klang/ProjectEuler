@@ -8,7 +8,6 @@ Find the minimal path sum, in matrix.txt, a text file containing a 80 by 80 matr
   (:use tools.numbers)
   (:use tools.primes)
   (:use [clojure.contrib.str-utils2 :only (split)])
-  (:use clojure.contrib.duck-streams)
   (:use clojure.test))
 
 (defn str2int [v]
@@ -18,7 +17,7 @@ Find the minimal path sum, in matrix.txt, a text file containing a 80 by 80 matr
   (into [] (map #(into [] (str2int %)) 
 		(map #(split % #",") (split (slurp filename) #"\r\n")))))
 
-(def s-full (read-data "matrix.txt"))
+(def s-full (read-data "src/matrix.txt"))
 
 (def example [[131 673 234 103  18]
 	      [201  96 342 965 150]
@@ -174,4 +173,5 @@ But expects another mechanism to sum the results"
 ;; "Elapsed time: 81.554255 msecs"
 ;; 427337
 
-
+(defn problem081 []
+  (calculate-minimum s-full))
