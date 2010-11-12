@@ -48,6 +48,16 @@
 	(recur (conj! f cur) (quot n cur) cur)
 	(recur f n (inc cur))))))
 
+(defn factors-hinted
+  "hints can be some of the factors already assumed to be in the number"
+  [num & hints]
+  (loop [f (transient (vec hints)) n (reduce quot num hints) cur 2]
+    (if (= n 1)
+      (persistent! f)
+      (if (zero? (rem n cur))
+	(recur (conj! f cur) (quot n cur) cur)
+	(recur f n (inc cur))))))
+
 
 ;; prime-factors has an assert that I keep falling in when using prime? in a functional way
 (defn prime? [n]

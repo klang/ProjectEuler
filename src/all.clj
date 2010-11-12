@@ -23,6 +23,7 @@
 	[problem061 :only (problem061)]
 	[problem067 :only (problem067)]
 	[problem081 :only (problem081)] [problem082 :only (problem082)] [problem083 :only (problem083)]
+	[problem119 :only (problem119)]
 	[problem087 :only (problem087)] [problem087 :only (problem158)]
 	[problem108 :only (problem108)] [problem110 :only (problem110)]
 	[problem231 :only (problem231)]))
@@ -87,6 +88,7 @@
   (is (= (time (problem158)) 409511334375))        ;;    17.227335 msecs
   (is (= (time (problem108)) 180180))              ;;  4707.300194 msecs
   (is (= (time (problem110)) 9350130049860600))    ;; 13919.281935 msecs
+  (is (= (time (problem119)) 248155780267521))     ;;    25.218576 msecs
   (is (= (time (problem231)) 7526965179680))       ;;  5021.874612 msecs + 6 seconds to generate primes up to 20 million
 )
 
