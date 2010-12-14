@@ -24,8 +24,9 @@
 	[problem061 :only (problem061)]
 	[problem067 :only (problem067)]
 	[problem081 :only (problem081)] [problem082 :only (problem082)] [problem083 :only (problem083)]
+	[problem093 :only (problem093)]
 	[problem119 :only (problem119)]
-	[problem087 :only (problem087)] [problem087 :only (problem158)]
+	[problem087 :only (problem087)] [problem158 :only (problem158)]
 	[problem108 :only (problem108)] [problem110 :only (problem110)]
 	[problem231 :only (problem231)]))
 
@@ -86,6 +87,7 @@
   (is (= (time (problem082)) 260324))              ;;   691.370197 msecs      
   (is (= (time (problem083)) 425185))              ;;   701.88803 msecs 
   (is (= (time (problem087)) 743))                 ;;     0.103365 msecs
+  (is (= (time (problem093)) 1258))                ;; 14724.167179 msecs
   (is (= (time (problem067)) 7273))                ;;    24.278234 msecs
   (is (= (time (problem158)) 409511334375))        ;;    17.227335 msecs
   (is (= (time (problem108)) 180180))              ;;  4707.300194 msecs
