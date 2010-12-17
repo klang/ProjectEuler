@@ -58,13 +58,13 @@ Find the set of four distinct digits, a < b < c < d, for which the longest set o
   (count (filter true? (map = (line numbers) (iterate inc 1)))))
 
 
-(defn find [min max]
+(defn search [min max]
   (for [a (range min max) b (range min max) c (range min max) d (range min max)
 	:when (< a b c d)] {:line [a b c d] :length (line-length a b c d)}))
 
 
-(defn finder [max]
-  (loop [l (find 1 max)
+(defn maximum [max]
+  (loop [l (search 1 max)
 	 m {:line [] :length 0}]
     (if (empty? l)
       m
@@ -72,11 +72,11 @@ Find the set of four distinct digits, a < b < c < d, for which the longest set o
 			(first l)
 			m)))))
 
-;; problem093> (time (finder 10)) 
+;; problem093> (time (maximum 10)) 
 ;; "Elapsed time: 14724.167179 msecs"
 ;; {:line [1 2 5 8], :length 51}
-;; problem093> (time (finder 15)) 
+;; problem093> (time (maximum 15)) 
 
-(defn problem093 [] (finder 10))
+(defn problem093 [] (maximum 10))
 
 

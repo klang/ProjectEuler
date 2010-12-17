@@ -152,6 +152,10 @@
 	    (recur (rest word-groups)
 		   (apply max (flatten (cons the-max  maxes)))))))))
 
+;; problem098> (time (matches word-groups number-groups))
+;; "Elapsed time: 221.400845 msecs"
+;; 18769
+
 ;;-----------------------------------------------------------------------------
 ;;-----------------------------------------------------------------------------
 
