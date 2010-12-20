@@ -53,5 +53,9 @@
 ;; 6531031914842725
 (defn problem068 [] (apply max (distinct (gon5))))
 
+;; 10 seconds faster, if n0 is locked to 10 (the solutions are symetric)
 
-
+;; for the inner ring
+;; (combinations [1 2 3 4 5 6 7 8 9 10] 5)
+;; for the outer ring
+;; (difference #{1 2 3 4 5 6 7 8 9 10} (first (combinations [1 2 3 4 5 6 7 8 9 10] 5)))
