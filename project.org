@@ -29,6 +29,7 @@
 ** 265 - Binary Circles
 ** 191 - Prize Strings
 * done
+<2011-01-25 Tue> #117: 265 very, very slow
 <2011-01-12 Wed> #116: 317 mathematic intuition works fine. (pen and paper)
 <2010-12-20 Mon> #115: 315 in the release week, as solver 176 (easy problem)
 <2010-12-17 Fri> #114: 068

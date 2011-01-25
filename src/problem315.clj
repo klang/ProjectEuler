@@ -31,16 +31,16 @@
 ;; 9		0x6F	0x7B	on	on	on	on	off	on	on
 
 (defn binary-string [n] (. Integer toBinaryString n))
-(defn common-bits [d1 d2]
-  (let [d1 (segments d1) d2 (segments d2)]
-    (bit-count (bit-and d1 d2))))
 
+(defn bit-count [n] (. Integer bitCount n))
 
 (def segments
      (assoc (zipmap (range) [0x7E 0x30 0x6D 0x79 0x33 0x5B 0x5F 0x72 0x7F 0x7B])
        nil 0x00))
 
-(defn bit-count [n] (. Integer bitCount n))
+(defn common-bits [d1 d2]
+  (let [d1 (segments d1) d2 (segments d2)]
+    (bit-count (bit-and d1 d2))))
  
 (defn bit-transition [d1 d2]
   (bit-count (bit-xor (segments d1) (segments d2))))
@@ -143,3 +143,37 @@
 
 ;; though this is the correct answer, the solution is not fast enough.
 
+;;If sevseg is a function that has bits representing the 
+;;segments and & is bitwise and, the number of switchings saved is: 
+
+;;2*bitcount(sevseg(old)&sevseg(new)) 
+
+;;(The two comes from switching on and off.)
+
+;; the maximal second element in the digital-root calculations is 64
+;; (reduce + (digits (dec (* 2  (expt 10 7)))))
+;; so we really only need to calculate the transition from the last
+;; one or two digits
+
+(defn digital-root [n]
+  (let [dn (digits n)]
+    (loop [to (digits (reduce + dn))
+	   total [(drop (- (count dn) (count to)) dn)]]
+	(if (= 1 (count to))
+	  (conj total to)
+	  (recur (digits (reduce + to)) (conj total to))))))
+
+;; problem315> (time (reduce + (map t-sam primes)))
+;; "Elapsed time: 35840.042561 msecs"
+;; 30706772
+
+(defn t-sam []
+  (* 2 (reduce + (map #(* (second %) (bit-count (segments (first %)))) (frequencies (flatten (map #(digital-root %) primes)))))))
+
+;; problem315> (time (t-sam))
+;; "Elapsed time: 35701.360078 msecs"
+;; 30706772
+
+(defn t-sam []
+  (loop [p (first primes)])
+  )
