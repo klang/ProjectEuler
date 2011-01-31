@@ -207,7 +207,7 @@
 
 (defn run-through
   []
-  (let [e (int 134217727)]	     ; 134217727 (+ 85539551 1000000) 
+  (let [e (int 131913257)]	     ; 134217727 (+ 85539551 1000000) 
     (loop [n (int 73743071) sum (long 0)]
       (if (< e n)
 	 sum
@@ -218,3 +218,80 @@
 ;;problem265> (time (run-through))
 ;;"Elapsed time: 631035.639787 msecs"
 ;;209110240768
+
+;;;....
+
+;; http://en.wikipedia.org/wiki/De_Bruijn_sequence
+;; http://oeis.org/A065583
+(use '[tools.numbers :only (factorial)] )
+
+(defn B [k n]
+  (quot (expt (factorial k) (expt k (- n 1))) (expt k n)))
+
+;;(B 2 5)
+(defn S [n]
+  (quot (* (factorial n) (- (expt n (- n 1)) 1)) (* 2 (- n 1))))
+
+
+(defn count-distinct
+ [i]
+ (count (distinct
+	 ;; consider the 5 least significant bits bits = 11111 = 31
+	 (map #(bit-and (. Integer rotateRight i %) 31) 
+	      [0   1  2  3  4  5  6  7  8  9 10 11 12 13 14 15
+	       16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31]))))
+
+(defn count-distinct
+ [i]
+ (count (into #{}
+	 ;; consider the 5 least significant bits bits = 11111 = 31
+	 (map #(bit-and (. Integer rotateRight i %) 31) 
+	      [0   1  2  3  4  5  6  7  8  9 10 11 12 13 14 15
+	       16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31]))))
+(defn count-distinct
+ [i]
+ (count (into #{}
+	 ;; consider the 5 least significant bits bits = 11111 = 31
+	 (map #(bit-and (. Integer rotateRight i %) 31) 
+	      [0   1  2  3  4  5  6  7  8  9 10 11 12 13 14 15
+	       16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31]))))
+
+
+(defn run-through-2
+  []
+  (let [e (int (+ 1000000 73743071))] ;; 131913257
+    (loop [n (int 73743071) sum (long 0)]
+      (if (< e n)
+	 sum
+	(recur (+ n (int 2))
+	       (if (and (= 16 (. Integer bitCount n))
+			(= 32 (count-distinct n))) (+ sum (long n)) sum))))))
+
+
+
+;; original form, running through 1 million elements
+"Elapsed time: 6880.382304 msecs"
+;; stop using repeat in count-distinct
+"Elapsed time: 5789.087455 msecs"
+;; hardcode the range
+"Elapsed time: 4412.765772 msecs"
+;; using (into #{} .. instead of (distinct
+"Elapsed time: 1665.704695 msecs"
+
+;; full run should take
+;; (*  (/ 1665.704695 6880.382304 ) 631035.639787)
+;; 152770.43941213164
+;; problem265> (time (run-through))
+;; "Elapsed time: 126994.129502 msecs"
+;; 209110240768
+
+;; defining the function as inline doesn't give anything
+(comment
+  (definline count-distinct
+    "somethin"
+    [i]
+    `(count (into #{}
+		  ;; consider the 5 least significant bits bits = 11111 = 31
+		  (map #(bit-and (. Integer rotateRight ~i %) 31) 
+		       [0   1  2  3  4  5  6  7  8  9 10 11 12 13 14 15
+			16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31])))))
