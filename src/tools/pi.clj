@@ -147,7 +147,15 @@
   (apply comp (repeat n damping)))
 
 (comment
-  (double (first ((dampn 5) (sums-seq (series pi-formular-slow))))))
+  (double (first ((dampn 5) (sums-seq (series pi-formular-slow)))))
+  (double (first (nth (iterate damping (sums-seq (series pi-formular-slow))) 5)))
+  )
+
+(defn damp [seq n]
+  (nth (iterate damping seq) n))
+
+(comment
+  (double (first (damp 5 (sums-seq (series pi-formular-slow))))))
 
 (defn sums [i j]
   (cond (zero? i) (reduce + (map #(pi-formular %) (range i (+ j 1))))
