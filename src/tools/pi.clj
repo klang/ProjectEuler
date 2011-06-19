@@ -55,6 +55,7 @@
 ;; 1
 (defn pi-formular [n] 
   (/ (* 4 (Math/pow -1 n)) (inc (* 2 n))))
+
 (defn pi-formular-slow [n] 
   (/ (* 4 (expt -1 n)) (+ (* 2 n) 1)))
 
@@ -131,8 +132,22 @@
 	 '(10/3 46/15 334/105 982/315 10942/3465 140986/45045 28382/9009 2400458/765765 45788882/14549535))))
 
 ;; 4
-(double (first (damping (damping (damping (damping (damping (sums-seq (series pi-formular-slow)))))))))
+(comment
+  (double (first (damping (damping (damping (damping (damping (sums-seq (series pi-formular-slow)))))))))
+  (double (first ((comp damping damping damping damping damping) (sums-seq (series pi-formular-slow)))))
+  (double (first ((apply comp [damping damping damping damping damping]) (sums-seq (series pi-formular-slow))))))
 
+(defn dampn [n seq]
+  ((apply comp (repeat n damping)) seq))
+
+(comment
+  (double (first (dampn 5 (sums-seq (series pi-formular-slow))))))
+
+(defn dampn [n]
+  (apply comp (repeat n damping)))
+
+(comment
+  (double (first ((dampn 5) (sums-seq (series pi-formular-slow))))))
 
 (defn sums [i j]
   (cond (zero? i) (reduce + (map #(pi-formular %) (range i (+ j 1))))
