@@ -1,3 +1,8 @@
+(ns problem087
+  (:use [clojure.contrib.math]
+	[clojure.set :only (difference union)]
+	[clojure.test])
+  (:use [tools.primes :only (prime?)]))
 ;; The smallest number expressible as the sum of a prime square, prime cube, and prime fourth power is 28. In fact, there are exactly four numbers below fifty that can be expressed in such a way:
 ;; 
 ;; 28 = 2^2 + 2^3 + 2^4
@@ -6,7 +11,7 @@
 ;; 47 = 2^2 + 3^3 + 2^4
 ;; How many numbers below fifty million can be expressed as the sum of a prime square, prime cube, and prime fourth power?
 
-(use 'clojure.contrib.math)
+
 
 (defn sum-of-square-cube-fourth-power [a b c]
 ;  (do (println (list a b c (+ (expt a 2) (expt b 3) (expt c 4))))) 
@@ -47,9 +52,10 @@
 
 ; (def expt (memoize expt))
 ; (def limit 50000000)
- (def al (first (exact-integer-sqrt limit)))
- (def bl (expt limit 1/3))
- (def cl (first (exact-integer-sqrt al)))
+(comment
+  (def al (first (exact-integer-sqrt limit)))
+  (def bl (expt limit 1/3))
+  (def cl (first (exact-integer-sqrt al))))
 
 ;; o-------------------------------o---------------------------o----------------o 
 
@@ -78,9 +84,10 @@
 
 ;; PRIMES!! prime squares .. argh!
 
-(* (count (take-while #(< % (first (exact-integer-sqrt 50000000))) primes))
-   (count (take-while #(< % (expt 50000000 1/3)) primes))
-   (count (take-while #(< % (expt 50000000 1/4)) primes)))
+(comment
+  (* (count (take-while #(< % (first (exact-integer-sqrt 50000000))) primes))
+     (count (take-while #(< % (expt 50000000 1/3)) primes))
+     (count (take-while #(< % (expt 50000000 1/4)) primes))))
 
 ;; 1524532
 
@@ -111,7 +118,7 @@
 ;; The smart methods might have to be pulled down anyway
 
 (defn smarter [limit] 0)
-(use 'clojure.contrib.test-is)
+
 (deftest test-smarter
   (is (= #{0} (difference (naïve 50) (into #{} (smarter 50)))))
   (is (= #{0} (difference (naïve 500) (into #{} (smarter 500)))))
@@ -217,3 +224,5 @@
 ;; .. well, it didn't give much ..
 
 ;; I should probably have started by taking a, b and c from a prime sequence
+
+(defn problem087 [] (count (smartest 50000000)))
