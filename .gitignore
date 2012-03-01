@@ -2,3 +2,6 @@ lib
 classes
 *~
 \#*\#
+.lein-deps-sum
+.cake
+pom.xml
