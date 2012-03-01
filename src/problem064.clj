@@ -1,4 +1,6 @@
-(use 'clojure.contrib.math)
+(ns problem064
+  (:use [clojure.contrib.math]
+        [clojure.test]))
 
 ;; http://en.wikipedia.org/wiki/Methods_of_computing_square_roots#Example.2C_square_root_of_114_as_a_continued_fraction
 

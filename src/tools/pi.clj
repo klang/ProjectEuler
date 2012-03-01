@@ -28,6 +28,13 @@
 
 ;; lazy sequence giving the individual terms
 (def pi1 (map #(pi-series %) (iterate inc 0)))
+
+;; this formular will converge towards PI very slowly: (* 3 (expt 10 n)) terms for n digit precision 
+
+(comment
+  (double (reduce + (take (* 3 (expt 10 5)) pi1)))
+  (double (reduce + (take (* 3 (expt 10 6)) pi1))))
+
 ;; basically the same, but will use fractions (slower, but nice to look at)
 (def pi2 (map #(/ (* 4 (expt -1 %)) (+ (* 2 %) 1)) (iterate inc 0)))
 
@@ -162,6 +169,9 @@
 	:else
 	(/ (+ (sums (- i 1) j) (sums (- i 1) (+ j 1))) 2)))
 
+;;
+;; (- Math/PI (double (first (damp 45 (sums-seq (series pi-formular-slow))))))
+;; => 0.0
 
 
 (def pi-continued-fraction [3 7 15 1 292 1 1 1 2 1 3 1 14 2 1 1 2 2 2 2 1 84 2 1 1 15 3 13 1 4 2 6 6 99 1 2 2 6 3 5 1 1 6 8 1 7 1 2 3 7 1 2 1 1 12 1 1 1 3 1 1 8 1 1 2 1 6 1 1 5 2 2 3 1 2 4 4 16 1 161 45 1 22 1 2 2 1 4 1 2 24 1 2 1 3 1 2 1])

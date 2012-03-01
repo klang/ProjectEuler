@@ -12,6 +12,7 @@
 (defn digits [number]
   (map #(. Integer parseInt % 10) 
 	     (filter #(not (= % "")) (split (str number) #""))))
+;; (map #(. Integer parseInt (str %) 10) (str 123))
 
 (defn reverse-number [number]
   (loop [n number dl 0]
