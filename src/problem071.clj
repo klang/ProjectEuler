@@ -9,9 +9,10 @@ It can be seen that 2/5 is the fraction immediately to the left of 3/7.
  
 By listing the set of reduced proper fractions for d  1,000,000 in ascending order of size, find the numerator of the fraction immediately to the left of 3/7.
 "})
-  (:use tools.numbers)
-  (:use clojure.contrib.math)
-  (:use problem026))
+  (:use 
+   [tools.numbers :only (integer digits)]
+   [clojure.math.numeric-tower :only (expt gcd)]))
+
 ;(distinct (for [d (range 1 8) n (range 1 d)] (/ n d)))
 
 
@@ -106,3 +107,5 @@ Repeating parts starting with zeros are not supported.
 ;; user> (time (find-max 3 7 1000000))
 ;; "Elapsed time: 1867.093735 msecs"
 ;; 428570/999997
+
+(defn problem071 [] (.numerator (find-max 3 7 1000000)))

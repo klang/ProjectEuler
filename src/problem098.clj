@@ -1,12 +1,12 @@
 (ns problem098
-  (:use clojure.set
-	clojure.test
-	[clojure.contrib.math :only (expt exact-integer-sqrt)]
-	[clojure.contrib.pprint :only (pprint)]
-	[clojure.contrib.combinatorics :only (combinations)]
+  (:use [clojure.set :only (union)]
+	[clojure.test :only (deftest is)]
+	[clojure.math.numeric-tower :only (expt)]
+	[clojure.pprint :only (pprint)]
+	[clojure.math.combinatorics :only (combinations)]
 	[tools.numbers :only (digits integer)]
-	[clojure.contrib.str-utils2 :only (split)])
-  (:require [clojure.contrib.str-utils2 :as s :only (replace)]))
+	[clojure.string :only (split)])
+  (:require [clojure.string :as s :only (replace)]))
 
 (defonce words (map #(s/replace % "\"" "") (split (slurp "src/words.txt") #",")))
 
@@ -155,7 +155,7 @@
 ;; problem098> (time (matches word-groups number-groups))
 ;; "Elapsed time: 221.400845 msecs"
 ;; 18769
-
+(defn problem098 [] (matches word-groups number-groups))
 ;;-----------------------------------------------------------------------------
 ;;-----------------------------------------------------------------------------
 

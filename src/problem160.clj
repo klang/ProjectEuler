@@ -1,8 +1,8 @@
 (ns problem160
-  (:use tools.numbers)
-  (:use tools.primes)
-  (:use clojure.contrib.math)
-  (:use clojure.test))
+  (:use 
+   [clojure.test :only (deftest is)]
+   [tools.numbers :only (integer digits factorial)]
+   [clojure.math.numeric-tower :only (expt ceil floor)]))
 
 ;; http://en.wikipedia.org/wiki/Factorial
 ;; The asymptotically-best efficiency is obtained by computing n! from its prime factorization.
@@ -410,4 +410,11 @@
 	    (expt 10 5))))
 ;;"Elapsed time: 77.159839 msecs"
 ;;16576
+
+(defn problem160 [] 
+  (rem (* (bigint (f9s 1 12500)) 
+          (f9s 12501 20000) 
+          (f9s 500001 510000)
+          (f9s 2550001 2560000)) 
+       (expt 10 5)))
 

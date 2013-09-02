@@ -7,3 +7,10 @@ Finding the answers is as easy as using Google, there is no fun in that.
 Deducting the answers by yourself based on the math section on wikipedia or the comprehensive texts available on Wolfram and other math sites is much more challenging.
 
 Most of the source show the process I went through to solve the problem at hand. Comments showing my frustration at times may occur :-)
+
+To run everything, simply
+
+    lein repl
+    all=> (time (run-tests))
+
+I have stepped on the 'time' function, so gives some additional output.

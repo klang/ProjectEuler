@@ -1,4 +1,5 @@
-(load "tools")
+(ns problem052
+  (:use [tools.numbers :only (digit-set)]))
 
 ;; It can be seen that the number, 125874, and its double, 251748, contain exactly the same digits, but in a different order.
 
@@ -36,3 +37,5 @@
 ;;142857
 ;; user> (p052number 142857)
 ;; (142857 285714 428571 571428 714285 857142)
+
+(defn problem052 [] (first (take 1 (filter #(p052o %) (iterate inc 1)))))

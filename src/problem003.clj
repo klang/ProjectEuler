@@ -3,7 +3,7 @@
 
 What is the largest prime factor of the number 600851475143 ?"})
   (:use clojure.test)
-  (:use [clojure.contrib.lazy-seqs :only (primes)]))
+  (:require [tools.primes :only (primes) :as tools]))
 
 ;; what is the difference between rem and mod?
 ;; is one faster than the other or is it just taste?
@@ -11,7 +11,7 @@ What is the largest prime factor of the number 600851475143 ?"})
 
 (defn factors [n]
   (loop [factors []
-	 p primes
+	 p tools/primes
 	 number n]
     (if (= number 1)
       factors

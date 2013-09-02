@@ -1,8 +1,9 @@
 (ns problem068
   (meta {:description ""})
   (:use [tools.numbers :only (digits integer)]
-	[clojure.contrib.combinatorics]
-	[clojure.test]))
+	[clojure.test :only (deftest is)])
+  (:require
+   [clojure.math.combinatorics :only (permutations) :as comb]))
 
 ;; Total	Solution Set
 ;; 9	        [[4 2 3] [5 3 1] [6 1 2]]
@@ -13,7 +14,7 @@
 (defn gon3
   "produces 3 symetric result sets (works 3 times as much as neccesary)"
   []
-  (for [[n0 n1 n2 n3 n4 n5] (permutations [1 2 3 4 5 6])
+  (for [[n0 n1 n2 n3 n4 n5] (comb/permutations [1 2 3 4 5 6])
 	:when (and (= (+ n0 n1 n2)
 		      (+ n3 n2 n4)
 		      (+ n5 n4 n1)))]
@@ -31,7 +32,7 @@
 (defn gon5
   "to produce 16 digit numbers, 10 has to be one of the external nodes"
   []
-  (for [[n0 n1 n2 n3 n4 n5 n6 n7 n8 n9] (permutations (range 1 11))
+  (for [[n0 n1 n2 n3 n4 n5 n6 n7 n8 n9] (comb/permutations (range 1 11))
 	:when (and (or (= n0 10) (= n3 10) (= n5 10) (= n7 10) (= n9 10))
 		   (= (+ n0 n1 n2)
 		      (+ n3 n2 n4)

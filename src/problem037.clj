@@ -5,9 +5,8 @@ The number 3797 has an interesting property. Being prime itself, it is possible 
 Find the sum of the only eleven primes that are both truncatable from left to right and right to left.
 
 NOTE: 2, 3, 5, and 7 are not considered to be truncatable primes."})
-  (:use [tools.primes :only (prime-factors)]
-	tools.numbers
-	[clojure.contrib.lazy-seqs :only (primes)]))
+  (:use [tools.primes :only (primes prime-factors)]
+	[tools.numbers :only (digits integer)]))
 
 (defn prime? [n]
   (if (>= 1 n)

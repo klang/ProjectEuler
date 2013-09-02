@@ -1,3 +1,4 @@
+(ns problem055)
 ;; If we take 47, reverse and add, 47 + 74 = 121, which is palindromic.
 ;; 
 ;; Not all numbers produce palindromes so quickly. For example,
@@ -15,7 +16,6 @@
 ;; How many Lychrel numbers are there below ten-thousand?
 ;; 
 ;; NOTE: Wording was modified slightly on 24 April 2007 to emphasise the theoretical nature of Lychrel numbers.
-(load "tools")
 
 (defn reverse-number [number]
   (loop [n number dl 0]
@@ -29,7 +29,7 @@
 
 (defn lychrel-number? [number]
   (loop [i lychrel-limit 
-	 n (+ number (reverse-number number))]
+	 n (+ (bigint number) (reverse-number number))]
     (if (palindrome? n)
       false ; (list number n i false)
       (if (zero? i)
@@ -49,3 +49,5 @@
 ;; user> (time (lychrel-numbers-under 10000))
 ;; "Elapsed time: 869.360469 msecs"
 ;; 249
+
+(defn problem055 [] (lychrel-numbers-under 10000))

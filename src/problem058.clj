@@ -1,3 +1,5 @@
+(ns problem058
+  (:use [tools.primes :only (prime?)]))
 ;Starting with 1 and spiralling anticlockwise in the following way, a square spiral with side length 7 is formed.
 
 ;65 64 63 62 61 60 59 58 57
@@ -13,8 +15,6 @@
 ;It is interesting to note that the odd squares lie along the bottom right diagonal, but what is more interesting is that 8 out of the 13 numbers lying along both diagonals are prime; that is, a ratio of 8/13  62%.
 ;
 ;If one complete new layer is wrapped around the spiral above, a square spiral with side length 9 will be formed. If this process is continued, what is the side length of the square spiral for which the ratio of primes along both diagonals first falls below 10%?
-
-(load "tools")
 
 ;; just like problem 28 .. but flipped
 
@@ -67,4 +67,5 @@
 ;;   (1 3 13 31 57  91 133 183 241)
 ;; t: 1 5  9 13 17  21  25  29  33
 ;; p: 0 3  5  8  9  10  11  13  15
- 
+
+(defn problem058 [] (first (f 1/10)))

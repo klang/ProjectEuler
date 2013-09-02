@@ -1,5 +1,5 @@
 (ns problem078
-  (:use clojure.contrib.math))
+  (:use [clojure.math.numeric-tower :only (expt)]))
 
 ;; http://www.research.att.com/~njas/sequences/A000041
 ;; F. Ruskey, The first 284547 partition numbers (52MB compressed file
@@ -30,5 +30,4 @@
 
 (def pn (memoize pn))
 
-
-
+(defn problem078 [] 0)

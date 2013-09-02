@@ -9,8 +9,10 @@ It can be verified that T285 = P165 = H143 = 40755.
 Find the next triangle number that is also pentagonal and hexagonal.
 
 "})
-  (:use clojure.set)
-  (:use clojure.test))
+  (:use 
+   [clojure.test :only (deftest is)])
+  (:require 
+   [clojure.set :only (intersection) :as set]))
 
 ;; lazy sequences
 (def triangles 
@@ -26,7 +28,7 @@ Find the next triangle number that is also pentagonal and hexagonal.
 (defn hexagonal [n] (* n (- (* 2 n) 1)))
 
 (comment
-  (intersection (set (take 100000 triangles)) (set (take 100000 pentagonals)) (set (take 100000 hexagonals)))
+  (set/intersection (set (take 100000 triangles)) (set (take 100000 pentagonals)) (set (take 100000 hexagonals)))
 ; #{1 1533776805 40755}
   )
 
@@ -36,4 +38,4 @@ Find the next triangle number that is also pentagonal and hexagonal.
 
 ;; (run-tests)
 (defn problem045 []
-  (last (sort (intersection (set (take 100000 triangles)) (set (take 100000 pentagonals)) (set (take 100000 hexagonals))))))
+  (last (sort (set/intersection (set (take 100000 triangles)) (set (take 100000 pentagonals)) (set (take 100000 hexagonals))))))

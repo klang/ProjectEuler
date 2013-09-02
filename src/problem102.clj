@@ -1,13 +1,11 @@
-(use '[clojure.contrib.str-utils2 :only (split)]
-     'clojure.contrib.duck-streams
-     'clojure.contrib.math)
-(require '[clojure.contrib.str-utils2 :as s])
+(ns problem102
+  (:use [clojure.string :only (split)]
+        [tools.numbers :only (str2int)]
+        [clojure.math.numeric-tower :only (abs)]))
 
 
-(def triangles-txt (slurp "triangles.txt") )
 
-(defn str2int [v]
-  (map #(. Integer parseInt % 10) v))
+(def triangles-txt (slurp "src/triangles.txt") )
 
 (def triangles (map #(str2int %) 
 		    (map #(split % #",") (split triangles-txt #"\r\n"))))
@@ -78,8 +76,6 @@
 
 ;; (count (filter true? (map #(inside-by-area 0 0 %) triangles)))
 ;; 228
-(defn SameSide [p1 p2 a b]
-  (let [cp1 (CrossProduct )]))
 
 (defn inside-by-same-side [vx vy [a1 a2 b1 b2 c1 c2]]
   ;; cross product of 
@@ -98,3 +94,4 @@
 
 ;; (count (filter true? (map #(inside-by-cross-product %) triangles)))
 ;; 228
+(defn problem102 [] (count (filter true? (map #(inside-by-cross-product %) triangles))))

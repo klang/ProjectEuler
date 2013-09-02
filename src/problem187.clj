@@ -1,4 +1,8 @@
-(load "tools")
+(ns problem187
+  (:use 
+   [clojure.test :only (deftest is)]
+   [tools.primes :only (primes)]
+   [clojure.math.numeric-tower :only (expt)]))
 
 ; A composite is a number containing at least two prime factors. 
 ; For example, 15 = 3 5; 9 = 3  3; 12 = 2  2  3.
@@ -79,7 +83,7 @@
   ;; the one minute rule is going to be broken .. find another way to do it.
   (loop [res 0 p primes i 0 ]
     (let [this-prime (first p), primes-under (pi (.intValue (/ limit this-prime))), prime-number i]
-      (do (println {:this this-prime 
+      #_(do (println {:this this-prime 
 		    :number prime-number 
 		    :under primes-under 
 		    :limit (.intValue (/ limit this-prime)) 
@@ -103,3 +107,4 @@
   )
 
  
+(defn problem187 [] (two-factor-integers-below (expt 10 8)))

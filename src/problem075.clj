@@ -16,15 +16,11 @@ Given that L is the length of the wire, for how many values of L <= 1,500,000 ca
 
 Note: This problem has been changed recently, please check that you are using the right parameters.
 "})
-  (:use clojure.contrib.math
-	clojure.contrib.repl-utils
-	clojure.set
-	clojure.contrib.combinatorics
-	[clojure.contrib.seq-utils :only (indexed)]
-	clojure.contrib.duck-streams
-	clojure.test))
+  (:use 
+   [clojure.test :only (deftest is)]
+   [tools.misc :only (indexed) ]))
 
-(set! *warn-on-reflection* true)
+;;(set! *warn-on-reflection* true)
 
 (def known [ 12  24  30  36  40  48  56  70  72  80  96 108 
 	    112 126 140 150 154 156 160 176 182 192 198 200 
@@ -196,7 +192,7 @@ Note: This problem has been changed recently, please check that you are using th
   (loop [queue (uad-queue [{:length 12 :uad [3 4 5]}] limit)
 	 catch (inc-items (vec (take (inc limit) (cycle [0]))) limit 12)]
     (if (empty? queue)
-      (time (vec (map first (filter #(= 1 (second %)) (indexed catch)))))
+      (vec (map first (filter #(= 1 (second %)) (indexed catch))))
       (recur (uad-queue queue limit) (inc-items catch limit (:length (last queue))) ))))
 
 ;; problem075> (time (def total (work 1500000)))
@@ -301,5 +297,8 @@ Note: This problem has been changed recently, please check that you are using th
 
 
 
+(defn problem075 [] (count (work 1500000)))
 
+;; "Elapsed time: 0.059785 msecs"
+;; problem075> 161667
 

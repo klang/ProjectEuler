@@ -10,10 +10,12 @@ What is the least value of n for which the number of distinct solutions exceeds 
 
 NOTE: This problem is an easier version of problem 110; it is strongly advised that you solve this one first." 
     })
-  (:use [clojure.contrib.seq-utils :only (indexed)])
-  (:use [clojure.contrib.math :only (gcd lcm)])
-  (:use [tools.primes :only (factors)])
-  (:use clojure.test))
+  (:use 
+   [clojure.test :only (deftest is)]
+   [tools.misc :only (indexed)]
+   [clojure.math.numeric-tower :only (gcd lcm)]
+   [tools.primes :only (factors)]
+   [clojure.pprint :only (pprint)]))
 
 (defn foo [b d] (/ (+ b d) (* b d)))
 (defn bar [b d] (rem (* b d) (+ b d)))
@@ -174,7 +176,6 @@ NOTE: This problem is an easier version of problem 110; it is strongly advised t
 
 (comment (take 200 (map #(vector (naive-solusion-count %) (factors %)) (iterate inc 1))))
 
-(use 'clojure.contrib.pprint)
 (comment
   (pprint (take 1260 (map #(vector % (naive-solusion-count %) (factors %)) (iterate inc 1))))
   (pprint (sort (take 1260 (map #(vector (naive-solusion-count %) % (factors %)) (iterate inc 1)))))

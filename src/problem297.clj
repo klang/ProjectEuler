@@ -11,14 +11,15 @@ Also, for 0<n<10^6, ∑ z(n) = 7894453.
 
 Find ∑ z(n) for 0<n<10^17."
 	 :observations "F83 < 10^17 < F84"})
-  (:use clojure.contrib.lazy-seqs
-	[clojure.contrib.seq-utils :only (indexed)]
-	clojure.contrib.math
-	clojure.test))
+  (:use
+   [clojure.test :only (deftest is)]
+   [tools.misc :only (indexed)]
+   [tools.numbers :only (fibos)]
+   [clojure.math.numeric-tower :only (expt) :as math]))
 
 (defn flatten-once [s] (remove seq? (tree-seq seq? seq s)))
-(def hard-fibs (into [] (take-while #(< %(expt 10 17)) (drop 2 (fibs)))))
-(def hard-fibs-reverse (into [] (reverse (take-while #(< %(expt 10 17)) (drop 2 (fibs))))))
+(def hard-fibs (into [] (take-while #(< %(expt 10 17)) (drop 2 (fibos)))))
+(def hard-fibs-reverse (into [] (reverse (take-while #(< %(expt 10 17)) (drop 2 (fibos))))))
 
 (defn zeckendorf-hard [number]
   "returns the zeckendorf representation of a number, based on a hardcoded list"
@@ -42,14 +43,14 @@ Find ∑ z(n) for 0<n<10^17."
   "returns the zeckendorf representation of a number"
   (loop [number number catch (transient [])]
     (if (zero? number) (persistent! catch)
-      (let [n (last (take-while #(<= % number) (fibs)))]
+      (let [n (last (take-while #(<= % number) (fibos)))]
 	(recur (- number n) (conj! catch n))))))
 
 (defn zeckendorf-terms [number]
   "returns the number of terms in the zeckendorf representation of a number"
   (loop [number number terms 0]
     (if (zero? number) terms
-      (let [n (last (take-while #(<= % number) (fibs)))]
+      (let [n (last (take-while #(<= % number) (fibos)))]
 	(recur (- number n) (inc terms))))))
 
 (deftest test-zeckendorf 
@@ -74,10 +75,6 @@ Find ∑ z(n) for 0<n<10^17."
     (= n 1) 1
     :else
     (+ (Zr (- n 1)) (Zr (- n 2)) (F (- n 1)))))
-
-(defn fibos []
-  "Christophe Grand's lazy fibonacci sequence, also available in clojure.contrib.lazy-seqs"
-  (map first (iterate (fn [[a b]] [b (+ a b)]) [0 1])))
 
 (defn Z []
   "returns the sum of the number of terms in fibonacci points"
@@ -118,7 +115,7 @@ Counting from zero in [1 2 3 5 8 13 21 34 55 89 144 233 377 610 987 1597 2584 41
 	 (reduce + (take (find-index 987) (Z)))))
 
   ;; when the target is not a fibonacci number
-  (is (= (nth (Z) (inc (find-index  (- 1000 (last (take-while #(<= % 1000) (fibs)))))))
+  (is (= (nth (Z) (inc (find-index  (- 1000 (last (take-while #(<= % 1000) (fibos)))))))
 	 33
 	 ;; (zeckendorf-hard 33) => [21 8 3 1]
 	 (+ 1 2 2 2 3 2 3 3 2 3 3 3 4)))
@@ -228,11 +225,11 @@ Counting from zero in [1 2 3 5 8 13 21 34 55 89 144 233 377 610 987 1597 2584 41
 (defn Zef2 [number]
   (let [z (zeckendorf-hard number)]
     (+ (reduce + (take (find-index (first z)) (Z)))
-       (zelastpart2 (rest z)))))
+       (zelastpart (rest z)))))
 
 (defn find-index [fib-num]
   "find the index of a given fibonacci number" 
-  (- (first (first (filter #(= (second %) fib-num) (indexed (fibs))))) 2))
+  (- (first (first (filter #(= (second %) fib-num) (indexed (fibos))))) 2))
 
 (defn Zef2 [number]
   "returns ∑ z(n) < number"
@@ -249,5 +246,4 @@ Counting from zero in [1 2 3 5 8 13 21 34 55 89 144 233 377 610 987 1597 2584 41
 (deftest test-zef2  
   (is (= 7894453 (Zef2 1000000))))
 
-(time (run-tests))
-
+(defn problem297 [] (Zef2 1000000))

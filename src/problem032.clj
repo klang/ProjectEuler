@@ -6,11 +6,16 @@ The product 7254 is unusual, as the identity, 39 x 186 = 7254, containing multip
 Find the sum of all products whose multiplicand/multiplier/product identity can be written as a 1 through 9 pandigital.
 
 HINT: Some products can be obtained in more than one way so be sure to only include it once in your sum."})
-  (:use clojure.contrib.combinatorics
-	clojure.contrib.math
-	tools.numbers
-	problem038
-	clojure.test))
+;;  #_(:use clojure.contrib.combinatorics
+;;	clojure.contrib.math
+;;	tools.numbers
+;;	problem038
+;;	clojure.test)
+  (:use
+   [clojure.test :only (deftest is)]
+   [tools.numbers :only (digits integer)]
+   [problem038 :only (concat-numbers)]
+   [clojure.math.combinatorics :only (permutations) :as comb]))
 
 (defn pandigital1-9? [number]
   (let [d (digits number)]
@@ -115,3 +120,5 @@ HINT: Some products can be obtained in more than one way so be sure to only incl
 ;; (6952 7852 5796 5346 5346 4396 7254 5796 7632)
 ;; problem032> (reduce + (into #{} '( 6952 7852 5796 5346 5346 4396 7254 5796 7632)))
 ;; 45228
+
+(defn problem032 [] nil)

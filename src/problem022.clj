@@ -5,8 +5,10 @@ For example, when the list is sorted into alphabetical order, COLIN, which is wo
 
 What is the total of all the name scores in the file?"})
   
-  (:use clojure.test)
-  (:require [clojure.contrib.str-utils2 :as s]))
+  (:use 
+   [clojure.test :only (deftest is)])
+  (:require 
+   [clojure.string :only (replace split) :as str]))
 
 (defn word-value [w]  
   (reduce + (map #(- (int %) 64) w)))
@@ -15,12 +17,12 @@ What is the total of all the name scores in the file?"})
 
 (def solve022
      (map #(* (word-value %1) %2) 
-	  (sort (map #(s/replace % "\"" "") 
-		     (s/split names-txt #","))) 
+	  (sort (map #(str/replace % "\"" "") 
+		     (str/split names-txt #","))) 
 	  (iterate inc 1)))
 
 (deftest test-problem022
-  (is (= "COLIN" (nth (sort (map #(s/replace % "\"" "") (s/split names-txt #","))) 937)))
+  (is (= "COLIN" (nth (sort (map #(str/replace % "\"" "") (str/split names-txt #","))) 937)))
   (is (= 53 (word-value "COLIN")))
   (is (= 49714 (nth solve022 937))))
 

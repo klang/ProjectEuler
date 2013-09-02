@@ -8,12 +8,10 @@ If we list the set of reduced proper fractions for d <  8 in ascending order of 
 It can be seen that there are 3 fractions between 1/3 and 1/2.
  
 How many fractions lie between 1/3 and 1/2 in the sorted set of reduced proper fractions for d <= 12,000?"})
-  (:use clojure.contrib.math)
-  (:use tools.numbers)
-  (:use tools.primes)
-  (:use problem072)
-  (:use tools.farey)
-  (:use clojure.test))
+  (:use 
+   [clojure.math.numeric-tower :only (gcd) :as math]
+   [clojure.test :only (deftest is)]
+   [tools.farey :only (farey farey-seq fraction-compare)]))
  
 (defn fractions [min max limit] 
   (sort (for [d (range 1 (+ limit 1)) 
@@ -102,3 +100,5 @@ How many fractions lie between 1/3 and 1/2 in the sorted set of reduced proper f
       (recur (rest fractions) (inc number)))))
 
 ;; .. well, not really faster. Got bored waiting.
+
+(defn problem073 [] (count-fractions))

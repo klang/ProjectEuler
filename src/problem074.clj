@@ -18,7 +18,8 @@ It is not difficult to prove that EVERY starting number will eventually get stuc
 Starting with 69 produces a chain of five non-repeating terms, but the longest non-repeating chain with a starting number below one million is sixty terms.
 
 How many chains, with a starting number below one million, contain exactly sixty non-repeating terms?"})
-  (:use tools.numbers))
+  (:use 
+   [tools.numbers :only (factorial digit-list)]))
 
 ;(defn factorial [n]   (reduce * (range n 0 -1)))
 (def factorial-mem (memoize factorial))
@@ -61,3 +62,4 @@ How many chains, with a starting number below one million, contain exactly sixty
 ;; "Elapsed time: 252445.451798 msecs"
 ;; 120
 ;; (+ 42 0 240 120) : 402
+(defn problem074 [] (chains 60 0 1000000))

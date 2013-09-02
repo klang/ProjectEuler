@@ -1,12 +1,12 @@
 (ns problem043
-  (:use tools.numbers)
-  (:use tools.primes)
-  (:use [clojure.contrib.lazy-seqs :only (primes)])
-  (:use clojure.contrib.combinatorics)
-  (:use clojure.contrib.math)
-  (:use clojure.test))
+  (:use 
+   [clojure.test  :only (deftest is)]
+   [tools.numbers :only (factorial integer digits)]
+   [tools.primes  :only (primes)])
+  (:require
+   [clojure.math.combinatorics :only (permutations) :as comb]))
 
-(def pandigital (permutations '(0 1 2 3 4 5 6 7 8 9)))
+(def pandigital (comb/permutations '(0 1 2 3 4 5 6 7 8 9)))
 ;; user> (factorial 10)
 ;; 3628800
 ;; minus the ones that have 0 in the first position
@@ -128,7 +128,7 @@
 ;; as permutations give the results in order, that will be the (nth pandigital (factorial9))'th number
 ;; so we can safely drop anything before that
 
-(def pandigital (drop (factorial 9) (permutations '(0 1 2 3 4 5 6 7 8 9))))
+(def pandigital (drop (factorial 9) (comb/permutations '(0 1 2 3 4 5 6 7 8 9))))
 
 ;; http://en.wikipedia.org/wiki/Divisibility_rule
 ;; the special property can be reduced further, as we know that
@@ -139,7 +139,7 @@
 (def pandigital (filter #(and (even? (nth % 3))
 			      (or (= 5 (nth % 5)) 
 				  (= 0 (nth % 5)))) 
-			(drop (factorial 9) (permutations '(0 1 2 3 4 5 6 7 8 9)))))
+			(drop (factorial 9) (comb/permutations '(0 1 2 3 4 5 6 7 8 9)))))
 ;; problem043> (time (first pandigital))
 ;; "Elapsed time: 2220.100732 msecs"
 ;; (1 0 2 4 3 5 6 7 8 9)

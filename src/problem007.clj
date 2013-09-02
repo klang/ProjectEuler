@@ -5,11 +5,11 @@
 
 as we have a lazy sequence for the primes, this problem is really, really easy .. this is almost cheating
 counting from zero, so the 10001st will be the 10000th number in the sequence"})
-  (:use clojure.contrib.test-is 
-	clojure.contrib.lazy-seqs))
+  (:use clojure.test)
+  (:require [tools.primes :only (primes) :as tools]))
 
 (defn- solve007 [n]
-  (nth primes (- n 1)))
+  (nth tools/primes (- n 1)))
 
 (deftest test-problem007
   (is (= 13 (solve007 6))))

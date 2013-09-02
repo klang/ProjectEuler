@@ -1,8 +1,8 @@
 (ns problem089
-  (:use [clojure.contrib.str-utils2 :only (split)])
-  (:use [clojure.contrib.string :only (replace-re)])
-  (:use [tools.numbers :only (digits)])
-  (:use clojure.test))
+  (:refer-clojure :exclude (replace))
+  (:use 
+   [clojure.test :only (deftest is)]
+   [clojure.string :only (split replace)]))
 
 (def roman-txt (slurp "src/roman.txt") )
 
@@ -12,19 +12,19 @@
 ;; I can only be placed before V and X.
 ;; X can only be placed before L and C.
 ;; C can only be placed before D and M.
-(defn reduce-I [str] (replace-re #"IIIII" "V" str))
-(defn reduce-V [str] (replace-re #"VV" "X" str))
-(defn reduce-X [str] (replace-re #"XXXXX" "L" str))
-(defn reduce-L [str] (replace-re #"LL" "C" str))
-(defn reduce-C [str] (replace-re #"CCCCC" "D" str))
-(defn reduce-D [str] (replace-re #"DD" "M" str))
+(defn reduce-I [str] (replace #"IIIII" "V" str))
+(defn reduce-V [str] (replace #"VV" "X" str))
+(defn reduce-X [str] (replace #"XXXXX" "L" str))
+(defn reduce-L [str] (replace #"LL" "C" str))
+(defn reduce-C [str] (replace #"CCCCC" "D" str))
+(defn reduce-D [str] (replace #"DD" "M" str))
 
-(defn rewrite-9 [str] (replace-re #"VIV" "IX" str))
-(defn rewrite-90 [str] (replace-re #"LXL" "XC" str))
-(defn rewrite-900 [str] (replace-re #"DCD" "CM" str))
-(defn rewrite-I [str] (replace-re #"IIII" "IV" str))
-(defn rewrite-X [str] (replace-re #"XXXX" "XL" str))
-(defn rewrite-C [str] (replace-re #"CCCC" "CD" str))
+(defn rewrite-9 [str] (replace #"VIV" "IX" str))
+(defn rewrite-90 [str] (replace #"LXL" "XC" str))
+(defn rewrite-900 [str] (replace #"DCD" "CM" str))
+(defn rewrite-I [str] (replace #"IIII" "IV" str))
+(defn rewrite-X [str] (replace #"XXXX" "XL" str))
+(defn rewrite-C [str] (replace #"CCCC" "CD" str))
 
 (defn reduce-numeral [str]
   (-> str

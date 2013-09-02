@@ -1,11 +1,11 @@
 ;; What is the difference between the sum of the squares and the square of the sums?
 (ns problem006
-    (:use clojure.contrib.math)
-    (:use clojure.contrib.test-is))
+  (:require [clojure.math.numeric-tower :only (expt) :as math])
+  (:use clojure.test))
 
 (defn solve006 [n]
-  (- (expt (reduce + (range (+ 1 n))) 2) 
-     (reduce + (map #(expt % 2) (range (+ 1 n))))))
+  (- (math/expt (reduce + (range (+ 1 n))) 2) 
+     (reduce + (map #(math/expt % 2) (range (+ 1 n))))))
 
 (deftest test-problem006
   (is (= 2640 (solve006 10))))

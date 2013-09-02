@@ -11,11 +11,11 @@ Here is a listing of all chains with length 4:
 Only two of these chains start with a prime, their sum is 12.
 
 What is the sum of all primes less than 40000000 which generate a chain of length 25?"})
-  (:use :reload-all tools.primes)
-  (:use :reload-all problem072)
-  (:use clojure.test)
-  ;(:use [clojure.contrib.lazy-seqs :only (primes)])
-)
+
+  (:use 
+    [clojure.test :only (deftest is)]
+    [problem072 :only (make-tots-seq4)]
+    [tools.primes :only (primes-up-to totient totient-seq)]))
 
 (defn chain [n]
   "naïve calculation of the totient chain (does a lot of recalculation)"
@@ -223,7 +223,7 @@ int-arrays not immutable! but they are very fast"
 
 (set! *warn-on-reflection* true)
 
-(defonce primes (primes-up-to 400))
+(defonce primes (primes-up-to 40000000))
 
 ;; problem214> (time (defonce primes (primes-up-to 40000000)))
 ;; "Elapsed time: 11238.36337 msecs"
@@ -270,4 +270,6 @@ int-arrays not immutable! but they are very fast"
 
 (defn p214b []
   (apply + (for [prime (reverse primes) :when (and (< 8388608 prime) (= (chain prime) 25))] prime)))
+
+(def problem214 p214b)
 

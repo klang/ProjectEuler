@@ -9,11 +9,9 @@ It can be seen that there are 21 elements in this set.
 
 How many elements would be contained in the set of reduced proper fractions for d <= 1,000,000?"
 	 :hint "http://en.wikipedia.org/wiki/Farey_sequence"})
-  (:use clojure.contrib.math)
-  (:use :reload-all tools.numbers)
-  (:use :reload-all tools.primes)
-  (:use [clojure.contrib.lazy-seqs :only (primes)])
-  (:use clojure.test))
+  (:use 
+   [clojure.test :only (deftest is)]
+   [tools.primes :only (primes totient)]))
 
 
 (def f1 [0/1 1/1])
@@ -265,3 +263,5 @@ Now search for entry where Tot=i this corresponds to a prime put this as p,repea
 ;;problem214> (time (-  (reduce + (make-tots-seq6 1000000)) 1))		     
 ;;"Elapsed time: 9948.969285 msecs"
 ;;303963152391
+
+(defn problem072 []  (-  (reduce + (make-tots-seq6 1000000)) 1))

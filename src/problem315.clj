@@ -1,7 +1,7 @@
 (ns problem315
   (meta {:notation "http://en.wikipedia.org/wiki/Seven-segment_display"})
-  (:use [clojure.test]
-	[clojure.contrib.math :only (expt abs)]
+  (:use [clojure.test :only (deftest is)]
+	[clojure.math.numeric-tower :only (expt abs)]
 	[tools.numbers :only (digits)]
 	[tools.primes :only (primes-up-to)]))
 
@@ -167,13 +167,11 @@
 ;; "Elapsed time: 35840.042561 msecs"
 ;; 30706772
 
-(defn t-sam []
+(defn problem315 []
   (* 2 (reduce + (map #(* (second %) (bit-count (segments (first %)))) (frequencies (flatten (map #(digital-root %) primes)))))))
 
-;; problem315> (time (t-sam))
+;; problem315> (time (problem315))
 ;; "Elapsed time: 35701.360078 msecs"
 ;; 30706772
 
-(defn t-sam []
-  (loop [p (first primes)])
-  )
+

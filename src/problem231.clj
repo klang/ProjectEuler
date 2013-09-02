@@ -6,10 +6,10 @@ So the sum of the terms in the prime factorisation of 10C3 is 14.
 
 Find the sum of the terms in the prime factorisation of 20000000C15000000."
 	 :note "memory to contain the primes up to 20 million is a bit high, set jvm-opts to -Xmx512"})
-  (:use [tools.numbers :only (factorial)]
-	[tools.primes :only (factors primes-up-to)]
-	[clojure.contrib.lazy-seqs :only (primes)]
-	[clojure.test :only (deftest is run-tests)]))
+  (:use 
+   [tools.numbers :only (factorial)]
+   [tools.primes :only (factors primes primes-up-to)]
+   [clojure.test :only (deftest is run-tests)]))
 
 ;; :jvm-opts ["-Xmx512M"]
 
@@ -98,7 +98,7 @@ Find the sum of the terms in the prime factorisation of 20000000C15000000."
 (defn prime-sum-fast [n k q]
   (- (count-factors-under n q) (+ (count-factors-under k q) (count-factors-under (- n k) q))))
 
-(time (def p20 (primes-up-to 20000000)))
+(def p20 (primes-up-to 20000000))
 ;; Elapsed time: 5798.47659 msecs
 
 (deftest theory

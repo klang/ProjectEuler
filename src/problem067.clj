@@ -7,8 +7,9 @@
 ;;
 ;; That is, 3 + 7 + 4 + 9 = 23.
 (ns problem067
-  (:use problem018 
-	clojure.test))
+  (:use 
+   [clojure.test :only (deftest is)]
+   [problem018 :only (read-data squeeze-max-triangle)]))
 
 (def t-mega (read-data "src/triangle.txt"))
 

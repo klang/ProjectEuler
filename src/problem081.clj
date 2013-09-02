@@ -4,18 +4,17 @@
 131 201 96 342 746 422 121 37 331 = 2427
 
 Find the minimal path sum, in matrix.txt, a text file containing a 80 by 80 matrix, from the top left to the bottom right by only moving right and down."})
-
-  (:use tools.numbers)
-  (:use tools.primes)
-  (:use [clojure.contrib.str-utils2 :only (split)])
-  (:use clojure.test))
+  (:use 
+   [clojure.test :only (deftest is)])
+  (:require
+   [clojure.string :only (split) :as str]))
 
 (defn str2int [v]
   (map #(. Integer parseInt % 10) v))
 
 (defn read-data [filename]
   (into [] (map #(into [] (str2int %)) 
-		(map #(split % #",") (split (slurp filename) #"\r\n")))))
+		(map #(str/split % #",") (str/split (slurp filename) #"\r\n")))))
 
 (def s-full (read-data "src/matrix.txt"))
 

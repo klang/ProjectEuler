@@ -3,13 +3,14 @@
 The arithmetic sequence, 1487, 4817, 8147, in which each of the terms increases by 3330, is unusual in two ways: (i) each of the three terms are prime, and, (ii) each of the 4-digit numbers are permutations of one another.
 
 There are no arithmetic sequences made up of three 1-, 2-, or 3-digit primes, exhibiting this property, but there is one other 4-digit increasing sequence."})
-  (:use tools.primes
-	tools.numbers
-	clojure.contrib.lazy-seqs))
+  (:use 
+   [tools.primes :only (primes)]
+   [tools.numbers :only (digit-set)])
+  (:require
+   [clojure.math.combinatorics :only (combinations) :as comb]))
 
 
 ;; What 12-digit number do you form by concatenating the three terms in this sequence?
-(use 'clojure.contrib.combinatorics)
 
 (def four-digit-primes
      (filter #(< 1000 %) (take-while #(< % 10000) primes)))
@@ -79,19 +80,19 @@ There are no arithmetic sequences made up of three 1-, 2-, or 3-digit primes, ex
 ;; finding the example given:
 ;; user> (@sorted-primes #{1 4 7 8})
 ;; [1487 1847 4817 4871 7481 7841 8147 8741]
-;; (filter #(spacing %) (combinations (@sorted-primes #{1 4 7 8}) 3))
+;; (filter #(spacing %) (comb/combinations (@sorted-primes #{1 4 7 8}) 3))
 ;; ((1487 4817 8147))
 (defn list-spacing [[ d1 d2 d3]]
   (list (- d2 d1) (- d3 d2)))
 
-(def foo (map #(combinations (second %) 3) (filter #(< 2 (count (second %))) @sorted-primes)))
+(def foo (map #(comb/combinations (second %) 3) (filter #(< 2 (count (second %))) @sorted-primes)))
 
 (defn find-sequence [sorted-primes]
   (loop [sp @sorted-primes
 	 found []]
     (if (= '() sp) 
       found
-      (let [item (filter #(spacing %) (combinations (second (first sp)) 3))]
+      (let [item (filter #(spacing %) (comb/combinations (second (first sp)) 3))]
 	(recur (rest sp) (if (= '() item) found (conj found item))))
       )
     ))

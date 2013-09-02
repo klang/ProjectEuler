@@ -7,7 +7,7 @@ We will call a positive number a generalised Hamming number of type n, if it has
 Hence the Hamming numbers are the generalised Hamming numbers of type 5.
 
 How many generalised Hamming numbers of type 100 are there which don't exceed 10^9?"})
-  (:use clojure.contrib.lazy-seqs))
+  (:use [tools.primes :only (primes)]))
 
 ;; implementation from RosettaCode.com
 ;; http://rosettacode.org/wiki/Hamming_numbers#Clojure
@@ -61,3 +61,4 @@ How many generalised Hamming numbers of type 100 are there which don't exceed 10
 ;; "Elapsed time: 305696.680426 msecs"
 ;; 2944730
 
+(defn problem204 [] (count (take-while #(<= % 1000000000) hamming)))

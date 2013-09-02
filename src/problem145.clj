@@ -1,13 +1,16 @@
+(ns problem145
+  (:use 
+   [clojure.test :only (deftest is)]
+   [clojure.math.numeric-tower :only (expt)]
+   [tools.numbers :only (digit-list integer)]))
+
 ;; Some positive integers n have the property that the sum [ n + reverse(n) ] consists entirely of odd (decimal) digits. For instance, 36 + 63 = 99 and 409 + 904 = 1313. We will call such numbers reversible; so 36, 63, 409, and 904 are reversible. Leading zeroes are not allowed in either n or reverse(n).
 
 ;; There are 120 reversible numbers below one-thousand.
 
 ;; How many reversible numbers are there below one-billion (10^9)?
 
-(ns p145
-  (:use clojure.test)
-  (:use [clojure.contrib.math :only (expt)])
-  (:use [tools.numbers :only (digit-list integer)]))
+
 
 
 (defn reversible-number? [number]
@@ -82,15 +85,15 @@
 ;; (stats f22to23mil)
 ;; {:distinct 400, :count 14400}
 
-(time (def f1000-2000 (part 1000 2000)))
-(time (def f2000-3000 (part 2000 3000)))
-(time (def f3000-4000 (part 3000 4000)))
-(time (def f4000-5000 (part 4000 5000)))
-(time (def f5000-6000 (part 5000 6000)))
-(time (def f6000-7000 (part 6000 7000)))
-(time (def f7000-8000 (part 7000 8000)))
-(time (def f8000-9000 (part 8000 9000)))
-(time (def f9000-10000 (part 9000 10000)))
+(def f1000-2000 (part 1000 2000))
+(def f2000-3000 (part 2000 3000))
+(def f3000-4000 (part 3000 4000))
+(def f4000-5000 (part 4000 5000))
+(def f5000-6000 (part 5000 6000))
+(def f6000-7000 (part 6000 7000))
+(def f7000-8000 (part 7000 8000))
+(def f8000-9000 (part 8000 9000))
+(def f9000-10000 (part 9000 10000))
 
 { :f1000-2000 (stats f1000-2000 )
   :f2000-3000 (stats f2000-3000 )
@@ -127,7 +130,7 @@
 ;; brute force galore
 ;; user> (+ 540000 50000 18000 0 600 100 20)
 ;; 608720
-
+(defn problem145 [] 0)
 
 (def explanation
      "a) for n = 2k for some integer k, none of the digit-additions can carry, so the outside pair of digits can be any one of 20 choices, and each of the inside pairs can be any one of thirty choices, for a total of 20*30^(k-1) n-digit reversible numbers 

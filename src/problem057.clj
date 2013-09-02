@@ -1,3 +1,7 @@
+(ns problem057
+  (:use
+   [tools.numbers :only (digits)]
+   [problem065 :only (estimate-continued-fraction)]))
 ;; It is possible to show that the square root of two can be expressed as an infinite continued fraction.
 ;; 
 ;; sqrt 2 = 1 + 1/(2 + 1/(2 + 1/(2 + ... ))) = 1.414213...
@@ -13,8 +17,6 @@
 ;; 
 ;; In the first one-thousand expansions, how many fractions contain a numerator with more digits than denominator?
 
-(load "problem065")
-
 ;; (estimate-continued-fraction [1 2])
 ;; (estimate-continued-fraction [1 2 2])
 ;; (estimate-continued-fraction [1 2 2 2])
@@ -22,7 +24,7 @@
 ;; (estimate-continued-fraction [1 2 2 2 2 2])
 ;; (estimate-continued-fraction [1 2 2 2 2 2 2])
 
-(defn p57 [] 
+(defn problem057 [] 
   (loop [sq2c [1 2] i 1 c 0]
     (if (< 1000 i)
       c
@@ -33,6 +35,6 @@
 	;(do (println (list num den i)))
 	(recur (conj sq2c 2) (inc i) (if (< den num) (inc c) c))))))
 
-;; user> (time (p57))
+;; user> (time (problem057))
 ;; "Elapsed time: 170892.443036 msecs"
 ;; 153

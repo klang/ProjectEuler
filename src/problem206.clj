@@ -1,8 +1,7 @@
 (ns problem206
-  (:use tools.numbers)
-  (:use clojure.contrib.math)
-  (:use clojure.contrib.combinatorics)
-  (:use clojure.test))
+  (:use 
+   [clojure.test :only (deftest is)]
+   [clojure.math.numeric-tower :only (exact-integer-sqrt sqrt)]))
 
 ;;Find the unique positive integer whose square has the form 1_2_3_4_5_6_7_8_9_0, where each “_” is a single digit.
 
@@ -119,3 +118,4 @@
 ;; problem206> (exact-integer-sqrt 1929374254627488900)
 ;; [1389019170 0]
 
+(def problem206 f)

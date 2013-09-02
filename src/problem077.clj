@@ -1,3 +1,5 @@
+(ns problem077
+  (:use [tools.partitions :only (p)]))
 ;; It is possible to write ten as the sum of primes in exactly five different ways:
 
 ;; 7 + 3
@@ -7,8 +9,7 @@
 ;; 2 + 2 + 2 + 2 + 2
 
 ;; What is the first value which can be written as the sum of primes in over five thousand different ways?
-(load "partitions")
 
 ;; (p 1 30)
 ;; 5604
-
+(defn problem077 [] nil)

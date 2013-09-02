@@ -14,9 +14,9 @@ n² + an + b, where |a| < 1000 and |b| <  1000
  where |n| is the modulus/absolute value of n, e.g. |11| = 11 and |4| = 4
 
 Find the product of the coefficients, a and b, for the quadratic expression that produces the maximum number of primes for consecutive values of n, starting with n = 0."})
-  (use tools.primes
-       clojure.contrib.lazy-seqs
-       clojure.test))
+  (:use 
+   [clojure.test :only (deftest is)]
+   [tools.primes :only (prime? primes)]))
 
 ;;a function that produces functions of the needed form.
 (defn- f [a b]

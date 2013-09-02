@@ -1,6 +1,22 @@
 (ns tools.primes
-  (:use [clojure.contrib.combinatorics])
-  (:use [clojure.contrib.lazy-seqs :only (primes)]))
+  (:use [clojure.math.combinatorics]))
+
+(def primes
+  ;; taken from [clojure.contrib.lazy-seqs :only (primes)]
+  ;; "Lazy sequence of all the prime numbers."
+  (concat 
+   [2 3 5 7]
+   (lazy-seq
+    (let [primes-from
+	  (fn primes-from [n [f & r]]
+	    (if (some #(zero? (rem n %))
+		      (take-while #(<= (* % %) n) primes))
+	      (recur (+ n f) r)
+	      (lazy-seq (cons n (primes-from (+ n f) r)))))
+	  wheel (cycle [2 4 2 4 6 2 6 4 2 4 6 6 2 6  4  2
+			6 4 6 8 4 2 4 2 4 8 6 4 6 2  4  6
+			2 6 6 4 2 4 6 2 6 4 2 4 2 10 2 10])]
+      (primes-from 11 wheel)))))
 
 (def prime-gen
      (let [primes (atom [])]
@@ -132,7 +148,7 @@ where p1...pm are the unique prime factors of n."
 Li(n) = n/ln(n) + n/[ln(n)]2 + 2n/[ln(n)]3 + ... + k!n/[ln(n)]k + 1 + ... (to infinity) 
 Hence n/ln(n) is a first approximation, n/ln(n) + n/[ln(n)]2 is better, and so on. 
 In fact, for relatively small n, n/(ln(n)-1) turns out to be a better approximation. "
-	 :optimations "return n-1 if n is prime" "return n*phi(n) if n is square."
+	 :optimations "return n-1 if n is prime - return n*phi(n) if n is square."
 	 }))
 
 

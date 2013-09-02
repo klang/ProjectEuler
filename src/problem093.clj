@@ -13,7 +13,9 @@ Note that concatenations of the digits, like 12 + 34, are not allowed.
 Using the set, {1, 2, 3, 4}, it is possible to obtain thirty-one different target numbers of which 36 is the maximum, and each of the numbers 1 to 28 can be obtained before encountering the first non-expressible number.
 
 Find the set of four distinct digits, a < b < c < d, for which the longest set of consecutive positive integers, 1 to n, can be obtained, giving your answer as a string: abcd."})
-  (:use [clojure.contrib.combinatorics]))
+  (:use 
+   [tools.numbers :only (integer)]
+   [clojure.math.combinatorics :only (permutations selections) :as comb]))
 
 (comment
   ;; the 4 different operater graphs it is possible to make
@@ -77,6 +79,6 @@ Find the set of four distinct digits, a < b < c < d, for which the longest set o
 ;; {:line [1 2 5 8], :length 51}
 ;; problem093> (time (maximum 15)) 
 
-(defn problem093 [] (maximum 10))
+(defn problem093 [] (integer (:line (maximum 10))))
 
 

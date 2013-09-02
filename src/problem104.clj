@@ -1,10 +1,12 @@
+(ns problem104
+  (:use [tools.numbers :only (digits fibos)]
+        [clojure.math.numeric-tower :only (expt)]))
 ;; The Fibonacci sequence is defined by the recurrence relation:
 
 ;;  F(n) = F(n-1) + F(n-2), where F(1) = 1 and F(2) = 1.
 ;; It turns out that F(541), which contains 113 digits, is the first Fibonacci number for which the last nine digits are 1-9 pandigital (contain all the digits 1 to 9, but not necessarily in order). And F(2749), which contains 575 digits, is the first Fibonacci number for which the first nine digits are 1-9 pandigital.
 
 ;; Given that F(k) is the first Fibonacci number for which the first nine digits AND the last nine digits are 1-9 pandigital, find k.
-(load "tools")
 
 (defn least-9-digits [number]
   (digits (rem number 1000000000)))
@@ -84,3 +86,4 @@
 ;; 329468
 
 ;; optimized? .. not much
+(defn problem104 [] (p104))

@@ -1,6 +1,6 @@
 ;; http://en.wikipedia.org/wiki/Partition_(number_theory)
 (ns tools.partitions 
-  (:use clojure.contrib.math))
+  (:use [clojure.math.numeric-tower :only (expt sqrt) :as math]))
 
 ;; intermediate function
 (defn p [k n]
