@@ -3,10 +3,12 @@
 
 131 201 96 342 234 103 18 150 111 422 121 37 331 = 2297
 "})
-  (:use [problem081 :only (str2int read-data)])
-  (:use clojure.test)
-  (:use [clojure.contrib.str-utils2 :only (split)])
-  (:use [tools.dijkstra :only (shortest-path)]))
+  (:use 
+   [clojure.test :only (deftest is)]
+   [problem081 :only (str2int read-data)]
+   [tools.dijkstra :only (shortest-path)])
+  (:require
+   [clojure.string :only (split) :as str]))
 
 (def matrix (read-data "src/matrix.txt"))
 

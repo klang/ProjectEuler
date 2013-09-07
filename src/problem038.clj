@@ -9,9 +9,10 @@
       The same can be achieved by starting with 9 and multiplying by 1, 2, 3, 4, and 5, giving the pandigital, 918273645, which is the concatenated product of 9 and (1,2,3,4,5).
 
       What is the largest 1 to 9 pandigital 9-digit number that can be formed as the concatenated product of an integer with (1,2, ... , n) where n > 1?"})
-  (:use clojure.contrib.combinatorics
-	tools.numbers
-	clojure.test))
+  (:use
+   [clojure.test :only (deftest is)]
+   [tools.numbers :only (digits integer)]
+   [clojure.math.combinatorics :only (permutations) :as comb]))
 
 (set! *print-length* 103)
 (set! *print-level* 15)

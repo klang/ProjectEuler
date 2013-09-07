@@ -1,11 +1,12 @@
 (ns problem025
   (meta {:description "What is the first term in the Fibonacci sequence to contain 1000 digits?"})
-  (:use tools.numbers
-	[clojure.contrib.lazy-seqs :only (fibs)]
-	[clojure.contrib.seq-utils :only (indexed)]
-	[clojure.contrib.str-utils2 :only (split)]
-	clojure.contrib.math
-  	clojure.test))
+  (:use 
+   [clojure.test :only (deftest is)]
+   [tools.numbers :only (fibos digits)]
+   [tools.misc :only (indexed)])
+  (:require
+   [clojure.string :only (split)]
+   [clojure.math.numeric-tower :only (expt) :as math]))
 
 
 (defn fibo-terms []
@@ -29,7 +30,7 @@
 
 ;; faster version
 (defn solve025 [d]
-  (first (first (take 1 (drop-while #(<= (second %) (expt 10 (dec d))) (indexed (fibs)))))))
+  (first (first (take 1 (drop-while #(<= (second %) (math/expt 10 (dec d))) (indexed (fibos)))))))
 
 ;; problem025> (time (problem025))
 ;; "Elapsed time: 730.76045 msecs"

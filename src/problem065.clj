@@ -1,5 +1,5 @@
 (ns problem065
-  (:use clojure.contrib.math))
+  (:use [tools.numbers :only (digits)]))
 
 ;; http://en.wikipedia.org/wiki/Continued_fraction
 ;; convert number to continued fraction representation
@@ -65,3 +65,5 @@
 ;; user> (reduce + (digits (.numerator (estimate-continued-fraction (take 100 continued-fraction-e)))))
 ;; 272
 ;; 
+(defn problem065 []
+  (reduce + (digits (.numerator (estimate-continued-fraction (take 100 continued-fraction-e))))))

@@ -1,5 +1,8 @@
-(load "tools")
-(use 'clojure.contrib.math 'clojure.set)
+(ns problem070
+  (:use 
+   [clojure.test :only (deftest is)]
+   [tools.primes :only (totient)]
+   [tools.numbers :only (digits)]))
 
 (defn totient-permutation? [number]
   (= (sort (digits (totient number))) 
@@ -43,3 +46,4 @@
 ;; "Elapsed time: 5498767.682737 msecs"
 ;; (8319823 8319823/8313928)
 ;; 
+(defn problem070 [] 0)

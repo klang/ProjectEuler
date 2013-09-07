@@ -12,12 +12,8 @@ The first three consecutive numbers to have three distinct prime factors are:
 646 = 2  * 17 * 19
 
 Find the first four consecutive integers to have four distinct primes factors. What is the first of these numbers?"})
-  
-
-  (:use tools.primes
-	clojure.contrib.repl-utils
-	clojure.contrib.seq-utils))
-
+  (:use 
+   [tools.primes :only (prime? prime-factors)]))
 
 (defn distinct-prime-factors [n] (count (set (prime-factors n))))
 (defn not-primes [] (filter #(not (prime? %)) (iterate inc 2)))

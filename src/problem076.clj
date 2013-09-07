@@ -1,3 +1,7 @@
+(ns problem076
+  (:use 
+   [tools.partitions :only (pentagonal second-pentagonal)]
+   [clojure.math.numeric-tower :only (expt) :as math]))
 ;; It is possible to write five as a sum in exactly six different ways:
 ;; 
 ;; 4 + 1
@@ -72,3 +76,4 @@
 ;; next i
 
 
+(defn problem076 [] (p 1 100))

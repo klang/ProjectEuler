@@ -11,9 +11,10 @@
 It turns out that the conjecture was false.
 
 What is the smallest odd composite that cannot be written as the sum of a prime and twice a square?"})
-  (:use tools.primes)
-  (:use clojure.contrib.combinatorics)
-  (:use [clojure.contrib.lazy-seqs :only (primes)]))
+  (:use 
+   [tools.primes :only (prime? primes)])
+  (:require 
+   [clojure.math.combinatorics :only (cartesian-product) :as comb]))
 
 (def twice-a-square (map #(* 2 % %) (iterate inc 1)))
 (def odd-composite-numbers (filter #(and (odd? %) (not (prime? %))) (iterate inc 2)))
@@ -22,7 +23,7 @@ What is the smallest odd composite that cannot be written as the sum of a prime 
   (let [p (take-while #(< % odd-composite-number) primes)
 	s (take-while #(< % (- odd-composite-number 1)) twice-a-square)
 	f (take 1 (filter #(= (+ (first % ) (second %)) odd-composite-number)
-			  (cartesian-product p (reverse s))))]
+			  (comb/cartesian-product p (reverse s))))]
     ;{:primes p :twice-a-squares s :found f}
     (zero? (count f))))
 

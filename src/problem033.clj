@@ -7,10 +7,11 @@ We shall consider fractions like, 30/50 = 3/5, to be trivial examples.
 There are exactly four non-trivial examples of this type of fraction, less than one in value, and containing two digits in the numerator and denominator.
  
 If the product of these four fractions is given in its lowest common terms, find the value of the denominator."})
-  (:use tools.numbers
-	clojure.set
-	clojure.test
-	problem026))
+  (:use 
+   [clojure.test :only (deftest is)]
+   [tools.numbers :only (digits integer)])
+  (:require
+   [clojure.set :only (intersection difference) :as set]))
 
 ;; (count (for [d (range 10 100) n (range 10 d)] [n d]))
 ;; 4005
@@ -32,9 +33,9 @@ If the product of these four fractions is given in its lowest common terms, find
 (defn unorthodox-cancelling? [[ numerator denominator]]
   (let [n (set (digits numerator)) 
 	d (set (digits denominator))
-	i (intersection n d)
-	nd (difference n i)       
-	dd (difference d i)
+	i (set/intersection n d)
+	nd (set/difference n i)       
+	dd (set/difference d i)
 	ndx (if (empty? nd) i nd) 
 	ddx (if (empty? dd) i dd)]
     (cond (= n d) false

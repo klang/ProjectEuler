@@ -4,11 +4,10 @@
 There are exactly eleven palindromes below one-thousand that can be written as consecutive square sums, and the sum of these palindromes is 4164. Note that 1 = 0² + 1² has not been included as this problem is concerned with the squares of positive integers.
 
 Find the sum of all the numbers less than 10⁸ that are both palindromic and can be written as the sum of consecutive squares."})
-  (:use clojure.contrib.lazy-seqs
-	clojure.contrib.seq-utils
-	clojure.contrib.math
-	tools.numbers
-	clojure.test))
+  (:use
+   [clojure.math.numeric-tower :only (expt)]
+   [problem004 :only (palindrome?)]
+   [clojure.test :only (deftest is)]))
 
 ;; 1² 2²  3²  4²  5²  6²  7²
 ;; 1  4   9  16  25  36  49  64  81 100 121 144 169  196  225
@@ -98,3 +97,5 @@ Find the sum of all the numbers less than 10⁸ that are both palindromic and ca
 ;; problem125> (time (p125b (expt 10 8)))
 ;; "Elapsed time: 4049.981541 msecs"
 ;; 2906969179
+(defn problem125 [] (p125b (expt 10 8)))
+

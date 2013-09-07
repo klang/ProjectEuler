@@ -1,8 +1,9 @@
 (ns problem087
-  (:use [clojure.contrib.math]
-	[clojure.set :only (difference union)]
-	[clojure.test])
-  (:use [tools.primes :only (prime?)]))
+  (:use 
+   [clojure.math.numeric-tower :only (expt exact-integer-sqrt)]
+   [clojure.set :only (difference union)]
+   [clojure.test :only (deftest is)]
+   [tools.primes :only (prime?)]))
 ;; The smallest number expressible as the sum of a prime square, prime cube, and prime fourth power is 28. In fact, there are exactly four numbers below fifty that can be expressed in such a way:
 ;; 
 ;; 28 = 2^2 + 2^3 + 2^4

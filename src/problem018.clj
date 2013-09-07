@@ -13,15 +13,17 @@ Find the maximum total from top to bottom of the triangle below:
 [snipped]
 
 NOTE: As there are only 16384 routes, it is possible to solve this problem by trying every route. However, Problem 67, is the same challenge with a triangle containing one-hundred rows; it cannot be solved by brute force, and requires a clever method! ;o) "})
-  (:use clojure.test)
-  (:use [clojure.contrib.str-utils2 :only (split)]))
+  (:use 
+   [clojure.test :only (deftest is)])
+  (:require 
+   [clojure.string :only (split) :as str]))
 
 (defn str2int [v]
   (map #(. Integer parseInt % 10) v))
 
 (defn read-data [filename]
   (into [] (map #(into [] (str2int %)) 
-		(map #(split % #" ") (split (slurp filename) #"\n")))))
+		(map #(str/split % #" ") (str/split (slurp filename) #"\n")))))
 
 (def t-hard [[3] [7 4] [2 4 6] [8 5 9 3]])
 (def t-read (read-data "src/triangle-018-test.txt"))

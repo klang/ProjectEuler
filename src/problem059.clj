@@ -1,18 +1,20 @@
-(use '[clojure.contrib.str-utils2 :only (split)]
-     'clojure.contrib.duck-streams
-     'clojure.contrib.test-is
-     'clojure.contrib.combinatorics)
-(require '[clojure.contrib.str-utils2 :as s])
+(ns problem059
+  (:use 
+   [clojure.test :only (deftest is)])
+  (:require
+   [clojure.string :only (split replace) :as str]
+   [clojure.math.combinatorics :only (selections) :as comb]))
+
 
 (defn word-value [w]  
   (reduce + (map #(- (int %) 64) w)))
 
-(def cipher1-txt (slurp "cipher1.txt"))
+(def cipher1-txt (slurp "src/cipher1.txt"))
 
 (def cipher1 
      (map #(. Integer parseInt % 10) 
-	  (map #(s/replace % "\r\n" "")	;; remove the 2 last chars in the file
-	       (split cipher1-txt #","))))
+	  (map #(str/replace % "\r\n" "")	;; remove the 2 last chars in the file
+	       (str/split cipher1-txt #","))))
 
 ;; user> (bit-xor 65 42)
 ;; 107
@@ -32,7 +34,7 @@
 ;;user> (count (selections pool 3))
 ;;17576
 
-(def passwords (selections pool 3))
+(def passwords (comb/selections pool 3))
 
 ; (apply str (map #(char (bit-xor %1 %2)) cipher1 (cycle (first passwords))))
 
@@ -58,12 +60,12 @@
     (is (= nil (re-matches #"[a-zA-Z., ]+" (xor-text-string (xor-text-string text pass) "adf"))))
     (is (= text (re-matches #"[a-zA-Z., ]+" (xor-text-string (xor-text-string text pass) pass))))))
 
-(def words-txt (slurp "words.txt"))
-(def words (map #(s/replace % "\"" "") (split words-txt #",")))
+(def words-txt (slurp "src/words.txt"))
+(def words (map #(str/replace % "\"" "") (str/split words-txt #",")))
 
 
 (defn probably-char [c]
-  (re-matches #"[a-zA-Z., ]" (str %)))
+  (re-matches #"[a-zA-Z., ]" (str c)))
 
 (defn decipher [text pass]
   (letfn [(d [password limit] 
@@ -105,7 +107,7 @@
 
 ;; (reduce + (xor-text-list cipher1 "god"))
 ;; 107359
-
+(defn problem059 [] (reduce + (xor-text-list cipher1 "god")))
 
 
 

@@ -1,10 +1,10 @@
 (ns problem079
-  (:use clojure.contrib.duck-streams)
-  (:use [clojure.contrib.str-utils2 :only (split)])
-  (:use clojure.test)
-  (:use tools.numbers))
+  (:use 
+   [clojure.string :only (split)]
+   [tools.numbers :only (digits)]
+   [clojure.test :only (deftest is)]))
 
-(def keylog-txt (slurp "keylog.txt") )
+(def keylog-txt (slurp "src/keylog.txt") )
 
 (def keylog-values (split keylog-txt #"\r\n"))
 
@@ -78,3 +78,5 @@
 ;; .. I can't be bothered ... 
 ;; I've used ten times as much time getting this far, as solving the problem with
 ;; pen and paper and
+
+(defn problem079 [] 73162890)

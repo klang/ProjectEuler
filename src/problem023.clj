@@ -1,10 +1,9 @@
 (ns problem023
-  (:use	[tools.primes :only (divisors# prime-factors divisors prime?)]
-	[clojure.contrib.math :only (expt exact-integer-sqrt)]
-	[clojure.contrib.lazy-seqs :only (primes)]
-	[clojure.test]
-	[clojure.contrib.combinatorics]
-	[clojure.set]))
+  (:use	[tools.primes :only (primes divisors prime?)]
+	[clojure.math.numeric-tower :only (expt exact-integer-sqrt)]
+	[clojure.test :only (deftest is)])
+  (:require
+   	[clojure.math.combinatorics :only (selections) :as comb]))
 
 (defn sum-of-proper-divisors [n] (- (reduce + (divisors n)) n))
 
@@ -16,7 +15,7 @@
 (def abundant-numbers (filter abundant (iterate inc 1)))
 
 ;; lazy sequence, that gives the sums of abundant numbers
-(comment (def asums (map #(+ (nth % 0) (nth % 1)) (selections abundant-numbers 2))))
+(comment (def asums (map #(+ (nth % 0) (nth % 1)) (comb/selections abundant-numbers 2))))
 ;; problem is, that there are a lot (* 6965 6965) 48511225 which is way
 ;; more combinations than there are numbers under the limit given
 
@@ -27,7 +26,7 @@
 ;; a lot of the combinations are not necesary, maybe we can keep under the limit as we go?
 (def asums (map #(+ (nth % 0) (nth % 1)) 
 		(filter #(<= (+ (nth % 0) (nth % 1)) limit)
-			(selections abundant-numbers 2))))
+			(comb/selections abundant-numbers 2))))
 ;; should only give the the numbers under the limit that are sums of two abundant numbers
 ;;(def asums-set (into #{} (filter #(<= % limit) asums)))
 ;; this also takes a while, and runs out of memory

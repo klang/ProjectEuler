@@ -67,7 +67,7 @@
 ;; "Elapsed time: 846266.642135 msecs"
 ;; 127231
 (def t10-73 (map #(- (* 2 % %) 1) (range 2000001 3000001)))
-(time (count (filter #(prime? %) t10-73)))
+(comment (time (count (filter #(prime? %) t10-73))))
 
 (def t10-74 (map #(- (* 2 % %) 1) (range 3000001 4000001)))
 ; on iMac

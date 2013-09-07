@@ -6,9 +6,8 @@
 It can be seen that P4 + P7 = 22 + 70 = 92 = P8. However, their difference, 70 - 22 = 48, is not pentagonal.
 
 Find the pair of pentagonal numbers, Pj and Pk, for which their sum and difference is pentagonal and D = |Pk - Pj| is minimised; what is the value of D?"})
-  (:use clojure.contrib.math)
-  (:use clojure.test)
-  )
+  (:use [clojure.test :only (deftest is)]
+        [clojure.math.numeric-tower :only (exact-integer-sqrt)]))
 
 (def pentagonals ; (quot (* n (- (* 3 n) 1)) 2)
   (map (fn [n] (quot (- (* 3 n n) n) 2)) (iterate inc 1)))
@@ -142,7 +141,7 @@ Find the pair of pentagonal numbers, Pj and Pk, for which their sum and differen
   (map #(conj % {:sum (+ (:pj %) (:pk %))}) (pentagonal-diff n)))
 
 ;; http://gist.github.com/391238
-(defn flatten [s] (remove seq? (tree-seq seq? seq s)))
+(comment (defn flatten [s] (remove seq? (tree-seq seq? seq s))))
 
 ;(defn pentagonal-diff-and-sum-reduced [n]
 ;  (map #(conj % {:sum pj} )) 

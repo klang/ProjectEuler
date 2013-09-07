@@ -1,3 +1,8 @@
+(ns problem053
+  (:use 
+   [clojure.test :only (deftest is)])
+  (:require 
+   [tools.numbers :only (factorial) :as numbers]))
 ; There are exactly ten ways of selecting three from five, 12345:
 
 ; 123, 124, 125, 134, 135, 145, 234, 235, 245, and 345
@@ -10,9 +15,7 @@
 
 ;It is not until n = 23, that a value exceeds one-million: 23C10 = 1144066.
 
-(load "tools")
-
-(def factorial (memoize factorial))
+(def factorial (memoize numbers/factorial))
 
 (defn C [n r]
   (assert (and (integer? n) (integer? r) (<= r n)))
@@ -32,3 +35,5 @@
 
 ;; user> (count (filter #(< 1000000 %) (dv 100)))
 ;; 4075
+
+(defn problem053 [] (count (filter #(< 1000000 %) (dv 100))))

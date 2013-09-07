@@ -1,8 +1,7 @@
 (ns problem265
-  (:use [clojure.contrib.math :only (expt)]
-	[clojure.contrib.repl-utils]
-	[clojure.test]
-	[clojure.contrib.combinatorics]))
+  (:use 
+   [clojure.math.numeric-tower :only (expt)]
+   [clojure.test :only (deftest is)]))
 
 ;;00010111
 ;;000
@@ -268,15 +267,15 @@
 			(= 32 (count-distinct n))) (+ sum (long n)) sum))))))
 
 
-
-;; original form, running through 1 million elements
-"Elapsed time: 6880.382304 msecs"
-;; stop using repeat in count-distinct
-"Elapsed time: 5789.087455 msecs"
-;; hardcode the range
-"Elapsed time: 4412.765772 msecs"
-;; using (into #{} .. instead of (distinct
-"Elapsed time: 1665.704695 msecs"
+(comment
+  ;; original form, running through 1 million elements
+  "Elapsed time: 6880.382304 msecs"
+  ;; stop using repeat in count-distinct
+  "Elapsed time: 5789.087455 msecs"
+  ;; hardcode the range
+  "Elapsed time: 4412.765772 msecs"
+  ;; using (into #{} .. instead of (distinct
+  "Elapsed time: 1665.704695 msecs")
 
 ;; full run should take
 ;; (*  (/ 1665.704695 6880.382304 ) 631035.639787)
@@ -295,3 +294,5 @@
 		  (map #(bit-and (. Integer rotateRight ~i %) 31) 
 		       [0   1  2  3  4  5  6  7  8  9 10 11 12 13 14 15
 			16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31])))))
+
+(defn problem265 [] (run-through))

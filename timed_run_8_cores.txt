@@ -1,0 +1,136 @@
+MacBook Pro,Retina, 15-inch, Early 2013
+Processor: 2,7 GHz Intel Core i7
+Memory:    16BG 1600MHz DDR3
+Software:  OS X 10.8.4 (12E55)
+
+ergates:ProjectEuler klp$ lein repl
+WARNING: time already refers to: #'clojure.core/time in namespace: all, being replaced by: #'all/time
+nREPL server started on port 7888
+REPL-y 0.2.0
+Clojure 1.5.1
+    Docs: (doc function-name-here)
+          (find-doc "part-of-name-here")
+  Source: (source function-name-here)
+ Javadoc: (javadoc java-object-or-class-here)
+    Exit: Control+D or (exit) or (quit)
+
+all=> (time (run-tests))
+
+Testing all
+"(problem001) Elapsed time: 0.846 msecs"
+"(problem002) Elapsed time: 0.585 msecs"
+"(problem003) Elapsed time: 0.786 msecs"
+"(problem004) Elapsed time: 655.878 msecs"
+"(problem005) Elapsed time: 0.344 msecs"
+"(problem006) Elapsed time: 0.325 msecs"
+"(problem007) Elapsed time: 0.716 msecs"
+"(problem008) Elapsed time: 258.524 msecs"
+"(problem009) Elapsed time: 252.085 msecs"
+"(problem011) Elapsed time: 7.734 msecs"
+"(problem013) Elapsed time: 0.166 msecs"
+"(problem015) Elapsed time: 0.224 msecs"
+"(problem016) Elapsed time: 0.641 msecs"
+"(problem017) Elapsed time: 16.931 msecs"
+"(problem018) Elapsed time: 1.32 msecs"
+"(problem019) Elapsed time: 15.537 msecs"
+"(problem020) Elapsed time: 0.425 msecs"
+"(problem021) Elapsed time: 2430.756 msecs"
+"(problem022) Elapsed time: 12.602 msecs"
+"(problem024) Elapsed time: 1306.759 msecs"
+"(problem025) Elapsed time: 93.605 msecs"
+"(problem026) Elapsed time: 101.6 msecs"
+"(problem027) Elapsed time: 3220.659 msecs"
+"(problem028) Elapsed time: 6.791 msecs"
+"(problem029) Elapsed time: 21.737 msecs"
+"(problem031) Elapsed time: 994.723 msecs"
+"(problem033) Elapsed time: 2.298 msecs"
+"(problem036) Elapsed time: 1452.923 msecs"
+"(problem038) Elapsed time: 283.558 msecs"
+"(problem039) Elapsed time: 77.194 msecs"
+"(problem040) Elapsed time: 56.761 msecs"
+"(problem041) Elapsed time: 1.71 msecs"
+"(problem042) Elapsed time: 5.647 msecs"
+"(problem045) Elapsed time: 655.515 msecs"
+"(problem046) Elapsed time: 718.073 msecs"
+"(problem047) Elapsed time: 5221.311 msecs"
+"(problem048) Elapsed time: 35.37 msecs"
+"(problem049) Elapsed time: 18.953 msecs"
+"(problem052) Elapsed time: 587.812 msecs"
+"(problem053) Elapsed time: 22.31 msecs"
+"(problem054) Elapsed time: 457.699 msecs"
+"(problem055) Elapsed time: 166.433 msecs"
+"(problem056) Elapsed time: 540.598 msecs"
+"(problem059) Elapsed time: 1.993 msecs"
+"(problem061) Elapsed time: 5.023 msecs"
+"(problem062) Elapsed time: 72.146 msecs"
+"(problem063) Elapsed time: 3.049 msecs"
+"(problem064) Elapsed time: 994.498 msecs"
+"(problem065) Elapsed time: 2.301 msecs"
+"(problem067) Elapsed time: 5.141 msecs"
+"(problem069) Elapsed time: 0.49 msecs"
+"(problem071) Elapsed time: 647.344 msecs"
+"(problem075) Elapsed time: 4620.217 msecs"
+"(problem076) Elapsed time: 16.123 msecs"
+"(problem079) Elapsed time: 0.011 msecs"
+"(problem080) Elapsed time: 11.238 msecs"
+"(problem081) Elapsed time: 20.096 msecs"
+"(problem082) Elapsed time: 218.003 msecs"
+"(problem083) Elapsed time: 229.833 msecs"
+"(problem087) Elapsed time: 23127.382 msecs"
+"(problem085) Elapsed time: 0.01 msecs"
+
+FAIL in (test-solve-all) (all.clj:148)
+expected: (= (time (problem085)) 2772)
+  actual: (not (= 0 2772))
+"(problem089) Elapsed time: 0.033 msecs"
+"(problem096) Elapsed time: 0.009 msecs"
+
+FAIL in (test-solve-all) (all.clj:152)
+expected: (= (time (problem096)) 24702)
+  actual: (not (= 0 24702))
+"(problem097) Elapsed time: 2.216 msecs"
+"(problem098) Elapsed time: 42.856 msecs"
+"(problem099) Elapsed time: 14.738 msecs"
+
+FAIL in (test-solve-all) (all.clj:155)
+expected: (= (time (problem099)) :unknown)
+  actual: (not (= (895447 504922) :unknown))
+"(problem102) Elapsed time: 6.329 msecs"
+"(problem112) Elapsed time: 2531.344 msecs"
+"(problem120) Elapsed time: 1.086 msecs"
+"(problem122) Elapsed time: 0.201 msecs"
+
+FAIL in (test-solve-all) (all.clj:160)
+expected: (= (time (problem122)) 1582)
+  actual: (not (= 0 1582))
+"(problem123) Elapsed time: 0.009 msecs"
+
+FAIL in (test-solve-all) (all.clj:161)
+expected: (= (time (problem123)) 21035)
+  actual: (not (= 0 21035))
+"(problem124) Elapsed time: 4235.534 msecs"
+"(problem125) Elapsed time: 961.13 msecs"
+"(problem145) Elapsed time: 0.009 msecs"
+
+FAIL in (test-solve-all) (all.clj:164)
+expected: (= (time (problem145)) 608720)
+  actual: (not (= 0 608720))
+"(problem160) Elapsed time: 13.7 msecs"
+"(problem187) Elapsed time: 1124.789 msecs"
+"(problem188) Elapsed time: 20.059 msecs"
+"(problem197) Elapsed time: 524.012 msecs"
+"(problem203) Elapsed time: 6.164 msecs"
+"(problem206) Elapsed time: 564.233 msecs"
+"(problem108) Elapsed time: 843.189 msecs"
+"(problem119) Elapsed time: 4.649 msecs"
+"(problem158) Elapsed time: 1.31 msecs"
+"(problem231) Elapsed time: 1026.154 msecs"
+"(problem297) Elapsed time: 1.28 msecs"
+"(problem317) Elapsed time: 0.149 msecs"
+"(problem321) Elapsed time: 0.055 msecs"
+
+Ran 1 tests containing 87 assertions.
+6 failures, 0 errors.
+"(run-tests) Elapsed time: 61704.582 msecs"
+{:type :summary, :pass 81, :test 1, :error 0, :fail 6}
+all=>

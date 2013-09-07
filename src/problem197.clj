@@ -6,8 +6,9 @@ the sequence un is defined by u(0) = -1 and u(n+1) = f(u(n)).
 Find u(n) + u(n+1) for n = 10^12.
 Give your answer with 9 digits after the decimal point." 
     })
-  (:use clojure.contrib.math
-	clojure.test))
+  (:use 
+   [clojure.math.numeric-tower :only (floor expt)]
+   [clojure.test :only (deftest is)]))
 
 (defn f [x] (* (floor (expt 2 (- 30.403243784 (expt x 2)))) (expt 10 -9)))
 
@@ -35,3 +36,5 @@ Give your answer with 9 digits after the decimal point."
 
 ;; Excellent work, klang! By solving your 100th problem you have earned a place among the 
 ;; top 2.48% of members and have advanced to level 3.
+
+(defn problem197 [] (+ (nth (u) (expt 10 5)) (nth (u) (+ 1 (expt 10 4)))))

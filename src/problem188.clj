@@ -7,7 +7,7 @@ a↑↑(k+1) = a^(a↑↑k).
 Thus we have e.g. 3↑↑2 = 3^3 = 27, hence 3↑↑3 = 3^27 = 7625597484987 and 3↑↑4 is roughly 10^3.6383346400240996*10^12.
 
 Find the last 8 digits of 1777↑↑1855."})
-  (:use clojure.contrib.math))
+  (:use [clojure.math.numeric-tower :only (expt)]))
 
 ; (mod (↑↑ 1777 1855) (expt 10 8))
 
@@ -81,7 +81,7 @@ Find the last 8 digits of 1777↑↑1855."})
 
 (defn exptm [base pow modulus]
   "Binary exponentation kept down"
-  (.modPow (bigint base) (bigint pow) (bigint modulus)))
+  (.modPow (biginteger base) (biginteger pow) (biginteger modulus)))
 
 (defn hyperm [a b m]
   "returns a↑↑b mod m, keeps the results low"
@@ -91,3 +91,5 @@ Find the last 8 digits of 1777↑↑1855."})
 ;; user> (time (hyperm 1777 1855 (expt 10 8)))
 ;; "Elapsed time: 208.373776 msecs"
 ;; 95962097
+
+(defn problem188 [] (hyperm 1777 1855 (expt 10 8)))

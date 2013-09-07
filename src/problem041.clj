@@ -1,6 +1,6 @@
 (ns problem041  
-  (:use tools.primes
-	clojure.contrib.combinatorics))
+  (:use [tools.primes :only (prime?)]
+	[clojure.math.combinatorics :only (permutations) :as comb]))
 
 (def pandigital (permutations '(1 2 3 4 5 6 7 8 9)))
 ;; (time (count pandigital))

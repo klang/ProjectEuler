@@ -1,11 +1,16 @@
 (ns problem061
-  (:use tools.numbers)
-  (:use problem045)
+  ;;(:use tools.numbers)
+  ;;(:use problem045)
   ;; gives lazy sequences:
   ;;  triangles, pentagonals, hexagonals
   ;; and functions:
   ;;  triangle, pentagonal, hexagonal
-  (:use clojure.contrib.combinatorics clojure.set clojure.test)  )
+  ;;(:use clojure.contrib.combinatorics clojure.set clojure.test)  
+  (:use 
+   [problem045 :only (triangles pentagonals hexagonals triangle pentagonal hexagonal)]
+   [clojure.test :only (deftest is)]
+   [clojure.set :only (union difference)]
+   [clojure.math.combinatorics :only (cartesian-product) :as comb]))
 
 ;; lazy sequences
 (def squares 
@@ -274,8 +279,8 @@
   (let [target  (first (filter #(contains? all-elements (missing-element %)) all-5-chains))
 	element (missing-element target)
 	complete (union target (list element))]
-    #_(reduce +)
-    (map #(+ (* 100 (:front %)) (:back %)) complete)))
+    (reduce +
+            (map #(+ (* 100 (:front %)) (:back %)) complete))))
 ;; (5329 2926 2628 2821 2147 4753)
 ;; 20604 <<-- wrong .. produced with the wrong definition of heptagonals
 

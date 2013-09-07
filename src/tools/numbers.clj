@@ -1,18 +1,23 @@
 (ns tools.numbers
-  (:use clojure.test)
-  (:use [clojure.contrib.str-utils2 :only (split)])
-  ;(:use [clojure.contrib.math :only (expt sqrt exact-integer-sqrt)])
-  ;(:use [ clojure.contrib.lazy-seqs :only (primes)])
-  (:use clojure.contrib.math)
-  (:use clojure.contrib.repl-utils)
-  (:use clojure.contrib.combinatorics)
-  (:use clojure.set))
+  (:use 
+   [clojure.test :only (deftest is)]
+   [clojure.math.numeric-tower :only (expt)])
+  (:require 
+   [clojure.string :only (split) :as str]))
 
 
 (defn digits [number]
   (map #(. Integer parseInt % 10) 
-	     (filter #(not (= % "")) (split (str number) #""))))
+	     (filter #(not (= % "")) (str/split (str number) #""))))
 ;; (map #(. Integer parseInt (str %) 10) (str 123))
+
+(defn str2int [string]
+  (into [] (map #(. Integer parseInt (str %) 10) (seq string))))
+;;(defn str2int [v] (map #(. Integer parseInt % 10) v))
+(deftest test-str2int
+  (is (= (into [] (map #(. Integer parseInt (str %) 10) (seq "003020600")))
+	 (str2int "003020600")
+	 [0 0 3 0 2 0 6 0 0])))
 
 (defn reverse-number [number]
   (loop [n number dl 0]
@@ -52,11 +57,11 @@
 
 
 (defn factorial [n] 
-  (reduce * (range n 0 -1)))
+  (reduce * (range (bigint n) 0 -1)))
 
 (defn factorials []
-  (map first (iterate (fn [[a b]] [(* a b) (inc b)]) [1 2])))
+  (map first (iterate (fn [[a b]] [(* a b) (inc b)]) [1 2N])))
 
 (defn fibos []
-  (map first (iterate (fn [[a b]] [b (+ a b)]) [0 1])))
+  (map first (iterate (fn [[a b]] [b (+ a b)]) [0 1N])))
 

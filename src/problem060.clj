@@ -5,14 +5,12 @@
 Find the lowest sum for a set of five primes for which any two primes concatenate to produce another prime." 
     :hint "the first two usable primes will be 3 and 7"
     })
-  (:use tools.numbers)
-  (:use tools.primes)
-  (:use problem038)
-  (:use [clojure.contrib.lazy-seqs :only (primes)])
-  (:use clojure.contrib.combinatorics)
-  (:use clojure.contrib.repl-utils)
-  (:use clojure.set)
-  (:use clojure.test))
+  (:use 
+   [clojure.test :only (deftest is)]
+   [tools.primes :only (prime? primes primes-up-to)]
+   [problem038 :only (concat-numbers)]
+   [clojure.set :only (intersection union)]
+   [clojure.math.combinatorics :only (combinations)]))
 
 (defn prime-concat? [a b]
   (and (prime? (concat-numbers a b)) 
@@ -547,3 +545,4 @@ Find the lowest sum for a set of five primes for which any two primes concatenat
 ;;(21741 {:count 5, :group [13 5197 5701 6733 8389]})
 ;;problem060> (reduce + [13 5197 5701 6733 8389])
 ;;26033
+(defn problem060 [] (reduce + (:group (second (p60 5)))))
