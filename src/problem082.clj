@@ -4,11 +4,13 @@
 201 96 342 234 103 18 = 994
 
 Find the minimal path sum, in matrix.txt, a text file containing a 80 by 80 matrix, from the left column to the right column"})
-  (:use [problem081 :only (str2int read-data)])
-  (:use [problem083 :only (children distance marker pos problem node up down right)])
-  (:use [clojure.contrib.str-utils2 :only (split)])
-  (:use clojure.test)
-  (:use [tools.dijkstra :only (shortest-path)]))
+  (:use 
+   [clojure.test :only (deftest is)]
+   [tools.dijkstra :only (shortest-path)]
+   [problem081 :only (str2int read-data)]
+   [problem083 :only (children distance marker pos problem node up down right)])
+  (:require
+   [clojure.string :only (split) :as str]))
 
 (def matrix (read-data "src/matrix.txt"))
 

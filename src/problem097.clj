@@ -1,3 +1,7 @@
+(ns problem097
+  (:use 
+   [clojure.test :only (deftest is)]
+   [clojure.math.numeric-tower :only (expt) :as math]))
 ;; The first known prime found to exceed one million digits was discovered in 1999, and is a Mersenne prime of the form 2^6972593 - 1; it contains exactly 2,098,960 digits. Subsequently other Mersenne primes, of the form 2^p - 1, have been found which contain more digits.
 ;; 
 ;; However, in 2004 there was found a massive non-Mersenne prime which contains 2,357,207 digits: 28433 * 2^7830457 + 1.
@@ -112,7 +116,8 @@
 ;; user> (+ (lsd-mult 10 28433 (lsd-expt2 10 2 7830457)) 1)
 ;; 8739992577
 
-(load "helpers")
+(defn problem097 [] (+ (lsd-mult 10 28433 (lsd-expt2 10 2 7830457)) 1))
+
 ;; (+ (mod (* 28433 (exptm 2 7830457 (expt 10 10)))(expt 10 10)) 1)
 ;; 8739992577
 

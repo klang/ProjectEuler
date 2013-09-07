@@ -5,7 +5,7 @@ We assume that the fragments move without air resistance, in a uniform gravitati
 
 Find the volume (in m³) of the region through which the fragments move before reaching the ground. Give your answer rounded to four decimal places."
 	 :hints ";; http://en.wikipedia.org/wiki/Trajectory#Example:_Constant_gravity.2C_no_drag_or_wind"})
-  (:use [clojure.contrib.math :only (expt)]))
+  (:use [clojure.math.numeric-tower :only (expt)]))
 
 
 
@@ -45,3 +45,7 @@ Find the volume (in m³) of the region through which the fragments move before r
 (def radius 99.08340778978892)
 (def volume (* 0.5 Math/PI radius radius height))
 ;; 1856532.8455[27574]
+
+(defn problem317 [] (* 0.0001 (Math/round (* 10000 volume))))
+
+

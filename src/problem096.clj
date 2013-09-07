@@ -1,17 +1,16 @@
 (ns problem096
   (meta {:description "brute force sudoku puzzles"})
-  (:use tools.numbers
-	tools.primes)
-  (:use [clojure.contrib.str-utils2 :only (split)]
-	clojure.contrib.combinatorics
-	clojure.contrib.duck-streams
-	clojure.set
-	clojure.test))
+  (:use 
+   [clojure.string :only (split)]
+   [tools.numbers :only (integer str2int)]
+   [tools.misc :only (flatten-once)]
+   [clojure.set :only (difference intersection union)]
+   [clojure.test :only (deftest is)]))
 
 (defn read-data [filename]
   (partition 10 (split (slurp filename) #"\r\n")))
 
-(def sudoku-data (read-data "sudoku.txt"))
+(def sudoku-data (read-data "src/sudoku.txt"))
 
 (comment
   (defn flatten [s] (remove seq? (tree-seq seq? seq s)))
@@ -31,14 +30,6 @@
  (map #(apply str %) (map #(flatten (drop 1 %)) sudoku-data))
  (map #(apply str %) (map #(drop 1 %) sudoku-data))
 )
-
-(defn str2int [string]
-  (into [] (map #(. Integer parseInt (str %) 10) (seq string))))
-
-(deftest test-str2int
-  (is (= (into [] (map #(. Integer parseInt (str %) 10) (seq "003020600")))
-	 (str2int "003020600")
-	 [0 0 3 0 2 0 6 0 0])))
 
 ;; each sudoko is represented as a string of 81 chars
 (def sudoku-string (map #(apply str %) (map #(drop 1 %) sudoku-data)))
@@ -357,8 +348,6 @@
 			      (hash-map (str (count cip) "_" %) (list % cip)))
 			   (queue sudoku))))))
 
-(defn flatten-once [s] (remove seq? (tree-seq seq? seq s)))
-
 (defn guesses [sudoku]
   "return the different guesses, but start with the cells with less candidates"
   (let [paths (least-degrees-of-freedom sudoku)]
@@ -452,6 +441,7 @@
 
   )
 
+(defn problem096 [] 0)
 
 
 

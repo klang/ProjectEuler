@@ -1,5 +1,5 @@
 (ns problem039
-  (:use clojure.contrib.math))
+  (:use [clojure.math.numeric-tower :only (exact-integer-sqrt)]))
 
 (defn solutions [p]
   ;; partition p in 3 groups where a + b + c = p

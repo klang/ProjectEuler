@@ -17,11 +17,12 @@ Find the value of d <  1000 for which 1/d contains the longest recurring cycle i
 http://en.wikipedia.org/wiki/Repeating_decimal
 
 On the one hand, the decimal representation of a rational number is ultimately periodic because it can be determined by a long division process, which must ultimately become periodic as there are only finitely many different remainders and so eventually it will find a remainder that has occurred before."})
-  (:use tools.numbers)
-  (:use tools.primes)
-  (:use clojure.test)
-  (:use clojure.contrib.math)
-  (:use clojure.set))
+  (:use 
+   [clojure.test :only (deftest is)]
+   [tools.primes :only (factors totient)])
+  (:require 
+   [clojure.math.numeric-tower :only (gcd) :as math]
+   [clojure.set :only (intersection) :as set]))
 
 (defn long-divide-cycle-length [num div] 
   (loop [number    (quot num div)
@@ -110,7 +111,7 @@ On the one hand, the decimal representation of a rational number is ultimately p
 
 (defn terminating-decimal [k d]
   "Terminating decimals represent rational numbers of the form k/d. Where d = 2^n * 5^m"
-  (not (empty? (intersection #{2 5} (set (factors d))))))
+  (not (empty? (set/intersection #{2 5} (set (factors d))))))
 
 (defn repeating-decimal [fraction] nil)
 
@@ -121,7 +122,7 @@ On the one hand, the decimal representation of a rational number is ultimately p
 (defn totient-scheme [n]
   (loop [tot 0, pos (- n 1)]
     (if (> pos 0)
-      (if (= 1 (gcd n pos))
+      (if (= 1 (math/gcd n pos))
 	(recur (+ tot 1) (- pos 1))
 	(recur tot (- pos 1)))
       tot)))

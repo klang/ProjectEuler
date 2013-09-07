@@ -1,12 +1,12 @@
+(ns problem179
+  (:use	[tools.primes :only (divisors#)]
+	[clojure.math.numeric-tower :only (expt exact-integer-sqrt)]
+	[clojure.test :only (deftest is)]))
 ;; Find the number of integers 1 < n < 10^7, for which n and n + 1 have the same number of positive divisors. 
 
 ;; For example, 14 has the positive divisors 1, 2, 7, 14 while 15 has 1, 3, 5, 15.
 
 ;; (custom-set-variables '(swank-clojure-extra-vm-args '("-server" "-Xmx128M")))
-(ns p179
-  (:use	[tools.primes :only (divisors#)]
-	[clojure.contrib.math :only (expt exact-integer-sqrt)]
-	[clojure.test]))
 
 (defn f [limit]
   (loop [n 2, dn (divisors# n), c 0]
@@ -152,12 +152,12 @@
 
 (deftest test-limited-end-result-time
   (let [limit 1000]
-    (is (= (time (f1 limit))
-	   (time (p179res limit))
-	   (time (same-cnt (p179-dorun-transient limit)))	
-	   (time (same-cnt (p179-recur-transient limit)))
-	   (time (same-cnt (p179-dorun-int-array limit)))
-	   (time (same-cnt (take limit (make-divs-seq limit))))))))
+    (is (= (f1 limit)
+	   (p179res limit)
+	   (same-cnt (p179-dorun-transient limit))	
+	   (same-cnt (p179-recur-transient limit))
+	   (same-cnt (p179-dorun-int-array limit))
+	   (same-cnt (take limit (make-divs-seq limit)))))))
 
 (deftest test-resulting-vector
   (let [limit 100]
@@ -168,5 +168,5 @@
 
 
 
-
+(def problem179 problem-179)
 

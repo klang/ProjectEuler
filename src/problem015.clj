@@ -1,7 +1,8 @@
 (ns problem015
-  (:use clojure.test)
-  (:use tools.numbers)
-  (:use clojure.contrib.math))
+  (:use 
+   [clojure.test :only (deftest is)]
+   [tools.numbers :only (factorial)]
+   [clojure.math.numeric-tower :only (expt)]))
 
 ;; next possible steps from a point in a max X max square
 (defn path-transition [[i j] max]

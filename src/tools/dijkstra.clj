@@ -1,6 +1,5 @@
 (ns tools.dijkstra
-  (meta {:description "kototamo at gmail dot com"})
-  (:use [clojure.contrib.def]))
+  (meta {:description "kototamo at gmail dot com"}))
 
 (declare dijkstra build-path add-rdist update-rdists take-minnode)
 

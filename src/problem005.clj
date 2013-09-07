@@ -1,6 +1,7 @@
 (ns problem005
   (meta {:description "What is the smallest number divisible by each of the numbers 1 to 20?"})
-  (:use [clojure.contrib.math :only (lcm)]))
+  (:use clojure.test)
+  (:require [clojure.math.numeric-tower :only (lcm) :as math]))
 
 
 
@@ -52,7 +53,6 @@
       (recur m (inc s)))))
 
 ;; 2520 is the smallest number that can be divided by each of the numbers from 1 to 10 without any remainder.
-(use 'clojure.contrib.test-is)
 
 (deftest test-problem005
   (is (= 2520 (problem005 10))))
@@ -200,4 +200,4 @@
 ;; "Elapsed time: 0.900674 msecs"
 ;; 232792560
 
-(defn problem005 [] (reduce lcm (range 1 21)))
+(defn problem005 [] (reduce math/lcm (range 1 21)))

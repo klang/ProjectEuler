@@ -5,3 +5,5 @@ classes
 .lein-deps-sum
 .cake
 pom.xml
+target
+.lein-repl-history

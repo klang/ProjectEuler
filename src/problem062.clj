@@ -1,7 +1,8 @@
 (ns problem062
-  (:use tools.numbers)
-  (:use clojure.contrib.math)
-  (:use clojure.test))
+  (:use 
+   [clojure.test :only (deftest is)]
+   [tools.numbers :only (digits)]
+   [clojure.math.numeric-tower :only (expt) :as math]))
 
 ;The cube, 41063625 (345³), can be permuted to produce two other cubes: 56623104 (384³) and 66430125 (405³). In fact, 41063625 is the smallest cube which has exactly three permutations of its digits which are also cube.
 
@@ -30,3 +31,5 @@
 ;; (8384 8288 7202 7061 5027)
 ;; (expt 5027 3)
 ;; 127035954683
+
+(defn problem062 [] (expt (last (foo 5)) 3))

@@ -13,9 +13,9 @@ Which prime, below one-million, can be written as the sum of the most consecutiv
      :info "(count (take-while #(< % 1000000) primes)) ==> 78498"
      :idea "use the old divisors trick, maybe?"
 }
-  (:use tools.primes)
-  (:use clojure.contrib.lazy-seqs)
-  (:use clojure.test))
+  (:use
+   [clojure.test :only (deftest is)]
+   [tools.primes :only (prime? primes)]))
 
 (deftest test-problem050
   (is (prime? (reduce + (take 21 (drop 3 primes)))) )

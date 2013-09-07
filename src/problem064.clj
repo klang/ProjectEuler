@@ -1,6 +1,7 @@
 (ns problem064
-  (:use [clojure.contrib.math]
-        [clojure.test]))
+  (:use 
+   [clojure.math.numeric-tower :only (exact-integer-sqrt floor sqrt)]
+   [clojure.test :only (deftest is)]))
 
 ;; http://en.wikipedia.org/wiki/Methods_of_computing_square_roots#Example.2C_square_root_of_114_as_a_continued_fraction
 
@@ -76,4 +77,4 @@ The calculation is based on http://en.wikipedia.org/wiki/Methods_of_computing_sq
 ;; "Elapsed time: 7726.570798 msecs"
 ;; 1322
 
-
+(defn problem064 [] (count-odd-periods-b 10000))

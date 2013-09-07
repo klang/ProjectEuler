@@ -1,18 +1,19 @@
 (ns problem321
   (meta {:description ""})
   (:use
-   [clojure.test]
-   [clojure.contrib.string :only (replace-re)]
-   [clojure.contrib.math :only (expt round)]
-   [clojure.contrib.generic.math-functions :only (sqrt)]
-   [clojure.contrib.seq-utils :only (indexed)]
-   [problem065 :only (estimate-continued-fraction)]))
+   [clojure.test :only (deftest is)]
+   [clojure.math.numeric-tower :only (sqrt expt round)]
+   [tools.misc :only (indexed)]
+   [problem065 :only (estimate-continued-fraction)])
+  (:require 
+   [clojure.string :only (replace) :as str]))
+
 
 ;; R and B  moving towards the goal
-(defn R_  [S] (replace-re #"R_" "_R" S))
-(defn _B  [S] (replace-re #"_B" "B_" S))
-(defn RB_ [S] (replace-re #"RB_" "_BR" S))
-(defn _RB [S] (replace-re #"_RB" "BR_" S))
+(defn R_  [S] (str/replace #"R_" "_R" S))
+(defn _B  [S] (str/replace #"_B" "B_" S))
+(defn RB_ [S] (str/replace #"RB_" "_BR" S))
+(defn _RB [S] (str/replace #"_RB" "BR_" S))
 
 (deftest test-slide
   (is (= (R_ "RRR_BBB") "RR_RBBB"))
@@ -147,12 +148,12 @@
 ;;(reduce + the-ms)
 ;;2470433131948039 -- not correct
 
-(def the-ns (take 40 (sort (into #{} (flatten (merge (map n1 (range 1 40)) (map n2 (range 1 40))))))))
+(def the-nns (take 40 (sort (into #{} (flatten (merge (map n1 (range 1 40)) (map n2 (range 1 40))))))))
 (defn sol-n [m] (/ (- (sqrt (+ (+ (* 8 (* m m)) (* 16 m))1))1)2))
 
-;; the terms in the-ms run through M should equal the terms in the-ns run through triangle
+;; the terms in the-ms run through M should equal the terms in the-nns run through triangle
 (comment
-  (map  #(if (= (M %1) (triangle %2)) (M %) {:m %1 :n %2 :diff (- %2 %1) :moves (M %1) :triangle (triangle %2) :sols-n (sol-n %1)}) the-ms the-ns)
+  (map  #(if (= (M %1) (triangle %2)) (M %) {:m %1 :n %2 :diff (- %2 %1) :moves (M %1) :triangle (triangle %2) :sols-n (sol-n %1)}) the-ms the-nns)
 
   )
 ;; they do not, though .. sqrt 2 might not be as accurate as needed
@@ -192,3 +193,4 @@
 ;;(- (reduce + the-mes) (reduce + the-ms))
 ;;1
 ;; so, using the build in sqrt puts the end result off by one!
+(defn problem321 [] (reduce + the-mes))

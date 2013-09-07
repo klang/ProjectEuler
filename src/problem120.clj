@@ -1,6 +1,6 @@
 (ns problem120
-  (:use clojure.contrib.math)
-  (:use clojure.test))
+  (:use [clojure.test :only (deftest is)]
+        [clojure.math.numeric-tower :only (expt)]))
 
 ;; Let r be the remainder when (a-1)^n + (a+1)^n is divided by a².
 
@@ -38,6 +38,8 @@
 
 ;; perl -wle '$s+=$_*($_-2+($_&1)) for 3..1000; print $s' 
 
-(
+(comment
  (reduce + (map #(- (expt % 2) (* (- 2 (mod % 2)) %)) (range 3 1001)))
 )
+(defn problem120 [] 
+  (reduce + (map #(- (expt % 2) (* (- 2 (mod % 2)) %)) (range 3 1001))))

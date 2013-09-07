@@ -8,12 +8,11 @@ For n = 4 there are exactly three distinct solutions:
 
 What is the least value of n for which the number of distinct solutions exceeds four million?" 
     :note "There is a lot of comments in the following. They represent a lot of experimentation."})
-  (:use [tools.primes :only (factors)])
-  (:use [clojure.contrib.lazy-seqs :only (primes)])
-  (:use [clojure.contrib.math :only (expt)])
-  (:use [clojure.test :only (deftest is run-tests)])
-  (:use [clojure.repl :only (dir)])
-  )
+  (:use 
+   [clojure.test :only (deftest is run-tests)]
+   [tools.primes :only (factors primes)]
+   [clojure.math.numeric-tower :only (expt)]
+   [clojure.repl :only (dir)]))
 
 (comment
   ;; not this one:
@@ -1125,7 +1124,7 @@ What is the least value of n for which the number of distinct solutions exceeds 
 
 ;; we can use smerge from the Hamming number problem (204)
 ;; to merge two "factor blocks"
-(use '[problem204 :only (smerge)])
+;; (use '[problem204 :only (smerge)])
 
 (comment
   (map  #(max-powers %) (range 1 8))

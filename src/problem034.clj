@@ -1,6 +1,6 @@
 (ns problem034
-  (:use tools.numbers
-	clojure.test))
+  (:use [clojure.test :only (deftest is)]
+        [tools.numbers :only (digits factorial)]))
 
 (deftest test-problem034
   (is (= 145 (reduce + (map #(factorial %) (digits 145))))))

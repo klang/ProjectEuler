@@ -1,10 +1,9 @@
 (ns problem012
   (meta {:description "What is the value of the first triangle number to have over five hundred divisors?"})
-  (:use tools.numbers)
-  (:use tools.primes)
-  (:use clojure.contrib.combinatorics)
-  (:use clojure.set)
-  (:use clojure.test))
+  (:use [clojure.test :only (deftest is)])
+  (:require
+   [tools.primes :only (divisors factors) :as tools]
+   [clojure.math.combinatorics :only (subsets) :as comb]))
 
 ;; as a function:
 (defn triangle [n] (reduce + (range n 0 -1)))
@@ -25,12 +24,12 @@
 ;; naive way to find number of divisors
 (comment
   (defn divisors [n]
-    (count (set (map #(reduce * %) (subsets (factors n))))))
+    (count (set (map #(reduce * %) (comb/subsets (tools/factors n))))))
 )
 
 (defn solve012 [n]
   "returns first triangle number that has more than n divisors"
-  (first (filter #(> (count (divisors %)) n) (triangles))))
+  (first (filter #(> (count (tools/divisors %)) n) (triangles))))
 
 (deftest test-problem012
   (is (= 28 (solve012 5))))
@@ -51,9 +50,9 @@
     "All divisors of n.
 Combinations of products of prime factors will give all divisors:
 1, (factors n), (subsets (factors n)), n"
-    (let [f (factors n)
-	  ss (subsets (factors n))])
-    (vec (conj (set (factors n)) 1 n)))
+    (let [f (tools/factors n)
+	  ss (comb/subsets (tools/factors n))])
+    (vec (conj (set (tools/factors n)) 1 n)))
 )
 ;; (disj (set (subsets (factors 28))) (factors 28) () '(2) '(7))
 ;; (factors 28)

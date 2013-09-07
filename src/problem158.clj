@@ -10,9 +10,11 @@ We now consider strings of n  26 different characters from the alphabet.
 For every n, p(n) is the number of strings of length n for which exactly one character comes lexicographically after its neighbour to the left.
 
 What is the maximum value of p(n)?"})
-  (:use [clojure.contrib.combinatorics :only (combinations permutations selections)])
-  (:use [clojure.contrib.math :only (expt)])
-  (:use clojure.test))
+  (:use 
+   [clojure.test :only (deftest is)]
+   [tools.numbers :only (factorial)]
+   [clojure.math.combinatorics :only (combinations permutations selections)]
+   [clojure.math.numeric-tower :only (expt)]))
 
 (comment
   (count (filter true? (map #(< (first %) (second %)) (partition 2 1 [99] (map int '(\a \b \c))))))
@@ -73,7 +75,7 @@ What is the maximum value of p(n)?"})
 ;; 2 out of 3 of these permutations will be of the desired form (in this case)
 ;; (* 2/3 (* 2600 (* 3 2 1)))
 
-(defn factorial [n] 
+#_(defn factorial [n] 
   (reduce * (range n 0 -1)))
 
 (defn combinations#

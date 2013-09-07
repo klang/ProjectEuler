@@ -1,4 +1,5 @@
-(load "tools")
+(ns problem069
+  (:use [tools.primes :only (totient primes)]))
 
 (defn n-for-max-totient-ratios [limit]
   (loop [n 1 m 1
@@ -31,3 +32,4 @@
 ;; user> (time (n-for-max-totient-ratios 1000000))
 ;; "Elapsed time: 10.455521 msecs"
 ;; (510510 17017/3072)
+(defn problem069 [] (first (n-for-max-totient-ratios 1000000)))

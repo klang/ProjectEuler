@@ -2,8 +2,8 @@
   (meta {:description "n! means n * (n-1)  ...  3 * 2 * 1
 
 Find the sum of the digits in the number 100!"})
-  (:use tools.numbers
-	[clojure.contrib.str-utils2 :only (split)]))
+  (:use
+   [tools.numbers :only (digits factorial) :as tools] ))
 
 (defn solve020 [n] 
   (reduce + 

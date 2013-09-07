@@ -1,8 +1,10 @@
 (ns problem054
   (meta {:description "evaluate poker hands"
 	 :help "http://www.pagat.com/vying/pokerrank.html"})
-  (:use clojure.test
-	[clojure.contrib.str-utils2 :only (split)]))
+  (:use
+   [clojure.test :only (deftest is)])
+  (:require
+   [clojure.string :only (split) :as str]))
 
 (def poker-txt (slurp "src/poker.txt"))
 
@@ -10,7 +12,7 @@
 (def ranks [:2 :3 :4 :5 :6 :7 :8 :9 :T :J :Q :K :A])
 (def cards (zipmap ranks (iterate inc 2)))
 
-(def input (map #(split % #" ") (split poker-txt #"\r\n")))
+(def input (map #(str/split % #" ") (str/split poker-txt #"\r\n")))
 
 (defn parse
   "parses a card given on the short form, returns a card vector"

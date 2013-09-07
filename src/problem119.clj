@@ -6,8 +6,9 @@ We shall define an to be the nth term of this sequence and insist that a number 
 You are given that a2 = 512 and a10 = 614656.
 
 Find a30."})
-  (:use [tools.numbers :only (digits)])
-  (:use [clojure.contrib.math :only (expt)]))
+  (:use 
+   [tools.numbers :only (digits)]
+   [clojure.math.numeric-tower :only (expt)]))
 
 ;; just try brute forcing ..
 ;; adjusting the ranges until at least 30 members are returned

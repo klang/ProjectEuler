@@ -1,8 +1,9 @@
 (ns problem035
-  (:use tools.numbers
-	tools.primes
-	[clojure.contrib.str-utils2 :only (split)]
-	clojure.contrib.lazy-seqs))
+  (:use 
+   [tools.primes :only (primes prime?)]
+   [tools.numbers :only (digits)])
+  (:require 
+   [clojure.string :only (split) :as str]))
 
 (defn number-shift-right [number]
   (let [ds (digits number)
@@ -13,7 +14,7 @@
 (comment
   (defn _digits [n]
     (map #(. Integer parseInt % 10) 
-	 (filter #(not (= % "")) (split (str n) #"")))))
+	 (filter #(not (= % "")) (str/split (str n) #"")))))
 
 (defn rotations [number]
   (let [ds (digits number)]
@@ -56,7 +57,7 @@
 
 ;; -- trying to make things a bit more efficient (goal: less than a minute)
 (defn prime-digits [n]
-  (let [raw (filter #(not (= % "")) (split (str n) #""))
+  (let [raw (filter #(not (= % "")) (str/split (str n) #""))
 	raw-set (set raw)]
     (if (or (contains? raw-set "2") 
 	    (contains? raw-set "5") 

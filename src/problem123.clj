@@ -1,8 +1,8 @@
 (ns problem123
-  (:use clojure.contrib.lazy-seqs)
-  (:use tools.primes)
-  (:use clojure.contrib.math)
-  (:use clojure.test))
+  (:use 
+   [clojure.test :only (deftest is)]
+   [clojure.math.numeric-tower :only (expt)]
+   [tools.primes :only (primes)]))
 
 ;; Let pn be the nth prime: 2, 3, 5, 7, 11, ..., and let r be the remainder when (pn-1)^n + (pn+1)^n is divided by pn^2.
 ;; For example, when n = 3, p3 = 5, and 4^3 + 6^3 = 280  5 mod 25.
@@ -88,3 +88,4 @@
 ;;problem123> (fii 21035)
 ;;10001595590
 
+(defn problem123 [] 0)

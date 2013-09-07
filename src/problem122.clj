@@ -1,3 +1,7 @@
+(ns problem122
+  (:use [clojure.test :only (deftest is)]
+        [tools.primes :only (prime? prime-factors)]))
+
 ;       (range n² .. n)
 ; 1 ->  2
 ; 2 ->  4  3
@@ -35,10 +39,6 @@
 ;; http://en.wikipedia.org/wiki/Addition_chain
 ;; A003313 
 
-(use 'clojure.contrib.test-is)
-(load "tools")
-(load "helpers")
-
 ;; 1 + 1 = 2 + 1 = 3 + 3 = 6 + 6 = 12 + 3 = 15 
 ;; 1 + 1 = 2 + 2 = 4 + 4 = 8 + 4 = 12 + 2 = 14 + 1 = 15
 (defn num-1-in-binary-repr [n]
@@ -67,9 +67,7 @@
 (deftest test-m
   (is (= 5 (m 15))))
 
-(def p122 (reduce + (map #(m %) (range 1 201))))
-
-;; (time p122)    
+(defn problem122 [] (reduce + (map #(m %) (range 1 201))))
 
 ;; results from 
 ;; http://www.research.att.com/~njas/sequences/a003313.txt

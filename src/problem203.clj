@@ -1,10 +1,8 @@
 (ns problem203
-  (:use [tools.primes :only (divisors# prime-factors divisors)]
-	[tools.pseudo-primes :only (next-prime prime?)]
-	[tools.numbers :only (factorial)]
-	[clojure.contrib.math :only (expt exact-integer-sqrt)]
-	[clojure.contrib.lazy-seqs :only (primes)]
-	[clojure.test]))
+  (:use
+   [tools.primes :only (primes)]
+   [tools.numbers :only (factorial)]
+   [clojure.math.numeric-tower :only (expt exact-integer-sqrt)]))
 
 ;; from http://rosettacode.org/wiki/Pascal's_triangle#Clojure
 (defn nextrow [row]
@@ -81,3 +79,5 @@
 ;; problem203> (time (reduce + (square-free-pascal 51)))
 ;; "Elapsed time: 57.684452 msecs"
 ;; 34029210557338
+
+(defn problem203 [] (reduce + (square-free-pascal 51)))
