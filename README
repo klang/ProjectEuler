@@ -14,3 +14,13 @@ To run everything, simply
     all=> (time (run-tests))
 
 I have stepped on the 'time' function, so gives some additional output.
+
+    all=> (peuler)
+
+and
+
+    all=> (seuler)
+
+Will run the `euler/solved` problems in parallel and sequence. The parallel version is about twice as fast as the sequencial one.
+
+(only the execution of the problems will be done in parallel, not the problems themselves)

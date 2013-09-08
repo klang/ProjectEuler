@@ -1,6 +1,7 @@
 (ns all
   (meta {:description ""})
   (:use [clojure.test :only (deftest is run-tests)]
+        [euler.core :only (solved broken time-hash time-id problem)]
 	;; read in all the problems, but in each case, only the special function that returns the result
 	;; to avoid support function name clashing.
 	[problem001 :only (problem001)] [problem002 :only (problem002)]	[problem003 :only (problem003)]
@@ -196,3 +197,18 @@
                                          [96 97 98 99 102 104  112 120 122 123 124 125 145 160 179 187 188 197 203 204 206 214])))
   )
 
+(defn peuler []
+  (into {}
+        (->>
+         solved
+         (pmap #(time-id % (problem %)))
+         doall
+         time)))
+
+(defn seuler []
+  (into {}
+        (->>
+         solved
+         (map #(time-id % (problem %)))
+         doall
+         time)))
