@@ -2,11 +2,11 @@
   (:require
    [tools.primes :only (primes) :as tools]
    [clojure.math.combinatorics :only (cartesian-product) :as comb]
-   [clojure.math.numeric-tower :only (exact-integer-sqrt lcm) :as math]))xe
+   [clojure.math.numeric-tower :only (exact-integer-sqrt lcm) :as math]))
 
 (def p001 ((fn [n] (reduce + (map #(if (or (= 0 (mod % 5)) (= 0 (mod % 3))) % 0) (range n)))) 1000))
 
-(defn fibo [] (map first (iterate (fn [[a b]] [b (+ a b)]) [0 1])))
+(defn fibo [] (map first (iterate (fn [[a b]] [b (+ a b)]) [0 1N])))
 
 (def p002 ((fn [n] (reduce + (filter #(even? %) (take-while #(< % n) (fibo))))) 4000000))
 
@@ -37,7 +37,23 @@
                                y (range (math/expt 10 (- n 1)) (+ x 1))] 
                            (if (palindrome? (* x y)) (* x y) 0)))) 3))
 
+(defn divides-all? [n m]
+  (= (- m 1) (count (take-while #(true? %) (map #(zero? (mod n %)) (range 1 m))))))
+
+(def p005 ((fn [m]
+             (loop [m m
+                    s 1]
+               (if (divides-all? s m)
+                 s
+                 (recur m (inc s))))) 10))
+
+
+
 (def p010 ((fn [n] (reduce + (take-while #(< % n) tools/primes))) 2000000))
 
 
-[p001 p002 p003 p004 5 6 7 8 9 p010]
+[p001 p002 p003 p004 p005 6 7 8 9 p010]
+
+
+
+

@@ -1,6 +1,7 @@
 (ns scratch
-  (meta {:description ""})
-  (:use [clojure.test :only (deftest is run-tests)]
+  (:use [clojure.test :only (deftest is run-tests)])
+  #_(meta {:description ""})
+  #_(:use [clojure.test :only (deftest is run-tests)]
         [euler.core :only (solved broken time-hash time-id problem)]
 	;; read in all the problems, but in each case, only the special function that returns the result
 	;; to avoid support function name clashing.

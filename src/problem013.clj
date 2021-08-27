@@ -1,5 +1,5 @@
 (ns problem013
-  (meta {:description "Work out the first ten digits of the sum of the following one-hundred 50-digit numbers.
+  #_(meta {:description "Work out the first ten digits of the sum of the following one-hundred 50-digit numbers.
 
 clojure already supports arbitrary precicion calculations .. 
 multiplying_ these 100 numbers together is not even a problem.
